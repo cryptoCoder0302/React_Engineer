@@ -90,6 +90,7 @@ function buildExamples(watch) {
 		.exclude('underscore')
 		.add('./lib/Select.js', { expose: 'react-select' })
 		.transform(reactify)
+		.transform(shim)
 	*/
 	
 	if (watch) {
