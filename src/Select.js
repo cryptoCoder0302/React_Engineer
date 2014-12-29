@@ -18,7 +18,6 @@ var Select = React.createClass({
 		asyncOptions: React.PropTypes.func,     // function to call to get options
 		autoload: React.PropTypes.bool,         // whether to auto-load the default async options set
 		placeholder: React.PropTypes.string,    // field placeholder, displayed when there's no value
-		noResultsText: React.PropTypes.string,  // placeholder displayed when there are no matching search results
 		name: React.PropTypes.string,           // field name, for hidden <input /> tag
 		onChange: React.PropTypes.func,         // onChange handler: function(newValue) {}
 		className: React.PropTypes.string,      // className for the outer element
@@ -36,7 +35,6 @@ var Select = React.createClass({
 			asyncOptions: undefined,
 			autoload: true,
 			placeholder: '',
-			noResultsText: 'No results found',
 			name: undefined,
 			onChange: undefined,
 			className: undefined,
@@ -106,9 +104,9 @@ var Select = React.createClass({
 			if ('string' === typeof values) {
 				values = values.split(this.props.delimiter);
 			} else {
-				values = values ? [values] : []
+				values = values ? [values] : [];
 			}
-		};
+		}
 		
 		return values.map(function(val) {
 			return ('string' === typeof val) ? val = _.findWhere(this.state.options, { value: val }) || { value: val, label: val } : val;
@@ -125,7 +123,7 @@ var Select = React.createClass({
 			filteredOptions = this.filterOptions(this.state.options, values);
 		
 		return {
-			value: values.map(function(v) { return v.value }).join(this.props.delimiter),
+			value: values.map(function(v) { return v.value; }).join(this.props.delimiter),
 			values: values,
 			inputValue: '',
 			filteredOptions: filteredOptions,
@@ -341,7 +339,7 @@ var Select = React.createClass({
 					(this.props.matchProp !== 'label' && op.value.toLowerCase().indexOf(filterValue.toLowerCase()) >= 0) ||
 					(this.props.matchProp !== 'value' && op.label.toLowerCase().indexOf(filterValue.toLowerCase()) >= 0)
 				);
-			}
+			};
 			return _.filter(options, filterOption, this);
 		}
 	},
@@ -435,7 +433,7 @@ var Select = React.createClass({
 			
 		}, this);
 		
-		return ops.length ? ops : <div className="Select-noresults">{this.props.noResultsText}</div>;
+		return ops.length ? ops : <div className="Select-noresults">No results found</div>;
 		
 	},
 	
