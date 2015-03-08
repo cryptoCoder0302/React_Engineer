@@ -31,8 +31,7 @@ var Select = React.createClass({
 		filterOption: React.PropTypes.func,        // method to filter a single option: function(option, filterString)
 		filterOptions: React.PropTypes.func,       // method to filter the options array: function([options], filterString, [values])
 		matchPos: React.PropTypes.string,          // (any|start) match the start or entire string when filtering
-		matchProp: React.PropTypes.string,         // (any|label|value) which option property to filter on
-		inputProps: React.PropTypes.object,        // custom attributes for the Input (in the Select-control) e.g: {'data-foo': 'bar'}
+		matchProp: React.PropTypes.string,          // (any|label|value) which option property to filter on
 
 		/*
 		
@@ -64,7 +63,6 @@ var Select = React.createClass({
 			className: undefined,
 			matchPos: 'any',
 			matchProp: 'any',
-			inputProps: {},
 
 			onOptionLabelClick: undefined
 		};
@@ -350,6 +348,8 @@ var Select = React.createClass({
 
 	loadAsyncOptions: function(input, state) {
 
+		var thisRequestId = this._currentRequestId = requestId++;
+
 		for (var i = 0; i <= input.length; i++) {
 			var cacheKey = input.slice(0, i);
 			if (this._optionsCache[cacheKey] && (input === cacheKey || this._optionsCache[cacheKey].complete)) {
@@ -361,8 +361,6 @@ var Select = React.createClass({
 				return;
 			}
 		}
-
-		var thisRequestId = this._currentRequestId = requestId++;
 
 		this.props.asyncOptions(input, function(err, data) {
 
@@ -568,14 +566,13 @@ var Select = React.createClass({
 		}
 
 		var input;
-		var inputProps = _.extend({
+		var inputProps = {
 			ref: 'input',
 			className: 'Select-input',
 			tabIndex: this.props.tabIndex || 0,
 			onFocus: this.handleInputFocus,
 			onBlur: this.handleInputBlur
-		}, this.props.inputProps);
-		
+		};
 		if (this.props.searchable && !this.props.disabled) {
 			input = <Input value={this.state.inputValue} onChange={this.handleInputChange} minWidth="5" {...inputProps} />;
 		} else {
