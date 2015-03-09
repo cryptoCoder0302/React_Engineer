@@ -27,11 +27,14 @@ var Select = React.createClass({
 		searchPromptText: React.PropTypes.string,  // label to prompt for search input
 		name: React.PropTypes.string,              // field name, for hidden <input /> tag
 		onChange: React.PropTypes.func,            // onChange handler: function(newValue) {}
+		onFocus: React.PropTypes.func,             // onFocus handler: function(event) {}
+		onBlur: React.PropTypes.func,              // onBlur handler: function(event) {}
 		className: React.PropTypes.string,         // className for the outer element
 		filterOption: React.PropTypes.func,        // method to filter a single option: function(option, filterString)
 		filterOptions: React.PropTypes.func,       // method to filter the options array: function([options], filterString, [values])
 		matchPos: React.PropTypes.string,          // (any|start) match the start or entire string when filtering
-		matchProp: React.PropTypes.string,          // (any|label|value) which option property to filter on
+		matchProp: React.PropTypes.string,         // (any|label|value) which option property to filter on
+		inputProps: React.PropTypes.object,        // custom attributes for the Input (in the Select-control) e.g: {'data-foo': 'bar'}
 
 		/*
 		
@@ -63,6 +66,7 @@ var Select = React.createClass({
 			className: undefined,
 			matchPos: 'any',
 			matchProp: 'any',
+			inputProps: {},
 
 			onOptionLabelClick: undefined
 		};
@@ -249,12 +253,16 @@ var Select = React.createClass({
 		}
 	},
 
-	handleInputFocus: function() {
+	handleInputFocus: function(event) {
 		this.setState({
 			isFocused: true,
 			isOpen: this.state.isOpen || this._openAfterFocus
 		});
 		this._openAfterFocus = false;
+		
+		if (this.props.onFocus) {
+			this.props.onFocus(event);
+		}
 	},
 
 	handleInputBlur: function(event) {
@@ -265,6 +273,10 @@ var Select = React.createClass({
 				isFocused: false
 			});
 		}.bind(this), 50);
+		
+		if (this.props.onBlur) {
+			this.props.onBlur(event);
+		}
 	},
 
 	handleKeyDown: function(event) {
@@ -566,13 +578,14 @@ var Select = React.createClass({
 		}
 
 		var input;
-		var inputProps = {
+		var inputProps = _.extend({
 			ref: 'input',
 			className: 'Select-input',
 			tabIndex: this.props.tabIndex || 0,
 			onFocus: this.handleInputFocus,
 			onBlur: this.handleInputBlur
-		};
+		}, this.props.inputProps);
+		
 		if (this.props.searchable && !this.props.disabled) {
 			input = <Input value={this.state.inputValue} onChange={this.handleInputChange} minWidth="5" {...inputProps} />;
 		} else {
