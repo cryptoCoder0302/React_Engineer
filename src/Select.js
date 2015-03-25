@@ -100,9 +100,6 @@ var Select = React.createClass({
 		}
 
 		this._closeMenuIfClickedOutside = function(event) {
-			if (this.state.isOpen) {
-				return;
-			}
 			var menuElem = this.refs.selectMenuContainer.getDOMNode();
 			var controlElem = this.refs.control.getDOMNode();
 
@@ -136,14 +133,14 @@ var Select = React.createClass({
 	},
 
 	componentWillReceiveProps: function(newProps) {
-		if (newProps.value !== this.state.value) {
-			this.setState(this.getStateFromValue(newProps.value, newProps.options));
-		}
 		if (JSON.stringify(newProps.options) !== JSON.stringify(this.props.options)) {
 			this.setState({
 				options: newProps.options,
 				filteredOptions: this.filterOptions(newProps.options)
 			});
+		}
+		if (newProps.value !== this.state.value) {
+			this.setState(this.getStateFromValue(newProps.value, newProps.options));
 		}
 	},
 
