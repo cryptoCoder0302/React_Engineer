@@ -116,13 +116,13 @@ var Select = React.createClass({
 			}
 		}.bind(this);
 
-		this._bindCloseMenuIfClickedOutside = function() {
+		this._bindCloseMenuIfClickedOutside = (function() {
 			document.addEventListener('click', this._closeMenuIfClickedOutside);
-		};
+		}).bind(this);
 
-		this._unbindCloseMenuIfClickedOutside = function() {
+		this._unbindCloseMenuIfClickedOutside = (function() {
 			document.removeEventListener('click', this._closeMenuIfClickedOutside);
-		};
+		}).bind(this);
 	},
 
 	componentWillUnmount: function() {
@@ -585,8 +585,7 @@ var Select = React.createClass({
 
 			var optionClass = classes({
 				'Select-option': true,
-				'is-focused': isFocused,
-				'is-disabled': op.disabled
+				'is-focused': isFocused
 			});
 
 			var ref = isFocused ? 'focused' : null;
@@ -595,11 +594,8 @@ var Select = React.createClass({
 				mouseLeave = this.unfocusOption.bind(this, op),
 				mouseDown = this.selectValue.bind(this, op);
 
-			if(op.disabled) {
-				return <div ref={ref} key={'option-' + op.value} className={optionClass}>{op.label}</div>;
-			} else {
-				return <div ref={ref} key={'option-' + op.value} className={optionClass} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave} onMouseDown={mouseDown} onClick={mouseDown}>{op.label}</div>;
-			}
+			return <div ref={ref} key={'option-' + op.value} className={optionClass} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave} onMouseDown={mouseDown} onClick={mouseDown}>{op.label}</div>;
+
 		}, this);
 
 		return ops.length ? ops : (
