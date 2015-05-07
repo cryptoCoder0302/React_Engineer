@@ -98,32 +98,31 @@ var Select = React.createClass({
 			this.autoloadAsyncOptions();
 		}
 
-		var self = this;
 		this._closeMenuIfClickedOutside = function(event) {
-			if (!self.state.isOpen) {
+			if (!this.state.isOpen) {
 				return;
 			}
-			var menuElem = self.refs.selectMenuContainer.getDOMNode();
-			var controlElem = self.refs.control.getDOMNode();
+			var menuElem = this.refs.selectMenuContainer.getDOMNode();
+			var controlElem = this.refs.control.getDOMNode();
 
-			var eventOccuredOutsideMenu = self.clickedOutsideElement(menuElem, event);
-			var eventOccuredOutsideControl = self.clickedOutsideElement(controlElem, event);
+			var eventOccuredOutsideMenu = this.clickedOutsideElement(menuElem, event);
+			var eventOccuredOutsideControl = this.clickedOutsideElement(controlElem, event);
 
 			// Hide dropdown menu if click occurred outside of menu
 			if (eventOccuredOutsideMenu && eventOccuredOutsideControl) {
-				self.setState({
+				this.setState({
 					isOpen: false
-				}, self._unbindCloseMenuIfClickedOutside);
+				}, this._unbindCloseMenuIfClickedOutside);
 			}
-		};
+		}.bind(this);
 
-		this._bindCloseMenuIfClickedOutside = function() {
-			document.addEventListener('click', self._closeMenuIfClickedOutside);
-		};
+		this._bindCloseMenuIfClickedOutside = (function() {
+			document.addEventListener('click', this._closeMenuIfClickedOutside);
+		}).bind(this);
 
-		this._unbindCloseMenuIfClickedOutside = function() {
-			document.removeEventListener('click', self._closeMenuIfClickedOutside);
-		};
+		this._unbindCloseMenuIfClickedOutside = (function() {
+			document.removeEventListener('click', this._closeMenuIfClickedOutside);
+		}).bind(this);
 	},
 
 	componentWillUnmount: function() {
@@ -148,15 +147,12 @@ var Select = React.createClass({
 	},
 
 	componentDidUpdate: function() {
-		var self = this;
-
 		if (!this.props.disabled && this._focusAfterUpdate) {
 			clearTimeout(this._blurTimeout);
-
 			this._focusTimeout = setTimeout(function() {
-				self.getInputNode().focus();
-				self._focusAfterUpdate = false;
-			}, 50);
+				this.getInputNode().focus();
+				this._focusAfterUpdate = false;
+			}.bind(this), 50);
 		}
 
 		if (this._focusedOptionReveal) {
@@ -324,15 +320,12 @@ var Select = React.createClass({
 	},
 
 	handleInputBlur: function(event) {
-		var self = this;
-
 		this._blurTimeout = setTimeout(function() {
-			if (self._focusAfterUpdate) return;
-
-			self.setState({
+			if (this._focusAfterUpdate) return;
+			this.setState({
 				isFocused: false
 			});
-		}, 50);
+		}.bind(this), 50);
 
 		if (this.props.onBlur) {
 			this.props.onBlur(event);
@@ -452,33 +445,32 @@ var Select = React.createClass({
 			}
 		}
 
-		var self = this;
 		this.props.asyncOptions(input, function(err, data) {
 
 			if (err) throw err;
 
-			self._optionsCache[input] = data;
+			this._optionsCache[input] = data;
 
-			if (thisRequestId !== self._currentRequestId) {
+			if (thisRequestId !== this._currentRequestId) {
 				return;
 			}
-			var filteredOptions = self.filterOptions(data.options);
+			var filteredOptions = this.filterOptions(data.options);
 
 			var newState = {
 				options: data.options,
 				filteredOptions: filteredOptions,
-				focusedOption: self._getNewFocusedOption(filteredOptions)
+				focusedOption: this._getNewFocusedOption(filteredOptions)
 			};
 			for (var key in state) {
 				if (state.hasOwnProperty(key)) {
 					newState[key] = state[key];
 				}
 			}
-			self.setState(newState);
+			this.setState(newState);
 
 			if(callback) callback({});
 
-		});
+		}.bind(this));
 	},
 
 	filterOptions: function(options, values) {
@@ -593,7 +585,8 @@ var Select = React.createClass({
 
 			var optionClass = classes({
 				'Select-option': true,
-				'is-focused': isFocused
+				'is-focused': isFocused,
+				'is-disabled': op.disabled
 			});
 
 			var ref = isFocused ? 'focused' : null;
@@ -602,8 +595,11 @@ var Select = React.createClass({
 				mouseLeave = this.unfocusOption.bind(this, op),
 				mouseDown = this.selectValue.bind(this, op);
 
-			return <div ref={ref} key={'option-' + op.value} className={optionClass} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave} onMouseDown={mouseDown} onClick={mouseDown}>{op.label}</div>;
-
+			if(op.disabled) {
+				return <div ref={ref} key={'option-' + op.value} className={optionClass}>{op.label}</div>;
+			} else {
+				return <div ref={ref} key={'option-' + op.value} className={optionClass} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave} onMouseDown={mouseDown} onClick={mouseDown}>{op.label}</div>;
+			}
 		}, this);
 
 		return ops.length ? ops : (
