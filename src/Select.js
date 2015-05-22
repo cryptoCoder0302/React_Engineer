@@ -470,7 +470,7 @@ var Select = React.createClass({
 					}
 				}
 				this.setState(newState);
-				if(callback) callback({});
+				if(callback) callback.call(this, {});
 				return;
 			}
 		}
@@ -499,7 +499,7 @@ var Select = React.createClass({
 			}
 			self.setState(newState);
 
-			if(callback) callback({});
+			if(callback) callback.call(self, {});
 
 		});
 	},
@@ -613,13 +613,13 @@ var Select = React.createClass({
 			focusedValue = focusedValue == null ? this.state.filteredOptions[0] : focusedValue;
 		}
 		// Add the current value to the filtered options in last resort
-		if (this.props.allowCreate && this.state.inputValue.trim()) {
+		if (this.props.allowCreate && !this.state.filteredOptions.length) {
 			var inputValue = this.state.inputValue;
-			this.state.filteredOptions.unshift({
+			this.state.filteredOptions.push({
 				value: inputValue,
 				label: inputValue,
 				create: true
-			});
+			})
 		};
 
 		var ops = Object.keys(this.state.filteredOptions).map(function(key) {
