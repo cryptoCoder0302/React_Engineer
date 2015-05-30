@@ -33,9 +33,8 @@ var Select = React.createClass({
 		filterOptions: React.PropTypes.func,       // method to filter the options array: function([options], filterString, [values])
 		matchPos: React.PropTypes.string,          // (any|start) match the start or entire string when filtering
 		matchProp: React.PropTypes.string,         // (any|label|value) which option property to filter on
-		ignoreCase: React.PropTypes.bool,          // whether to perform case-insensitive filtering
 		inputProps: React.PropTypes.object,        // custom attributes for the Input (in the Select-control) e.g: {'data-foo': 'bar'}
-		allowCreate: React.PropTypes.bool,         // wether to allow creation of new entries
+
 		/*
 		* Allow user to make option label clickable. When this handler is defined we should
 		* wrap label into <a>label</a> tag.
@@ -66,9 +65,7 @@ var Select = React.createClass({
 			className: undefined,
 			matchPos: 'any',
 			matchProp: 'any',
-			ignoreCase: true,
 			inputProps: {},
-			allowCreate: false,
 
 			onOptionLabelClick: undefined
 		};
@@ -95,7 +92,11 @@ var Select = React.createClass({
 	componentWillMount: function() {
 		this._optionsCache = {};
 		this._optionsFilterString = '';
+		this.setState(this.getStateFromValue(this.props.value));
 
+		if (this.props.asyncOptions && this.props.autoload) {
+			this.autoloadAsyncOptions();
+		}
 
 		var self = this;
 		this._closeMenuIfClickedOutside = function(event) {
@@ -117,27 +118,12 @@ var Select = React.createClass({
 		};
 
 		this._bindCloseMenuIfClickedOutside = function() {
-			if (!document.addEventListener && document.attachEvent) {
-				document.attachEvent('onclick', this._closeMenuIfClickedOutside);
-			} else {
-				document.addEventListener('click', this._closeMenuIfClickedOutside);
-			}
+			document.addEventListener('click', self._closeMenuIfClickedOutside);
 		};
 
 		this._unbindCloseMenuIfClickedOutside = function() {
-			if (!document.removeEventListener && document.detachEvent) {
-				document.detachEvent('onclick', this._closeMenuIfClickedOutside);
-			} else {
-				document.removeEventListener('click', this._closeMenuIfClickedOutside);
-			}
+			document.removeEventListener('click', self._closeMenuIfClickedOutside);
 		};
-    
-		this.setState(this.getStateFromValue(this.props.value),function(){
-		  //Executes after state change is done. Fixes issue #201
-		  if (this.props.asyncOptions && this.props.autoload) {
-				this.autoloadAsyncOptions();
-			}
-    });
 	},
 
 	componentWillUnmount: function() {
@@ -378,8 +364,6 @@ var Select = React.createClass({
 			break;
 
 			case 13: // enter
-				if (!this.state.isOpen) return
-				
 				this.selectFocusedOption();
 			break;
 
@@ -397,14 +381,6 @@ var Select = React.createClass({
 
 			case 40: // down
 				this.focusNextOption();
-			break;
-
-			case 188: // ,
-				if (this.props.allowCreate) {
-					event.preventDefault();
-					event.stopPropagation();
-					this.selectFocusedOption();
-				};
 			break;
 
 			default: return;
@@ -477,7 +453,7 @@ var Select = React.createClass({
 					}
 				}
 				this.setState(newState);
-				if(callback) callback.call(this, {});
+				if(callback) callback({});
 				return;
 			}
 		}
@@ -506,7 +482,7 @@ var Select = React.createClass({
 			}
 			self.setState(newState);
 
-			if(callback) callback.call(self, {});
+			if(callback) callback({});
 
 		});
 	},
@@ -527,17 +503,12 @@ var Select = React.createClass({
 				if (this.props.multi && exclude.indexOf(op.value) > -1) return false;
 				if (this.props.filterOption) return this.props.filterOption.call(this, op, filterValue);
 				var valueTest = String(op.value), labelTest = String(op.label);
-				if (this.props.ignoreCase) {
-					valueTest = valueTest.toLowerCase();
-					labelTest = labelTest.toLowerCase();
-					filterValue = filterValue.toLowerCase();
-				}
 				return !filterValue || (this.props.matchPos === 'start') ? (
-					(this.props.matchProp !== 'label' && valueTest.substr(0, filterValue.length) === filterValue) ||
-					(this.props.matchProp !== 'value' && labelTest.substr(0, filterValue.length) === filterValue)
+					(this.props.matchProp !== 'label' && valueTest.toLowerCase().substr(0, filterValue.length) === filterValue) ||
+					(this.props.matchProp !== 'value' && labelTest.toLowerCase().substr(0, filterValue.length) === filterValue)
 				) : (
-					(this.props.matchProp !== 'label' && valueTest.indexOf(filterValue) >= 0) ||
-					(this.props.matchProp !== 'value' && labelTest.indexOf(filterValue) >= 0)
+					(this.props.matchProp !== 'label' && valueTest.toLowerCase().indexOf(filterValue.toLowerCase()) >= 0) ||
+					(this.props.matchProp !== 'value' && labelTest.toLowerCase().indexOf(filterValue.toLowerCase()) >= 0)
 				);
 			};
 			return (options || []).filter(filterOption, this);
@@ -545,9 +516,6 @@ var Select = React.createClass({
 	},
 
 	selectFocusedOption: function() {
-		if (this.props.allowCreate && !this.state.focusedOption) {
-			return this.selectValue(this.state.inputValue);
-		};
 		return this.selectValue(this.state.focusedOption);
 	},
 
@@ -624,15 +592,6 @@ var Select = React.createClass({
 		if(this.state.filteredOptions.length > 0) {
 			focusedValue = focusedValue == null ? this.state.filteredOptions[0] : focusedValue;
 		}
-		// Add the current value to the filtered options in last resort
-		if (this.props.allowCreate && this.state.inputValue.trim()) {
-			var inputValue = this.state.inputValue;
-			this.state.filteredOptions.unshift({
-				value: inputValue,
-				label: inputValue,
-				create: true
-			});
-		};
 
 		var ops = Object.keys(this.state.filteredOptions).map(function(key) {
 			var op = this.state.filteredOptions[key];
@@ -653,7 +612,7 @@ var Select = React.createClass({
 			if (op.disabled) {
 				return <div ref={ref} key={'option-' + op.value} className={optionClass}>{op.label}</div>;
 			} else {
-				return <div ref={ref} key={'option-' + op.value} className={optionClass} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave} onMouseDown={mouseDown} onClick={mouseDown}>{ op.create ? "Add "+op.label+" ?" : op.label}</div>;
+				return <div ref={ref} key={'option-' + op.value} className={optionClass} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave} onMouseDown={mouseDown} onClick={mouseDown}>{op.label}</div>;
 			}
 		}, this);
 
