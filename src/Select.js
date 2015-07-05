@@ -17,7 +17,6 @@ var Select = React.createClass({
 		allowCreate: React.PropTypes.bool,         // wether to allow creation of new entries
 		asyncOptions: React.PropTypes.func,        // function to call to get options
 		autoload: React.PropTypes.bool,            // whether to auto-load the default async options set
-		backspaceRemoves: React.PropTypes.bool,    // whether backspace removes an item if there is no text input
 		className: React.PropTypes.string,         // className for the outer element
 		clearable: React.PropTypes.bool,           // should it be possible to reset value
 		clearAllText: React.PropTypes.string,      // title for the "clear" control when multi: true
@@ -51,7 +50,6 @@ var Select = React.createClass({
 			allowCreate: false,
 			asyncOptions: undefined,
 			autoload: true,
-			backspaceRemoves: true,
 			className: undefined,
 			clearable: true,
 			clearAllText: 'Clear all',
@@ -131,13 +129,12 @@ var Select = React.createClass({
 				document.removeEventListener('click', this._closeMenuIfClickedOutside);
 			}
 		};
+	},
 
-		this.setState(this.getStateFromValue(this.props.value), function(){
-			//Executes after state change is done. Fixes issue #201
-			if (this.props.asyncOptions && this.props.autoload) {
-				this.autoloadAsyncOptions();
-			}
-    });
+	componentDidMount: function() {
+		if (this.props.asyncOptions && this.props.autoload) {
+			this.autoloadAsyncOptions();
+		}
 	},
 
 	componentWillUnmount: function() {
@@ -385,7 +382,7 @@ var Select = React.createClass({
 		switch (event.keyCode) {
 
 			case 8: // backspace
-				if (!this.state.inputValue && this.props.backspaceRemoves) {
+				if (!this.state.inputValue) {
 					this.popValue();
 				}
 			return;
