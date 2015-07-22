@@ -2,4 +2,3 @@ lib/*
 dist/*
 examples/dist/*
 node_modules/*
-bower_components/*
