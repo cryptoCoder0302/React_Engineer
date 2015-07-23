@@ -17,6 +17,7 @@ var Select = React.createClass({
 		allowCreate: React.PropTypes.bool,         // wether to allow creation of new entries
 		asyncOptions: React.PropTypes.func,        // function to call to get options
 		autoload: React.PropTypes.bool,            // whether to auto-load the default async options set
+		backspaceRemoves: React.PropTypes.bool,    // whether backspace removes an item if there is no text input
 		className: React.PropTypes.string,         // className for the outer element
 		clearable: React.PropTypes.bool,           // should it be possible to reset value
 		clearAllText: React.PropTypes.string,      // title for the "clear" control when multi: true
@@ -51,6 +52,7 @@ var Select = React.createClass({
 			allowCreate: false,
 			asyncOptions: undefined,
 			autoload: true,
+			backspaceRemoves: true,
 			className: undefined,
 			clearable: true,
 			clearAllText: 'Clear all',
@@ -388,7 +390,7 @@ var Select = React.createClass({
 		switch (event.keyCode) {
 
 			case 8: // backspace
-				if (!this.state.inputValue) {
+				if (!this.state.inputValue && this.props.backspaceRemoves) {
 					this.popValue();
 				}
 			return;
@@ -551,6 +553,7 @@ var Select = React.createClass({
 			var filterOption = function(op) {
 				if (this.props.multi && exclude.indexOf(op.value) > -1) return false;
 				if (this.props.filterOption) return this.props.filterOption.call(this, op, filterValue);
+				if (filterValue && op.disabled) return false;
 				var valueTest = String(op.value), labelTest = String(op.label);
 				if (this.props.ignoreCase) {
 					valueTest = valueTest.toLowerCase();
@@ -593,7 +596,9 @@ var Select = React.createClass({
 	focusAdjacentOption: function(dir) {
 		this._focusedOptionReveal = true;
 
-		var ops = this.state.filteredOptions;
+		var ops = this.state.filteredOptions.filter(function(op) {
+			return !op.disabled;
+		});
 
 		if (!this.state.isOpen) {
 			this.setState({
@@ -729,8 +734,19 @@ var Select = React.createClass({
 			}, this);
 		}
 
-		if (!this.state.inputValue && (!this.props.multi || !value.length)) {
-			value.push(<div className="Select-placeholder" key="placeholder">{this.state.placeholder}</div>);
+		if(!this.state.inputValue && (!this.props.multi || !value.length)) {
+			if(this.props.valueRenderer && !!this.state.values.length) {
+				var val = this.state.values[0] || null;
+				console.log('select-value', this.state.values);
+				value.push(<Value
+						key={0}
+						option={val}
+						renderer={this.props.valueRenderer}
+						disabled={this.props.disabled} />);
+			} else {
+				value.push(<div className="Select-placeholder" key="placeholder">{this.state.placeholder}</div>);
+			}
+			
 		}
 
 		var loading = this.state.isLoading ? <span className="Select-loading" aria-hidden="true" /> : null;

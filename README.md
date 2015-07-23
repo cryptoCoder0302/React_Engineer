@@ -143,9 +143,11 @@ For multi-select inputs, when providing a custom `filterOptions` method, remembe
 	Property			|	Type		|	Description
 :-----------------------|:--------------|:--------------------------------
 	value 				|	any			|	 initial field value
+	valueRenderer		|	func		|	 function which returns a custom way to render the value selected
 	multi 				|	bool		|	 multi-value input
 	disabled 			|	bool		|	 whether the Select is disabled or not
 	options 			|	array		|	 array of options
+	optionRenderer		|	func		|	 function which returns a custom way to render the options in the menu
 	delimiter 			|	string		|	 delimiter to use to join multiple values
 	asyncOptions 		|	func		|	 function to call to get options
 	autoload 			|	bool		|	 whether to auto-load the default async options set
@@ -167,6 +169,7 @@ For multi-select inputs, when providing a custom `filterOptions` method, remembe
 	matchProp 			|	string		|	 (any, label, value) which option property to filter on
 	ignoreCase 			|	bool		|	 whether to perform case-insensitive filtering
 	inputProps 			|	object		|	 custom attributes for the Input (in the Select-control) e.g: {'data-foo': 'bar'}
+	backspaceRemoves 		|	bool		|	 whether pressing backspace removes the last item when there is no input value
 
 
 # Contributing
