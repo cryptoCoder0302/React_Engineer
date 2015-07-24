@@ -157,8 +157,8 @@ var Select = React.createClass({
 				filteredOptions: this.filterOptions(newProps.options)
 			});
 		}
-		if (newProps.value !== this.state.value || newProps.placeholder !== this.state.placeholder) {
-			this.setState(this.getStateFromValue(newProps.value, newProps.options, newProps.placeholder));
+		if (newProps.value !== this.state.value) {
+			this.setState(this.getStateFromValue(newProps.value, newProps.options));
 		}
 	},
 
@@ -201,12 +201,9 @@ var Select = React.createClass({
 		return true;
 	},
 
-	getStateFromValue: function(value, options, placeholder) {
+	getStateFromValue: function(value, options) {
 		if (!options) {
 			options = this.state.options;
-		}
-		if (!placeholder) {
-			placeholder = this.props.placeholder;
 		}
 
 		// reset internal filter string
@@ -220,7 +217,7 @@ var Select = React.createClass({
 			values: values,
 			inputValue: '',
 			filteredOptions: filteredOptions,
-			placeholder: !this.props.multi && values.length ? values[0].label : placeholder,
+			placeholder: !this.props.multi && values.length ? values[0].label : this.props.placeholder,
 			focusedOption: !this.props.multi && values.length ? values[0] : filteredOptions[0]
 		};
 	},
@@ -408,7 +405,7 @@ var Select = React.createClass({
 				if (this.state.isOpen) {
 					this.resetValue();
 				} else {
-					this.clearValue();
+					this.clearValue(event);
 				}
 			break;
 
