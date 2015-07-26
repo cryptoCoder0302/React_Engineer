@@ -157,8 +157,8 @@ var Select = React.createClass({
 				filteredOptions: this.filterOptions(newProps.options)
 			});
 		}
-		if (newProps.value !== this.state.value) {
-			this.setState(this.getStateFromValue(newProps.value, newProps.options));
+		if (newProps.value !== this.state.value || newProps.placeholder !== this.state.placeholder) {
+			this.setState(this.getStateFromValue(newProps.value, newProps.options, newProps.placeholder));
 		}
 	},
 
@@ -201,9 +201,12 @@ var Select = React.createClass({
 		return true;
 	},
 
-	getStateFromValue: function(value, options) {
+	getStateFromValue: function(value, options, placeholder) {
 		if (!options) {
 			options = this.state.options;
+		}
+		if (!placeholder) {
+			placeholder = this.props.placeholder;
 		}
 
 		// reset internal filter string
@@ -217,7 +220,7 @@ var Select = React.createClass({
 			values: values,
 			inputValue: '',
 			filteredOptions: filteredOptions,
-			placeholder: !this.props.multi && values.length ? values[0].label : this.props.placeholder,
+			placeholder: !this.props.multi && values.length ? values[0].label : placeholder,
 			focusedOption: !this.props.multi && values.length ? values[0] : filteredOptions[0]
 		};
 	},
@@ -418,7 +421,7 @@ var Select = React.createClass({
 			break;
 
 			case 188: // ,
-				if (this.props.allowCreate) {
+				if (this.props.allowCreate && this.props.multi) {
 					event.preventDefault();
 					event.stopPropagation();
 					this.selectFocusedOption();
@@ -648,17 +651,19 @@ var Select = React.createClass({
 			focusedValue = focusedValue == null ? this.state.filteredOptions[0] : focusedValue;
 		}
 		// Add the current value to the filtered options in last resort
+		var options = this.state.filteredOptions;
 		if (this.props.allowCreate && this.state.inputValue.trim()) {
 			var inputValue = this.state.inputValue;
-			this.state.filteredOptions.unshift({
+			options = options.slice();
+			options.unshift({
 				value: inputValue,
 				label: inputValue,
 				create: true
 			});
 		}
 
-		var ops = Object.keys(this.state.filteredOptions).map(function(key) {
-			var op = this.state.filteredOptions[key];
+		var ops = Object.keys(options).map(function(key) {
+			var op = options[key];
 			var isSelected = this.state.value === op.value;
 			var isFocused = focusedValue === op.value;
 
