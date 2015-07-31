@@ -575,6 +575,7 @@ var Select = React.createClass({
 			var filterOption = function(op) {
 				if (this.props.multi && exclude.indexOf(op.value) > -1) return false;
 				if (this.props.filterOption) return this.props.filterOption.call(this, op, filterValue);
+				if (filterValue && op.disabled) return false;
 				var valueTest = String(op.value), labelTest = String(op.label);
 				if (this.props.ignoreCase) {
 					valueTest = valueTest.toLowerCase();
@@ -617,7 +618,9 @@ var Select = React.createClass({
 	focusAdjacentOption: function(dir) {
 		this._focusedOptionReveal = true;
 
-		var ops = this.state.filteredOptions;
+		var ops = this.state.filteredOptions.filter(function(op) {
+			return !op.disabled;
+		});
 
 		if (!this.state.isOpen) {
 			this.setState({
