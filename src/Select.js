@@ -161,7 +161,7 @@ var Select = React.createClass({
 				filteredOptions: this.filterOptions(newProps.options)
 			});
 		}
-		if (newProps.value !== this.state.value || newProps.placeholder !== this.props.placeholder || optionsChanged) {
+		if (newProps.value !== this.state.value || newProps.placeholder !== this.state.placeholder || optionsChanged) {
 			this.setState(this.getStateFromValue(newProps.value, newProps.options, newProps.placeholder));
 		}
 	},
@@ -734,7 +734,6 @@ var Select = React.createClass({
 		if(!this.state.inputValue && (!this.props.multi || !value.length)) {
 			if(this.props.valueRenderer && !!this.state.values.length) {
 				var val = this.state.values[0] || null;
-				console.log('select-value', this.state.values);
 				value.push(<Value
 						key={0}
 						option={val}
