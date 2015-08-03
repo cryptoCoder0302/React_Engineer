@@ -230,10 +230,8 @@ var Select = React.createClass({
 			filteredOptions = this.filterOptions(options, values);
 
 		var focusedOption;
-		var valueForState = null;
 		if (!this.props.multi && values.length) {
 			focusedOption = values[0];
-			valueForState = values[0].value;
 		} else {
 			for(var optionIndex = 0; optionIndex < filteredOptions.length; ++optionIndex) {
 				if (!filteredOptions[optionIndex].disabled) {
@@ -241,11 +239,10 @@ var Select = React.createClass({
 					break;
 				}
 			}
-			valueForState = values.map(function(v) { return v.value; }).join(this.props.delimiter);
 		}
 
 		return {
-			value: valueForState,
+			value: values.map(function(v) { return v.value; }).join(this.props.delimiter),
 			values: values,
 			inputValue: '',
 			filteredOptions: filteredOptions,
@@ -255,24 +252,18 @@ var Select = React.createClass({
 	},
 
 	initValuesArray: function(values, options) {
-
 		if (!Array.isArray(values)) {
 			if (typeof values === 'string') {
 				values = values === '' ? [] : values.split(this.props.delimiter);
 			} else {
-				values = values !== undefined && values !== null ? [values] : [];
+				values = values ? [values] : [];
 			}
 		}
 
 		return values.map(function(val) {
-			if (typeof val === 'string' || typeof val === 'number') {
+			if (typeof val === 'string') {
 				for (var key in options) {
-					if (options.hasOwnProperty(key) &&
-						options[key] &&
-						(options[key].value === val ||
-							typeof options[key].value === 'number' &&
-							options[key].value.toString() === val
-						)) {
+					if (options.hasOwnProperty(key) && options[key] && options[key].value === val) {
 						return options[key];
 					}
 				}
@@ -581,7 +572,6 @@ var Select = React.createClass({
 			var filterOption = function(op) {
 				if (this.props.multi && exclude.indexOf(op.value) > -1) return false;
 				if (this.props.filterOption) return this.props.filterOption.call(this, op, filterValue);
-				if (filterValue && op.disabled) return false;
 				var valueTest = String(op.value), labelTest = String(op.label);
 				if (this.props.ignoreCase) {
 					valueTest = valueTest.toLowerCase();
