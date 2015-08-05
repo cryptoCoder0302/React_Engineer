@@ -4,7 +4,7 @@
 
 var babel = require('babel');
 
-module.exports = function (wallaby) { // eslint-disable-line no-unused-vars
+module.exports = function (wallaby) {
 	return {
 		files: ['src/*.js', 'testHelpers/*.js'],
 		tests: ['test/*-test.js' ],
@@ -13,7 +13,7 @@ module.exports = function (wallaby) { // eslint-disable-line no-unused-vars
 			runner: 'node'
 		},
 		preprocessors: {
-			'**/*.js': file => babel.transform(file.content, { sourceMap: true })
+			'**/*.js': file => babel.transform(file.content, {sourceMap: true})
 		}
 	};
 };

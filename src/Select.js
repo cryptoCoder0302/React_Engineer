@@ -228,7 +228,7 @@ var Select = React.createClass({
 
 		var values = this.initValuesArray(value, options),
 			filteredOptions = this.filterOptions(options, values);
-
+		
 		var focusedOption;
 		if (!this.props.multi && values.length) {
 			focusedOption = values[0];
@@ -247,7 +247,7 @@ var Select = React.createClass({
 			inputValue: '',
 			filteredOptions: filteredOptions,
 			placeholder: !this.props.multi && values.length ? values[0].label : placeholder,
-			focusedOption: focusedOption
+			focusedOption: focusedOption,
 		};
 	},
 
@@ -397,8 +397,7 @@ var Select = React.createClass({
 			if (self._focusAfterUpdate) return;
 
 			self.setState({
-				isFocused: false,
-				isOpen: false
+				isFocused: false
 			});
 		}, 50);
 
@@ -562,6 +561,10 @@ var Select = React.createClass({
 	},
 
 	filterOptions: function(options, values) {
+		if (!this.props.searchable) {
+			return options;
+		}
+
 		var filterValue = this._optionsFilterString;
 		var exclude = (values || this.state.values).map(function(i) {
 			return i.value;
