@@ -48,7 +48,9 @@ You can also use the standalone build by including `dist/select.js` and `dist/de
 
 React-Select generates a hidden text field containing the selected value, so you can submit it as part of a standard form. You can also listen for changes with the `onChange` event property.
 
-Options should be provided as an `Array` of `Object`s, each with a `value` and `label` property for rendering and searching.
+Options should be provided as an `Array` of `Object`s, each with a `value` and `label` property for rendering and searching. You can use a `disabled` property to indicate whether the option is disabled or not.
+
+The `value` property of each option should be set to either a string or a number.
 
 When the value is changed, `onChange(newValue, [selectedOptions])` will fire.
 
@@ -80,6 +82,7 @@ You can enable multi-value selection by setting `multi={true}`. In this mode:
 * The values of the selected items are joined using the `delimiter` property to create the input value
 * A simple value, if provided, will be split using the `delimiter` property
 * The `onChange` event provides an array of the selected options as the second argument
+* The first argument to `onChange` is always a string, regardless of whether the values of the selected options are numbers or strings
 
 ### Async options
 
@@ -89,7 +92,7 @@ The function takes two arguments `String input, Function callback`and will be ca
 
 When your async process finishes getting the options, pass them to `callback(err, data)` in a Object `{ options: [] }`.
 
-The select control will intelligently cache options for input strings that have already been fetched. Cache can be disabled by setting `allowCache` to `false` (Note that `complete: true` will then have no effect). Async options will still be filtered like the normal options array, so if your async process would only return a smaller set of results for a more specific query, also pass `complete: true` in the callback object.
+The select control will intelligently cache options for input strings that have already been fetched. Async options will still be filtered like the normal options array, so if your async process would only return a smaller set of results for a more specific query, also pass `complete: true` in the callback object.
 
 Unless you specify the property `autoload={false}` the control will automatically load the default set of options (i.e. for `input: ''`) when it is mounted.
 
@@ -170,7 +173,6 @@ For multi-select inputs, when providing a custom `filterOptions` method, remembe
 	ignoreCase 			|	bool		|	 whether to perform case-insensitive filtering
 	inputProps 			|	object		|	 custom attributes for the Input (in the Select-control) e.g: {'data-foo': 'bar'}
 	backspaceRemoves 		|	bool		|	 whether pressing backspace removes the last item when there is no input value
-	allowCache 				|	bool			|	 whether to allow caching of options
 
 
 # Contributing
