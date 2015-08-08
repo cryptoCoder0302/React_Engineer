@@ -16,7 +16,8 @@ var Select = React.createClass({
 	displayName: 'Select',
 
 	propTypes: {
-		allowCreate: React.PropTypes.bool,         // wether to allow creation of new entries
+		addLabelText: React.PropTypes.string,      // placeholder displayed when you want to add a label on a multi-value input
+		allowCreate: React.PropTypes.bool,         // whether to allow creation of new entries
 		asyncOptions: React.PropTypes.func,        // function to call to get options
 		autoload: React.PropTypes.bool,            // whether to auto-load the default async options set
 		backspaceRemoves: React.PropTypes.bool,    // whether backspace removes an item if there is no text input
@@ -25,6 +26,7 @@ var Select = React.createClass({
 		clearAllText: React.PropTypes.string,      // title for the "clear" control when multi: true
 		clearValueText: React.PropTypes.string,    // title for the "clear" control
 		delimiter: React.PropTypes.string,         // delimiter to use to join multiple values
+		disableCache: React.PropTypes.bool,          // whether to allow cache
 		disabled: React.PropTypes.bool,            // whether the Select is disabled or not
 		filterOption: React.PropTypes.func,        // method to filter a single option: function(option, filterString)
 		filterOptions: React.PropTypes.func,       // method to filter the options array: function([options], filterString, [values])
@@ -34,27 +36,27 @@ var Select = React.createClass({
 		matchProp: React.PropTypes.string,         // (any|label|value) which option property to filter on
 		multi: React.PropTypes.bool,               // multi-value input
 		name: React.PropTypes.string,              // field name, for hidden <input /> tag
-		addLabelText: React.PropTypes.string,      // placeholder displayed when you want to add a label on a multi-value input
+		newOptionCreator: React.PropTypes.func,    // factory to create new options when allowCreate set
 		noResultsText: React.PropTypes.string,     // placeholder displayed when there are no matching search results
 		onBlur: React.PropTypes.func,              // onBlur handler: function(event) {}
 		onChange: React.PropTypes.func,            // onChange handler: function(newValue) {}
 		onFocus: React.PropTypes.func,             // onFocus handler: function(event) {}
 		onOptionLabelClick: React.PropTypes.func,  // onCLick handler for value labels: function (value, event) {}
+		optionComponent: React.PropTypes.func,     // option component to render in dropdown
 		optionRenderer: React.PropTypes.func,      // optionRenderer: function(option) {}
 		options: React.PropTypes.array,            // array of options
 		placeholder: React.PropTypes.string,       // field placeholder, displayed when there's no value
 		searchable: React.PropTypes.bool,          // whether to enable searching feature or not
 		searchPromptText: React.PropTypes.string,  // label to prompt for search input
-		value: React.PropTypes.any,                // initial field value
-		valueRenderer: React.PropTypes.func,       // valueRenderer: function(option) {}
-		optionComponent: React.PropTypes.func,     // option component to render in dropdown
-		valueComponent: React.PropTypes.func,      // value component to render in multiple mode
 		singleValueComponent: React.PropTypes.func,// single value component when multiple is set to false
-		newOptionCreator: React.PropTypes.func     // factory to create new options when allowCreate set
+		value: React.PropTypes.any,                // initial field value
+		valueComponent: React.PropTypes.func,      // value component to render in multiple mode
+		valueRenderer: React.PropTypes.func        // valueRenderer: function(option) {}
 	},
 
 	getDefaultProps: function() {
 		return {
+			addLabelText: 'Add {label} ?',
 			allowCreate: false,
 			asyncOptions: undefined,
 			autoload: true,
@@ -64,25 +66,25 @@ var Select = React.createClass({
 			clearAllText: 'Clear all',
 			clearValueText: 'Clear value',
 			delimiter: ',',
+			disableCache: false,
 			disabled: false,
 			ignoreCase: true,
 			inputProps: {},
 			matchPos: 'any',
 			matchProp: 'any',
 			name: undefined,
-			addLabelText: 'Add {label} ?',
+			newOptionCreator: undefined,
 			noResultsText: 'No results found',
 			onChange: undefined,
 			onOptionLabelClick: undefined,
+			optionComponent: Option,
 			options: undefined,
 			placeholder: 'Select...',
 			searchable: true,
 			searchPromptText: 'Type to search',
-			value: undefined,
-			optionComponent: Option,
-			valueComponent: Value,
 			singleValueComponent: SingleValue,
-			newOptionCreator: undefined
+			value: undefined,
+			valueComponent: Value
 		};
 	},
 
@@ -495,30 +497,34 @@ var Select = React.createClass({
 
 	loadAsyncOptions: function(input, state, callback) {
 		var thisRequestId = this._currentRequestId = requestId++;
-		for (var i = 0; i <= input.length; i++) {
-			var cacheKey = input.slice(0, i);
-			if (this._optionsCache[cacheKey] && (input === cacheKey || this._optionsCache[cacheKey].complete)) {
-				var options = this._optionsCache[cacheKey].options;
-				var filteredOptions = this.filterOptions(options);
-				var newState = {
-					options: options,
-					filteredOptions: filteredOptions,
-					focusedOption: this._getNewFocusedOption(filteredOptions)
-				};
-				for (var key in state) {
-					if (state.hasOwnProperty(key)) {
-						newState[key] = state[key];
+		if (!this.props.disableCache) {
+			for (var i = 0; i <= input.length; i++) {
+				var cacheKey = input.slice(0, i);
+				if (this._optionsCache[cacheKey] && (input === cacheKey || this._optionsCache[cacheKey].complete)) {
+					var options = this._optionsCache[cacheKey].options;
+					var filteredOptions = this.filterOptions(options);
+					var newState = {
+						options: options,
+						filteredOptions: filteredOptions,
+						focusedOption: this._getNewFocusedOption(filteredOptions)
+					};
+					for (var key in state) {
+						if (state.hasOwnProperty(key)) {
+							newState[key] = state[key];
+						}
 					}
+					this.setState(newState);
+					if (callback) callback.call(this, {});
+					return;
 				}
-				this.setState(newState);
-				if(callback) callback.call(this, {});
-				return;
 			}
 		}
 
 		this.props.asyncOptions(input, (err, data) => {
 			if (err) throw err;
-			this._optionsCache[input] = data;
+			if (!this.props.disableCache) {
+				this._optionsCache[input] = data;
+			}
 			if (thisRequestId !== this._currentRequestId) {
 				return;
 			}
