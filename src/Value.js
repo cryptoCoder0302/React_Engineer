@@ -1,5 +1,4 @@
 var React = require('react');
-var classes = require('classnames');
 
 var Value = React.createClass({
 
@@ -31,33 +30,22 @@ var Value = React.createClass({
 		}
 
 		if(!this.props.onRemove && !this.props.optionLabelClick) {
-			return (
-				<div
-					className={classes('Select-value', this.props.option.className)}
-					style={this.props.option.style}
-					title={this.props.option.title}
-				>{label}</div>
-			);
+			return <div className="Select-value">{label}</div>;
 		}
 
 		if (this.props.optionLabelClick) {
-
 			label = (
-				<a className={classes('Select-item-label__a', this.props.option.className)}
+				<a className="Select-item-label__a"
 					onMouseDown={this.blockEvent}
 					onTouchEnd={this.props.onOptionLabelClick}
-					onClick={this.props.onOptionLabelClick}
-					style={this.props.option.style}
-					title={this.props.option.title}>
+					onClick={this.props.onOptionLabelClick}>
 					{label}
 				</a>
 			);
 		}
 
 		return (
-			<div className={classes('Select-item', this.props.option.className)}
-				 style={this.props.option.style}
-				 title={this.props.option.title}>
+			<div className="Select-item">
 				<span className="Select-item-icon"
 					onMouseDown={this.blockEvent}
 					onClick={this.handleOnRemove}
