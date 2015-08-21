@@ -1,7 +1,8 @@
 'use strict';
 /* global describe, it, beforeEach */
 
-var jsdomHelper = require('../testHelpers/jsdomHelper');
+var helper = require('../testHelpers/jsdomHelper');
+helper();
 
 var sinon = require('sinon');
 var unexpected = require('unexpected');
@@ -11,8 +12,6 @@ var expect = unexpected
 	.clone()
 	.installPlugin(unexpectedDom)
 	.installPlugin(unexpectedSinon);
-
-jsdomHelper();
 
 var React = require('react/addons');
 var TestUtils = React.addons.TestUtils;
@@ -894,45 +893,6 @@ describe('Select', function() {
 			expect(onChange, 'was not called');
 			expect(React.findDOMNode(instance), 'queried for first', DISPLAYED_SELECTION_SELECTOR,
 				'to have text', 'Select...');
-		});
-
-		it("doesn't select anything when a disabled option is the only item in the list after a search", function () {
-
-			typeSearchText('tw'); // Only 'two' in the list
-			pressEnterToAccept();
-			expect(onChange, 'was not called');
-			// And the menu is still open
-			expect(React.findDOMNode(instance), 'to contain no elements matching', DISPLAYED_SELECTION_SELECTOR)
-			expect(React.findDOMNode(instance), 'queried for' , '.Select-option',
-				'to satisfy', [
-					expect.it('to have text', 'Two')
-				]);
-		});
-
-		it("doesn't select anything when a disabled option value matches the entered text", function () {
-
-			typeSearchText('two');  // Matches value
-			pressEnterToAccept();
-			expect(onChange, 'was not called');
-			// And the menu is still open
-			expect(React.findDOMNode(instance), 'to contain no elements matching', DISPLAYED_SELECTION_SELECTOR)
-			expect(React.findDOMNode(instance), 'queried for' , '.Select-option',
-				'to satisfy', [
-					expect.it('to have text', 'Two')
-				]);
-		});
-
-		it("doesn't select anything when a disabled option label matches the entered text", function () {
-
-			typeSearchText('Two');  // Matches label
-			pressEnterToAccept();
-			expect(onChange, 'was not called');
-			// And the menu is still open
-			expect(React.findDOMNode(instance), 'to contain no elements matching', DISPLAYED_SELECTION_SELECTOR)
-			expect(React.findDOMNode(instance), 'queried for' , '.Select-option',
-				'to satisfy', [
-					expect.it('to have text', 'Two')
-				]);
 		});
 
 		it('shows disabled results in a search', function () {
