@@ -193,9 +193,7 @@
   color: #cccccc;
   cursor: not-allowed;
 }
-.Select-noresults,
-.Select-search-prompt,
-.Select-searching {
+.Select-noresults {
   box-sizing: border-box;
   color: #999999;
   cursor: default;
