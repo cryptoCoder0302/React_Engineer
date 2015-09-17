@@ -41,6 +41,7 @@ var Select = React.createClass({
 		onBlur: React.PropTypes.func,              // onBlur handler: function(event) {}
 		onChange: React.PropTypes.func,            // onChange handler: function(newValue) {}
 		onFocus: React.PropTypes.func,             // onFocus handler: function(event) {}
+		onInputChange: React.PropTypes.func,       // onInputChange handler: function(inputValue) {}
 		onOptionLabelClick: React.PropTypes.func,  // onCLick handler for value labels: function (value, event) {}
 		optionComponent: React.PropTypes.func,     // option component to render in dropdown
 		optionRenderer: React.PropTypes.func,      // optionRenderer: function(option) {}
@@ -77,6 +78,7 @@ var Select = React.createClass({
 			newOptionCreator: undefined,
 			noResultsText: 'No results found',
 			onChange: undefined,
+			onInputChange: undefined,
 			onOptionLabelClick: undefined,
 			optionComponent: Option,
 			options: undefined,
@@ -265,7 +267,11 @@ var Select = React.createClass({
 	initValuesArray: function(values, options) {
 		if (!Array.isArray(values)) {
 			if (typeof values === 'string') {
-				values = values === '' ? [] : values.split(this.props.delimiter);
+				values = values === ''
+					? []
+					: this.props.multi 
+						? values.split(this.props.delimiter)
+						: [ values ];
 			} else {
 				values = values !== undefined && values !== null ? [values] : [];
 			}
@@ -425,14 +431,13 @@ var Select = React.createClass({
 	},
 
 	handleKeyDown: function(event) {
-		event.preventDefault();
 		if (this.props.disabled) return;
 		switch (event.keyCode) {
 			case 8: // backspace
 				if (!this.state.inputValue && this.props.backspaceRemoves) {
 					this.popValue();
 				}
-			return;
+			break;
 			case 9: // tab
 				if (event.shiftKey || !this.state.isOpen || !this.state.focusedOption) {
 					return;
@@ -487,6 +492,10 @@ var Select = React.createClass({
 		// the latest value before setState() has completed.
 		this._optionsFilterString = event.target.value;
 
+		if (this.props.onInputChange) {
+			this.props.onInputChange(event.target.value);
+		}
+
 		if (this.props.asyncOptions) {
 			this.setState({
 				isLoading: true,
@@ -508,7 +517,10 @@ var Select = React.createClass({
 	},
 
 	autoloadAsyncOptions: function() {
-		this.loadAsyncOptions((this.props.value || ''), {}, () => {
+		this.setState({
+			isLoading: true
+		});
+		this.loadAsyncOptions((this.props.value || ''), { isLoading: false }, () => {
 			// update with fetched but don't focus
 			this.setValue(this.props.value, false);
 		});
@@ -787,7 +799,7 @@ var Select = React.createClass({
 		}
 
 		var loading = this.state.isLoading ? <span className="Select-loading" aria-hidden="true" /> : null;
-		var clear = this.props.clearable && this.state.value && !this.props.disabled ? <span className="Select-clear" title={this.props.multi ? this.props.clearAllText : this.props.clearValueText} aria-label={this.props.multi ? this.props.clearAllText : this.props.clearValueText} onMouseDown={this.clearValue} onClick={this.clearValue} dangerouslySetInnerHTML={{ __html: '&times;' }} /> : null;
+		var clear = this.props.clearable && this.state.value && !this.props.disabled ? <span className="Select-clear" title={this.props.multi ? this.props.clearAllText : this.props.clearValueText} aria-label={this.props.multi ? this.props.clearAllText : this.props.clearValueText} onMouseDown={this.clearValue} onTouchEnd={this.clearValue} onClick={this.clearValue} dangerouslySetInnerHTML={{ __html: '&times;' }} /> : null;
 
 		var menu;
 		var menuProps;
