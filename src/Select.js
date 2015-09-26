@@ -32,6 +32,7 @@ var Select = React.createClass({
 		filterOptions: React.PropTypes.func,       // method to filter the options array: function([options], filterString, [values])
 		ignoreCase: React.PropTypes.bool,          // whether to perform case-insensitive filtering
 		inputProps: React.PropTypes.object,        // custom attributes for the Input (in the Select-control) e.g: {'data-foo': 'bar'}
+		isLoading: React.PropTypes.bool,					 // whether the Select is loading or not (such as select options being loaded)
 		matchPos: React.PropTypes.string,          // (any|start) match the start or entire string when filtering
 		matchProp: React.PropTypes.string,         // (any|label|value) which option property to filter on
 		multi: React.PropTypes.bool,               // multi-value input
@@ -41,6 +42,7 @@ var Select = React.createClass({
 		onBlur: React.PropTypes.func,              // onBlur handler: function(event) {}
 		onChange: React.PropTypes.func,            // onChange handler: function(newValue) {}
 		onFocus: React.PropTypes.func,             // onFocus handler: function(event) {}
+		onInputChange: React.PropTypes.func,       // onInputChange handler: function(inputValue) {}
 		onOptionLabelClick: React.PropTypes.func,  // onCLick handler for value labels: function (value, event) {}
 		optionComponent: React.PropTypes.func,     // option component to render in dropdown
 		optionRenderer: React.PropTypes.func,      // optionRenderer: function(option) {}
@@ -71,12 +73,14 @@ var Select = React.createClass({
 			disabled: false,
 			ignoreCase: true,
 			inputProps: {},
+			isLoading: false,
 			matchPos: 'any',
 			matchProp: 'any',
 			name: undefined,
 			newOptionCreator: undefined,
 			noResultsText: 'No results found',
 			onChange: undefined,
+			onInputChange: undefined,
 			onOptionLabelClick: undefined,
 			optionComponent: Option,
 			options: undefined,
@@ -102,7 +106,7 @@ var Select = React.createClass({
 			 * - focusedOption
 			*/
 			isFocused: false,
-			isLoading: false,
+			isLoading: this.props.isLoading,
 			isOpen: false,
 			options: this.props.options
 		};
@@ -186,7 +190,6 @@ var Select = React.createClass({
 	componentDidUpdate: function() {
 		if (!this.props.disabled && this._focusAfterUpdate) {
 			clearTimeout(this._blurTimeout);
-			clearTimeout(this._focusTimeout);
 			this._focusTimeout = setTimeout(() => {
 				this.getInputNode().focus();
 				this._focusAfterUpdate = false;
@@ -266,7 +269,11 @@ var Select = React.createClass({
 	initValuesArray: function(values, options) {
 		if (!Array.isArray(values)) {
 			if (typeof values === 'string') {
-				values = values === '' ? [] : values.split(this.props.delimiter);
+				values = values === ''
+					? []
+					: this.props.multi
+						? values.split(this.props.delimiter)
+						: [ values ];
 			} else {
 				values = values !== undefined && values !== null ? [values] : [];
 			}
@@ -426,11 +433,11 @@ var Select = React.createClass({
 	},
 
 	handleKeyDown: function(event) {
-		event.preventDefault();
 		if (this.props.disabled) return;
 		switch (event.keyCode) {
 			case 8: // backspace
 				if (!this.state.inputValue && this.props.backspaceRemoves) {
+					event.preventDefault();
 					this.popValue();
 				}
 			return;
@@ -488,6 +495,10 @@ var Select = React.createClass({
 		// the latest value before setState() has completed.
 		this._optionsFilterString = event.target.value;
 
+		if (this.props.onInputChange) {
+			this.props.onInputChange(event.target.value);
+		}
+
 		if (this.props.asyncOptions) {
 			this.setState({
 				isLoading: true,
@@ -509,7 +520,10 @@ var Select = React.createClass({
 	},
 
 	autoloadAsyncOptions: function() {
-		this.loadAsyncOptions((this.props.value || ''), {}, () => {
+		this.setState({
+			isLoading: true
+		});
+		this.loadAsyncOptions((this.props.value || ''), { isLoading: false }, () => {
 			// update with fetched but don't focus
 			this.setValue(this.props.value, false);
 		});
@@ -788,7 +802,7 @@ var Select = React.createClass({
 		}
 
 		var loading = this.state.isLoading ? <span className="Select-loading" aria-hidden="true" /> : null;
-		var clear = this.props.clearable && this.state.value && !this.props.disabled ? <span className="Select-clear" title={this.props.multi ? this.props.clearAllText : this.props.clearValueText} aria-label={this.props.multi ? this.props.clearAllText : this.props.clearValueText} onMouseDown={this.clearValue} onClick={this.clearValue} dangerouslySetInnerHTML={{ __html: '&times;' }} /> : null;
+		var clear = this.props.clearable && this.state.value && !this.props.disabled ? <span className="Select-clear" title={this.props.multi ? this.props.clearAllText : this.props.clearValueText} aria-label={this.props.multi ? this.props.clearAllText : this.props.clearValueText} onMouseDown={this.clearValue} onTouchEnd={this.clearValue} onClick={this.clearValue} dangerouslySetInnerHTML={{ __html: '&times;' }} /> : null;
 
 		var menu;
 		var menuProps;
