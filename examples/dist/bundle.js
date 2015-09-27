@@ -212,7 +212,6 @@ var Select = React.createClass({
 		filterOptions: React.PropTypes.func, // method to filter the options array: function([options], filterString, [values])
 		ignoreCase: React.PropTypes.bool, // whether to perform case-insensitive filtering
 		inputProps: React.PropTypes.object, // custom attributes for the Input (in the Select-control) e.g: {'data-foo': 'bar'}
-		isLoading: React.PropTypes.bool, // whether the Select is loading externally or not (such as options being loaded)
 		matchPos: React.PropTypes.string, // (any|start) match the start or entire string when filtering
 		matchProp: React.PropTypes.string, // (any|label|value) which option property to filter on
 		multi: React.PropTypes.bool, // multi-value input
@@ -253,7 +252,6 @@ var Select = React.createClass({
 			disabled: false,
 			ignoreCase: true,
 			inputProps: {},
-			isLoading: false,
 			matchPos: 'any',
 			matchProp: 'any',
 			name: undefined,
@@ -914,7 +912,7 @@ var Select = React.createClass({
 			return ops;
 		} else {
 			var noResultsText, promptClass;
-			if (this.isLoading()) {
+			if (this.state.isLoading) {
 				promptClass = 'Select-searching';
 				noResultsText = this.props.searchingText;
 			} else if (this.state.inputValue || !this.props.asyncOptions) {
@@ -939,17 +937,13 @@ var Select = React.createClass({
 		}
 	},
 
-	isLoading: function isLoading() {
-		return this.props.isLoading || this.state.isLoading;
-	},
-
 	render: function render() {
 		var selectClass = classes('Select', this.props.className, {
 			'is-multi': this.props.multi,
 			'is-searchable': this.props.searchable,
 			'is-open': this.state.isOpen,
 			'is-focused': this.state.isFocused,
-			'is-loading': this.isLoading(),
+			'is-loading': this.state.isLoading,
 			'is-disabled': this.props.disabled,
 			'has-value': this.state.value
 		});
@@ -989,7 +983,7 @@ var Select = React.createClass({
 			}
 		}
 
-		var loading = this.isLoading() ? React.createElement('span', { className: 'Select-loading', 'aria-hidden': 'true' }) : null;
+		var loading = this.state.isLoading ? React.createElement('span', { className: 'Select-loading', 'aria-hidden': 'true' }) : null;
 		var clear = this.props.clearable && this.state.value && !this.props.disabled ? React.createElement('span', { className: 'Select-clear', title: this.props.multi ? this.props.clearAllText : this.props.clearValueText, 'aria-label': this.props.multi ? this.props.clearAllText : this.props.clearValueText, onMouseDown: this.clearValue, onTouchEnd: this.clearValue, onClick: this.clearValue, dangerouslySetInnerHTML: { __html: '&times;' } }) : null;
 
 		var menu;
