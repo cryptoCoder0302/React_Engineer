@@ -31,26 +31,26 @@ var Option = React.createClass({
 	},
 
 	render: function render() {
-		var option = this.props.option;
-		var label = option.create ? this.props.addLabelText.replace('{label}', option.label) : this.props.renderFunc(option);
-		var optionClasses = classes(this.props.className, option.className);
+		var obj = this.props.option;
+		var renderedLabel = this.props.renderFunc(obj);
+		var optionClasses = classes(this.props.className, obj.className);
 
-		return option.disabled ? React.createElement(
+		return obj.disabled ? React.createElement(
 			'div',
 			{ className: optionClasses,
 				onMouseDown: this.blockEvent,
 				onClick: this.blockEvent },
-			label
+			renderedLabel
 		) : React.createElement(
 			'div',
 			{ className: optionClasses,
-				style: option.style,
+				style: obj.style,
 				onMouseEnter: this.props.mouseEnter,
 				onMouseLeave: this.props.mouseLeave,
 				onMouseDown: this.props.mouseDown,
 				onClick: this.props.mouseDown,
-				title: option.title },
-			label
+				title: obj.title },
+			obj.create ? this.props.addLabelText.replace('{label}', obj.label) : renderedLabel
 		);
 	}
 });
@@ -617,11 +617,6 @@ var Select = React.createClass({
 
 	handleInputBlur: function handleInputBlur(event) {
 		var _this7 = this;
-
-		var menuDOM = ReactDOM.findDOMNode(this.refs.menu);
-		if (document.activeElement.isEqualNode(menuDOM)) {
-			return;
-		}
 
 		this._blurTimeout = setTimeout(function () {
 			if (_this7._focusAfterUpdate || !_this7.isMounted()) return;
