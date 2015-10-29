@@ -437,9 +437,15 @@ var Select = React.createClass({
 	},
 
 	handleInputBlur (event) {
+		var menuDOM = ReactDOM.findDOMNode(this.refs.menu);
+		if (document.activeElement.isEqualNode(menuDOM)) {
+			return;
+		}
+
 		this._blurTimeout = setTimeout(() => {
 			if (this._focusAfterUpdate || !this.isMounted()) return;
 			this.setState({
+				inputValue: '',
 				isFocused: false,
 				isOpen: false
 			});
@@ -744,7 +750,6 @@ var Select = React.createClass({
 				mouseDown: this.selectValue,
 				mouseEnter: this.focusOption,
 				mouseLeave: this.unfocusOption,
-				click: mouseDown,
 				addLabelText: this.props.addLabelText,
 				option: op,
 				ref: ref
