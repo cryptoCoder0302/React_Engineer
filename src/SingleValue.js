@@ -3,8 +3,8 @@ var classes = require('classnames');
 
 var SingleValue = React.createClass({
 	propTypes: {
-		placeholder: React.PropTypes.string,
-		value: React.PropTypes.object,
+		placeholder: React.PropTypes.string,       // this is default value provided by React-Select based component
+		value: React.PropTypes.object              // selected option
 	},
 	render () {
 		var classNames = classes('Select-placeholder', this.props.value && this.props.value.className);
