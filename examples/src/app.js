@@ -5,15 +5,15 @@ import ReactDOM from 'react-dom';
 import Select from 'react-select';
 
 import Contributors from './components/Contributors';
+import CustomComponents from './components/CustomComponents';
 import CustomKeysField from './components/CustomKeysField';
 import CustomRenderField from './components/CustomRenderField';
 import DisabledUpsellOptions from './components/DisabledUpsellOptions';
-import MultiSelectField from './components/MultiSelectField';
+import Multiselect from './components/Multiselect';
+import NumericSelect from './components/NumericSelect';
 import RemoteSelectField from './components/RemoteSelectField';
 import SelectedValuesField from './components/SelectedValuesField';
-import StatesField from './components/StatesField';
-import UsersField from './components/UsersField';
-import ValuesAsNumbersField from './components/ValuesAsNumbersField';
+import States from './components/States';
 
 var FLAVOURS = [
 	{ label: 'Chocolate', value: 'chocolate' },
@@ -31,11 +31,12 @@ function logChange() {
 
 ReactDOM.render(
 	<div>
-		<StatesField label="States" searchable />
-		<MultiSelectField label="Multiselect" />
-		<Contributors label="Contributors" hint="This example uses custom properties for the name and value of options, as well as async options loading" />
-		<UsersField label="Users (custom options/value)" hint="This example uses Gravatar to render user's image besides the value and the options" />
-		<ValuesAsNumbersField label="Values as numbers" />
+		<States label="States" searchable />
+		<Multiselect label="Multiselect" />
+		<Contributors label="Contributors" />
+		<NumericSelect label="Numeric Values" />
+		<CustomComponents label="Custom Option and Value Components" hint="This example uses Gravatar to render the user's image" />
+		{/*
 		<CustomKeysField label="Custom object keys for options" />
 		<SelectedValuesField label="Clickable labels (labels as links)" options={FLAVOURS} hint="Open the console to see click behaviour (data/event)" />
 		<SelectedValuesField label="Disabled option" options={FLAVOURS_WITH_DISABLED_OPTION} hint="You savage! Caramel is the best..." />
@@ -43,6 +44,7 @@ ReactDOM.render(
 		<SelectedValuesField label="Option Creation (tags mode)" options={FLAVOURS} allowCreate hint="Enter a value that's NOT in the list, then hit return" />
 		<CustomRenderField label="Custom render options/values" />
 		<RemoteSelectField label="Remote Options" hint='Type anything in the remote example to asynchronously load options. Valid alternative results are "A", "AA", and "AB"' />
+		*/}
 	</div>,
 	document.getElementById('example')
 );
