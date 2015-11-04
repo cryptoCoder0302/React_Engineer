@@ -2,7 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 
 const CONTRIBUTORS = require('../data/contributors');
-const MAX_CONTRIBUTORS = 6;
+const MAX_CONTRIBUTORS = 8;
 const ASYNC_DELAY = 500;
 
 const Contributors = React.createClass({
@@ -21,7 +21,7 @@ const Contributors = React.createClass({
 			value: value
 		});
 	},
-	getContributors (input, callback) {
+	getOptions (input, callback) {
 		input = input.toLowerCase();
 		var options = CONTRIBUTORS.filter(i => {
 			return i.github.substr(0, input.length) === input;
@@ -34,6 +34,9 @@ const Contributors = React.createClass({
 			callback(null, data);
 		}, ASYNC_DELAY);
 	},
+	gotoContributor (value, event) {
+		window.open('https://github.com/' + value.github);
+	},
 	renderHint () {
 		if (!this.props.hint) return null;
 		return (
@@ -44,7 +47,7 @@ const Contributors = React.createClass({
 		return (
 			<div className="section">
 				<h3 className="section-heading">{this.props.label}</h3>
-				<Select.Async multi value={this.state.value} onChange={this.onChange} valueKey="github" labelKey="name" loadOptions={this.getContributors} />
+				<Select.Async multi value={this.state.value} onChange={this.onChange} onValueClick={this.gotoContributor} valueKey="github" labelKey="name" getOptions={this.getOptions} />
 				{this.renderHint()}
 			</div>
 		);
