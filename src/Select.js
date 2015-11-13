@@ -51,7 +51,6 @@ const Select = React.createClass({
 		newOptionCreator: React.PropTypes.func,     // factory to create new options when allowCreate set
 		noResultsText: React.PropTypes.string,      // placeholder displayed when there are no matching search results
 		onBlur: React.PropTypes.func,               // onBlur handler: function (event) {}
-		onBlurResetsInput: React.PropTypes.bool,    // whether input is cleared on blur
 		onChange: React.PropTypes.func,             // onChange handler: function (newValue) {}
 		onFocus: React.PropTypes.func,              // onFocus handler: function (event) {}
 		onInputChange: React.PropTypes.func,        // onInputChange handler: function (inputValue) {}
@@ -64,6 +63,7 @@ const Select = React.createClass({
 		searchable: React.PropTypes.bool,           // whether to enable searching feature or not
 		simpleValue: React.PropTypes.bool,          // pass the value to onChange as a simple value (legacy pre 1.0 mode), defaults to false
 		style: React.PropTypes.object,              // optional style to apply to the control
+		tabIndex: React.PropTypes.string,           // optional tab index of the control
 		value: React.PropTypes.any,                 // initial field value
 		valueComponent: React.PropTypes.func,       // value component to render
 		valueKey: React.PropTypes.string,           // path of the label value in option objects
@@ -92,7 +92,6 @@ const Select = React.createClass({
 			matchProp: 'any',
 			multi: false,
 			noResultsText: 'No results found',
-			onBlurResetsInput: true,
 			optionComponent: Option,
 			placeholder: 'Select...',
 			searchable: true,
@@ -152,6 +151,7 @@ const Select = React.createClass({
 
 		// for the non-searchable select, toggle the menu
 		if (!this.props.searchable) {
+			this.focus();
 			return this.setState({
 				isOpen: !this.state.isOpen,
 			});
@@ -213,13 +213,12 @@ const Select = React.createClass({
 		if (this.props.onBlur) {
 			this.props.onBlur(event);
 		}
-		var onBlurredState = {
+		this.setState({
+			inputValue: '',
 			isFocused: false,
 			isOpen: false,
 			isPseudoFocused: false,
-		};
-		if (this.props.onBlurResetsInput) onBlurredState.inputValue = '';
-		this.setState(onBlurredState);
+		});
 	},
 
 	handleInputChange (event) {
@@ -477,7 +476,19 @@ const Select = React.createClass({
 		var className = classNames('Select-input', this.props.inputProps.className);
 		if (this.props.disabled || !this.props.searchable) {
 			if (this.props.multi && valueArray.length) return;
-			return <div className={className}>&nbsp;</div>;
+			return (
+				<input
+					{...this.props.inputProps}
+					className={className}
+					tabIndex={this.props.tabIndex}
+					onBlur={this.handleInputBlur}
+					onFocus={this.handleInputFocus}
+					type="search"
+					autoComplete="off"
+					readOnly="true"
+					ref="input"
+					style={{ border: 0 }}/>
+			);
 		}
 		return (
 			<Input
