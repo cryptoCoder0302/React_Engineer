@@ -93,11 +93,6 @@ describe('Select', () => {
 		TestUtils.Simulate.mouseDown(selectArrow);
 	};
 
-	var clickDocument = () => {
-		var clickEvent = document.createEvent('MouseEvents');
-		clickEvent.initEvent('click', true, true);
-		document.dispatchEvent(clickEvent);
-	};
 
 	var findAndFocusInputControl = () => {
 		// Focus on the input, such that mouse events are accepted
@@ -699,11 +694,9 @@ describe('Select', () => {
 		it('display the raw value if the option is not available', () => {
 
 			wrapper.setPropsForChild({
-				value: 'something new'
+				value: { value: 'new', label: 'something new' }
 			});
 
-			// TODO: This is a genuine regression / feature change
-			// When setting the value to something not in the options, it used to use the value as the label, now nothing is selected
 			expect(ReactDOM.findDOMNode(instance), 'queried for', DISPLAYED_SELECTION_SELECTOR,
 				'to have items satisfying', 'to have text', 'something new');
 		});
@@ -2968,7 +2961,7 @@ describe('Select', () => {
 			expect(ReactDOM.findDOMNode(instance), 'queried for', '.Select-option',
 				'to have length', 4);
 
-			clickDocument();
+			TestUtils.Simulate.blur(searchInputNode);
 			expect(ReactDOM.findDOMNode(instance), 'to contain no elements matching', '.Select-option');
 		});
 	});
