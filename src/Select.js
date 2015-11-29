@@ -44,6 +44,8 @@ const Select = React.createClass({
 		labelKey: React.PropTypes.string,           // path of the label value in option objects
 		matchPos: React.PropTypes.string,           // (any|start) match the start or entire string when filtering
 		matchProp: React.PropTypes.string,          // (any|label|value) which option property to filter on
+		scrollMenuIntoView: React.PropTypes.bool,   // boolean to enable the viewport to shift so that the full menu fully visible when engaged
+		menuBuffer: React.PropTypes.number,         // optional buffer (in px) between the bottom of the viewport and the bottom of the menu
 		menuStyle: React.PropTypes.object,          // optional style to apply to the menu
 		menuContainerStyle: React.PropTypes.object, // optional style to apply to the menu container
 		multi: React.PropTypes.bool,                // multi-value input
@@ -90,6 +92,8 @@ const Select = React.createClass({
 			labelKey: 'label',
 			matchPos: 'any',
 			matchProp: 'any',
+			scrollMenuIntoView: true,
+			menuBuffer: 0,
 			multi: false,
 			noResultsText: 'No results found',
 			optionComponent: Option,
@@ -129,6 +133,12 @@ const Select = React.createClass({
 			var menuRect = menuDOM.getBoundingClientRect();
 			if (focusedRect.bottom > menuRect.bottom || focusedRect.top < menuRect.top) {
 				menuDOM.scrollTop = (focusedDOM.offsetTop + focusedDOM.clientHeight - menuDOM.offsetHeight);
+			}
+		}
+		if ( this.props.scrollMenuIntoView && this.refs.menuContainer ) {
+			var menuContainerRect = this.refs.menuContainer.getBoundingClientRect();
+			if (window.innerHeight < menuContainerRect.bottom + this.props.menuBuffer) {
+				window.scrollTo(0, window.scrollY + menuContainerRect.bottom + this.props.menuBuffer - window.innerHeight);
 			}
 		}
 	},
@@ -477,14 +487,17 @@ const Select = React.createClass({
 		var className = classNames('Select-input', this.props.inputProps.className);
 		if (this.props.disabled || !this.props.searchable) {
 			return (
-				<div
+				<input
 					{...this.props.inputProps}
 					className={className}
-					tabIndex={this.props.tabIndex || 0}
+					tabIndex={this.props.tabIndex}
 					onBlur={this.handleInputBlur}
 					onFocus={this.handleInputFocus}
+					type="search"
+					autoComplete="off"
+					readOnly="true"
 					ref="input"
-					style={{ border: 0, width: 1, display:'inline-block' }}/>
+					style={{ border: 0 }}/>
 			);
 		}
 		return (

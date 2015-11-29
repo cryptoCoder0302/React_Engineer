@@ -19,7 +19,7 @@ function updateCache (cache, input, data) {
 
 function getFromCache (cache, input) {
 	if (!cache) return;
-	for (let i = input.length; i >= 0; --i) {
+	for (let i = 0; i <= input.length; i++) {
 		let cacheKey = input.slice(0, i);
 		if (cache[cacheKey] && (input === cacheKey || cache[cacheKey].complete)) {
 			return cache[cacheKey];
@@ -29,7 +29,7 @@ function getFromCache (cache, input) {
 
 function thenPromise (promise, callback) {
 	if (!promise || typeof promise.then !== 'function') return;
-	return promise.then((data) => {
+	promise.then((data) => {
 		callback(null, data);
 	}, (err) => {
 		callback(err);
@@ -118,7 +118,7 @@ const Async = React.createClass({
 			isLoading: true,
 		});
 		let responseHandler = this.getResponseHandler(input);
-		return thenPromise(this.props.loadOptions(input, responseHandler), responseHandler);
+		thenPromise(this.props.loadOptions(input, responseHandler), responseHandler);
 	},
 	render () {
 		let { noResultsText } = this.props;
