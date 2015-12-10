@@ -89,6 +89,14 @@ You can enable multi-value selection by setting `multi={true}`. In this mode:
 * The `onChange` event provides an array of the selected options as the second argument
 * The first argument to `onChange` is always a string, regardless of whether the values of the selected options are numbers or strings
 * By default, only options in the `options` array can be selected. Setting `allowCreate` to true allows new options to be created if they do not already exist.
+* By default, selected options can be cleared. To disable the possibility of clearing a particular option, add `clearableValue: false` to that option:
+```javascript
+var options = [
+	{ value: 'one', label: 'One' },
+	{ value: 'two', label: 'Two', clearableValue: false }
+];
+```
+Note: the `clearable` prop of the Select component should also be set to `false` to prevent allowing clearing all fields at once
 
 ### Async options
 
@@ -221,6 +229,8 @@ For multi-select inputs, when providing a custom `filterOptions` method, remembe
 	labelKey	|	string	|	'label'		|	the option property to use for the label
 	matchPos 	|	string	|	'any'		|	(any, start) match the start or entire string when filtering
 	matchProp 	|	string	|	'any'		|	(any, label, value) which option property to filter on
+	scrollMenuIntoView |	bool	|	true		|	whether the viewport will shift to display the entire menu when engaged
+	menuBuffer	|	number	|	0		|	buffer of px between the base of the dropdown and the viewport to shift if menu doesnt fit in viewport	
 	multi 		|	bool	|	undefined	|	multi-value input
 	name 		|	string	|	undefined	|	field name, for hidden `<input />` tag
 	newOptionCreator	|	func	|	undefined	|	factory to create new options when `allowCreate` is true
