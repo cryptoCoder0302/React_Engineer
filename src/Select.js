@@ -390,6 +390,7 @@ const Select = React.createClass({
 		if (event && event.type === 'mousedown' && event.button !== 0) {
 			return;
 		}
+		event.stopPropagation();
 		event.preventDefault();
 		this.setValue(null);
 		this.setState({
