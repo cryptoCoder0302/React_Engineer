@@ -7,13 +7,12 @@ const GRAVATAR_SIZE = 15;
 
 const GravatarOption = React.createClass({
 	propTypes: {
-		children: React.PropTypes.node,
 		className: React.PropTypes.string,
 		isDisabled: React.PropTypes.bool,
 		isFocused: React.PropTypes.bool,
 		isSelected: React.PropTypes.bool,
-		onFocus: React.PropTypes.func,
 		onSelect: React.PropTypes.func,
+		onFocus: React.PropTypes.func,
 		onUnfocus: React.PropTypes.func,
 		option: React.PropTypes.object.isRequired,
 	},
@@ -26,7 +25,7 @@ const GravatarOption = React.createClass({
 		this.props.onFocus(this.props.option, event);
 	},
 	handleMouseMove (event) {
-		if (this.props.isFocused) return;
+		if (this.props.focused) return;
 		this.props.onFocus(this.props.option, event);
 	},
 	handleMouseLeave (event) {
@@ -57,7 +56,6 @@ const GravatarOption = React.createClass({
 
 const GravatarValue = React.createClass({
 	propTypes: {
-		children: React.PropTypes.node,
 		placeholder: React.PropTypes.string,
 		value: React.PropTypes.object
 	},

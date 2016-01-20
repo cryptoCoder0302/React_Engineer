@@ -18,8 +18,5 @@ bower_components
 # Publish directory
 .publish
 
-# Editor artifacts
-.idea
-
 # Other
 .DS_Store
