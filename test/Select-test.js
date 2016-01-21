@@ -359,6 +359,12 @@ describe('Select', () => {
 			expect(ReactDOM.findDOMNode(instance), 'to contain no elements matching', '.Select-option');
 		});
 
+		it('the input should not have a required attribute', () => {
+			var inputNode = ReactDOM.findDOMNode(instance).querySelector('input');
+			expect(inputNode, 'to have attributes', {
+				required: undefined
+			})
+		});
 	});
 
 	describe('with values as numbers', () => {
@@ -719,6 +725,13 @@ describe('Select', () => {
 			expect(ReactDOM.findDOMNode(instance), 'queried for', DISPLAYED_SELECTION_SELECTOR,
 				'to have items satisfying', 'to have text', 'New item in the options');
 
+		});
+
+		it('the input should not have a required attribute', () => {
+			var inputNode = ReactDOM.findDOMNode(instance).querySelector('input');
+			expect(inputNode, 'to have attributes', {
+				required: undefined
+			})
 		});
 	});
 
@@ -1762,7 +1775,7 @@ describe('Select', () => {
 				});
 
 				it('should set the isFocused state to false if disabled=true', function(){
-
+					
 						expect(instance.state.isFocused, 'to equal', false);
 						findAndFocusInputControl();
 						expect(instance.state.isFocused, 'to equal', true);
@@ -1984,7 +1997,7 @@ describe('Select', () => {
 
 			// TODO: Disabled inputs no longer have an <input>, let's wait until that settles
 			// down before updating this test to match.
-
+			
 			// describe('and disabled', () => {
 			//
 			// 	beforeEach(() => {
@@ -2147,17 +2160,6 @@ describe('Select', () => {
 				typeSearchText('DOES NOT EXIST');
 				expect(ReactDOM.findDOMNode(instance).querySelector('.Select-menu'),
 					'to have text', 'No results unit test');
-			});
-
-			it('doesn\'t displays the text when no results are found and noResultsText is falsy', () => {
-
-				wrapper.setPropsForChild({
-					noResultsText: ''
-				});
-
-				typeSearchText('DOES NOT EXIST');
-				expect(ReactDOM.findDOMNode(instance),
-					'to contain no elements matching', '.Select-noresults');
 			});
 
 			it('supports updating the text', () => {
@@ -2654,6 +2656,122 @@ describe('Select', () => {
 				});
 			});
 		});
+
+		describe('required', () => {
+
+			it('input should have required attribute if value is empty', () => {
+				instance = createControl({
+					options: defaultOptions,
+					value: '',
+					required: true
+				});
+
+				const inputNode = ReactDOM.findDOMNode(instance).querySelector('input');
+				expect(inputNode, 'to have attributes', {
+					required: true
+				})
+			});
+
+			it('input should have required attribute after adding a value', () => {
+				instance = createControl({
+					options: defaultOptions,
+					value: '',
+					required: true
+				});
+
+				expect(instance.state.required, 'to be true');
+				typeSearchText('three');
+				pressEnterToAccept();
+				expect(instance.state.required, 'to be false');
+			});
+
+			it('input should not have required attribute if value is present', () => {
+				instance = createControl({
+					options: defaultOptions,
+					value: 'one',
+					required: true
+				});
+
+				const inputNode = ReactDOM.findDOMNode(instance).querySelector('input');
+				expect(inputNode, 'to have attributes', {
+					required: undefined
+				})
+			});
+
+			it('input should have required attribute after removing the value', () => {
+				instance = createControl({
+					options: defaultOptions,
+					value: 'one',
+					required: true
+				});
+
+				expect(instance.state.required, 'to be false');
+				instance.setValue([]);
+				expect(instance.state.required, 'to be true');
+			});
+
+		});
+
+		describe('required with multi=true', () => {
+
+			it('input should have required attribute if value is empty', () => {
+
+				instance = createControl({
+					options: defaultOptions,
+					value: '',
+					multi: true,
+					required: true
+				});
+
+				const inputNode = ReactDOM.findDOMNode(instance).querySelector('input');
+				expect(inputNode, 'to have attributes', {
+					required: true
+				})
+			});
+
+			it('input should not have required attribute after adding values', () => {
+				instance = createControl({
+					options: defaultOptions,
+					value: '',
+					multi: true,
+					required: true
+				});
+
+				expect(instance.state.required, 'to be true');
+				typeSearchText('three');
+				pressEnterToAccept();
+				expect(instance.state.required, 'to be false');
+			});
+
+			it('input should not have required attribute if value is present', () => {
+
+				instance = createControl({
+					options: defaultOptions,
+					value: 'one,two',
+					multi: true,
+					required: true
+				});
+
+				const inputNode = ReactDOM.findDOMNode(instance).querySelector('input');
+				expect(inputNode, 'to have attributes', {
+					required: undefined
+				})
+			});
+
+			it('input should have required attribute after removing values', () => {
+				instance = createControl({
+					options: defaultOptions,
+					value: 'one,two',
+					multi: true,
+					required: true
+				});
+
+				expect(instance.state.required, 'to be false');
+				instance.setValue([]);
+				expect(instance.state.required, 'to be true');
+			});
+
+		})
 	});
 
 	describe('clicking outside', () => {
