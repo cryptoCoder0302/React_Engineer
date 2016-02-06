@@ -57,11 +57,12 @@ const Select = React.createClass({
 		onBlur: React.PropTypes.func,               // onBlur handler: function (event) {}
 		onBlurResetsInput: React.PropTypes.bool,    // whether input is cleared on blur
 		onChange: React.PropTypes.func,             // onChange handler: function (newValue) {}
+		onClose: React.PropTypes.func,              // fires when the menu is closed
 		onFocus: React.PropTypes.func,              // onFocus handler: function (event) {}
 		onInputChange: React.PropTypes.func,        // onInputChange handler: function (inputValue) {}
 		onMenuScrollToBottom: React.PropTypes.func, // fires when the menu is scrolled to the bottom; can be used to paginate options
+		onOpen: React.PropTypes.func,               // fires when the menu is opened
 		onValueClick: React.PropTypes.func,         // onClick handler for value labels: function (value, event) {}
-		openAfterFocus: React.PropTypes.bool,		// boolean to enable opening dropdown when focused
 		optionComponent: React.PropTypes.func,      // option component to render in dropdown
 		optionRenderer: React.PropTypes.func,       // optionRenderer: function (option) {}
 		options: React.PropTypes.array,             // array of options
@@ -104,7 +105,6 @@ const Select = React.createClass({
 			multi: false,
 			noResultsText: 'No results found',
 			onBlurResetsInput: true,
-			openAfterFocus: false,
 			optionComponent: Option,
 			placeholder: 'Select...',
 			required: false,
@@ -130,6 +130,13 @@ const Select = React.createClass({
 	componentDidMount () {
 		if (this.props.autofocus) {
 			this.focus();
+		}
+	},
+
+	componentWillUpdate (nextProps, nextState) {
+		if (nextState.isOpen !== this.state.isOpen) {
+			const handler = nextState.isOpen ? nextProps.onOpen : nextProps.onClose;
+			handler && handler();
 		}
 	},
 
@@ -161,12 +168,6 @@ const Select = React.createClass({
 	focus () {
 		if (!this.refs.input) return;
 		this.refs.input.focus();
-
-		if (this.props.openAfterFocus) {
-			this.setState({
-				isOpen: true,
-			});
-		}
 	},
 
 	handleTouchMove (event) {
@@ -579,8 +580,8 @@ const Select = React.createClass({
 	renderClear () {
 		if (!this.props.clearable || !this.props.value || (this.props.multi && !this.props.value.length) || this.props.disabled || this.props.isLoading) return;
 		return (
-			<span className="Select-clear-zone" title={this.props.multi ? this.props.clearAllText : this.props.clearValueText}
-						aria-label={this.props.multi ? this.props.clearAllText : this.props.clearValueText}
+			<span className="Select-clear-zone" title={this.props.multi ? this.props.clearAllText : this.props.clearValueText} 
+						aria-label={this.props.multi ? this.props.clearAllText : this.props.clearValueText} 
 						onMouseDown={this.clearValue}
 						onTouchStart={this.handleTouchStart}
 						onTouchMove={this.handleTouchMove}
@@ -714,11 +715,11 @@ const Select = React.createClass({
 		return (
 			<div ref="wrapper" className={className} style={this.props.wrapperStyle}>
 				{this.renderHiddenField(valueArray)}
-				<div ref="control"
-						 className="Select-control"
-						 style={this.props.style}
-						 onKeyDown={this.handleKeyDown}
-						 onMouseDown={this.handleMouseDown}
+				<div ref="control" 
+						 className="Select-control" 
+						 style={this.props.style} 
+						 onKeyDown={this.handleKeyDown} 
+						 onMouseDown={this.handleMouseDown} 
 						 onTouchEnd={this.handleTouchEnd}
 						 onTouchStart={this.handleTouchStart}
 						 onTouchMove={this.handleTouchMove}>
@@ -730,9 +731,9 @@ const Select = React.createClass({
 				</div>
 				{isOpen ? (
 					<div ref="menuContainer" className="Select-menu-outer" style={this.props.menuContainerStyle}>
-						<div ref="menu" className="Select-menu"
-								 style={this.props.menuStyle}
-								 onScroll={this.handleMenuScroll}
+						<div ref="menu" className="Select-menu" 
+								 style={this.props.menuStyle} 
+								 onScroll={this.handleMenuScroll} 
 								 onMouseDown={this.handleMouseDownOnMenu}>
 							{this.renderMenu(options, !this.props.multi ? valueArray : null, focusedOption)}
 						</div>

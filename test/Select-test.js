@@ -2304,29 +2304,6 @@ describe('Select', () => {
 			});
 		});
 
-		describe('openAfterFocus', () => {
-
-			var openAfterFocus;
-
-			beforeEach(() => {
-				openAfterFocus = sinon.spy();
-
-				instance = createControl({
-					options: defaultOptions,
-					openAfterFocus: true
-				});
-			});
-
-			it('should show the options when focused', () => {
-				instance.focus();
-
-				if (instance.state.isFocused && instance.state.openAfterFocus) {
-					expect(instance.state.isOpen, 'to equal', true);
-				}
-			});
-
-		});
-
 		describe('onValueClick', () => {
 			var onValueClick;
 
@@ -2352,6 +2329,50 @@ describe('Select', () => {
 
 				TestUtils.Simulate.mouseDown(ReactDOM.findDOMNode(instance).querySelectorAll('a.Select-value-label')[0]);
 				expect(onValueClick, 'was called with', { value: 'two', label: '222' });
+			});
+		});
+
+		describe('onOpen', () => {
+			let instance = null;
+			let eventHandler = null;
+
+			beforeEach(() => {
+				eventHandler = sinon.spy();
+				instance = createControl({
+					options: defaultOptions,
+					multi: true,
+					value: ['two', 'one'],
+					onOpen: eventHandler
+				});
+			});
+
+			it('is called when the options are displayed', () => {
+				TestUtils.Simulate.mouseDown(ReactDOM.findDOMNode(instance).querySelector('.Select-control'));
+				expect(eventHandler, 'was called once');
+			});
+		});
+
+		describe('onClose', () => {
+			let instance = null;
+			let eventHandler = null;
+
+			beforeEach(() => {
+				eventHandler = sinon.spy();
+				instance = createControl({
+					options: defaultOptions,
+					multi: true,
+					value: ['two', 'one'],
+					onClose: eventHandler
+				});
+			});
+
+			it('is called after the options are hidden', () => {
+				const domNode = ReactDOM.findDOMNode(instance);
+				TestUtils.Simulate.mouseDown(domNode.querySelector('.Select-control'));
+				eventHandler.reset();
+
+				TestUtils.Simulate.keyDown(domNode.querySelector('input'), { keyCode: 27, key: 'Escape' });
+				expect(eventHandler, 'was called once');
 			});
 		});
 
