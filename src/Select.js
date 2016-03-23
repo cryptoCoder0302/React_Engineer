@@ -128,18 +128,8 @@ const Select = React.createClass({
 			isLoading: false,
 			isOpen: false,
 			isPseudoFocused: false,
-			required: false,
+			required: this.props.required && this.handleRequired(this.props.value, this.props.multi)
 		};
-	},
-
-	componentWillMount () {
-		const valueArray = this.getValueArray(this.props.value);
-
-		if (this.props.required) {
-			this.setState({
-				required: this.handleRequired(valueArray[0], this.props.multi),
-			});
-		}
 	},
 
 	componentDidMount () {
@@ -149,11 +139,9 @@ const Select = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		const valueArray = this.getValueArray(nextProps.value);
-
-		if (nextProps.required) {
+		if (this.props.value !== nextProps.value && nextProps.required) {
 			this.setState({
-				required: this.handleRequired(valueArray[0], nextProps.multi),
+				required: this.handleRequired(nextProps.value, nextProps.multi),
 			});
 		}
 	},
@@ -323,6 +311,7 @@ const Select = React.createClass({
 
 	handleInputBlur (event) {
  		if (this.refs.menu && document.activeElement.isEqualNode(this.refs.menu)) {
+			this.focus();
  			return;
  		}
 
@@ -417,7 +406,8 @@ const Select = React.createClass({
 		return op[this.props.labelKey];
 	},
 
-	getValueArray (value) {
+	getValueArray () {
+		let value = this.props.value;
 		if (this.props.multi) {
 			if (typeof value === 'string') value = value.split(this.props.delimiter);
 			if (!Array.isArray(value)) {
@@ -472,19 +462,19 @@ const Select = React.createClass({
 	},
 
 	addValue (value) {
-		var valueArray = this.getValueArray(this.props.value);
+		var valueArray = this.getValueArray();
 		this.setValue(valueArray.concat(value));
 	},
 
 	popValue () {
-		var valueArray = this.getValueArray(this.props.value);
+		var valueArray = this.getValueArray();
 		if (!valueArray.length) return;
 		if (valueArray[valueArray.length-1].clearableValue === false) return;
 		this.setValue(valueArray.slice(0, valueArray.length - 1));
 	},
 
 	removeValue (value) {
-		var valueArray = this.getValueArray(this.props.value);
+		var valueArray = this.getValueArray();
 		this.setValue(valueArray.filter(i => i !== value));
 		this.focus();
 	},
@@ -790,7 +780,7 @@ const Select = React.createClass({
 	},
 
 	render () {
-		let valueArray = this.getValueArray(this.props.value);
+		let valueArray = this.getValueArray();
 		let options = this._visibleOptions = this.filterOptions(this.props.multi ? valueArray : null);
 		let isOpen = this.state.isOpen;
 		if (this.props.multi && !options.length && valueArray.length && !this.state.inputValue) isOpen = false;
