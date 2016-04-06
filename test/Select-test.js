@@ -2304,6 +2304,29 @@ describe('Select', () => {
 			});
 		});
 
+		describe('openAfterFocus', () => {
+
+			var openAfterFocus;
+
+			beforeEach(() => {
+				openAfterFocus = sinon.spy();
+
+				instance = createControl({
+					options: defaultOptions,
+					openAfterFocus: true
+				});
+			});
+
+			it('should show the options when focused', () => {
+				instance.focus();
+
+				if (instance.state.isFocused && instance.state.openAfterFocus) {
+					expect(instance.state.isOpen, 'to equal', true);
+				}
+			});
+
+		});
+
 		describe('onValueClick', () => {
 			var onValueClick;
 
@@ -2693,6 +2716,25 @@ describe('Select', () => {
 
 				expect(ReactDOM.findDOMNode(instance), 'to contain no elements matching', '.Select-prompt');
 				expect(ReactDOM.findDOMNode(instance), 'to contain no elements matching', '.Select-noresults');
+			});
+		});
+
+		describe('with tabSelectsValue=false', () => {
+
+			beforeEach(() => {
+
+				instance = createControl({
+					options: defaultOptions,
+					tabSelectsValue: false
+				});
+			});
+
+			it('should not accept when tab is pressed', () => {
+
+				// Search 'h', should only show 'Three'
+				typeSearchText('h');
+				pressTabToAccept();
+				expect(onChange, 'was not called');
 			});
 		});
 

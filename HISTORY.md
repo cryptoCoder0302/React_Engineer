@@ -1,8 +1,15 @@
 # React-Select
 
+## v1.0.0-beta12 / 2016-04-02
+
+* added; `menuRenderer` method and example for effeciently rendering thousands of options, thanks [Brian Vaughn](https://github.com/bvaughn)
+* added; `optionClassName` prop, thanks [Max Tyler](https://github.com/iam4x)
+
 ## v1.0.0-beta11 / 2016-03-09
 
 * updated dependencies to allow use with React 15.x
+* changed; multiple selected values are now submitted using multiple inputs, thanks [Trinh Hoang Nhu](https://github.com/james4388)
+* added; `joinValues` prop to revert the above change and submit multiple values in a single field with the delimiter
 
 ## v1.0.0-beta10 / 2016-02-23
 

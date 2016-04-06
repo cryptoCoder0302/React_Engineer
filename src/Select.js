@@ -67,6 +67,8 @@ const Select = React.createClass({
 		onMenuScrollToBottom: React.PropTypes.func, // fires when the menu is scrolled to the bottom; can be used to paginate options
 		onOpen: React.PropTypes.func,               // fires when the menu is opened
 		onValueClick: React.PropTypes.func,         // onClick handler for value labels: function (value, event) {}
+		openAfterFocus: React.PropTypes.bool,		// boolean to enable opening dropdown when focused
+		optionClassName: React.PropTypes.string,    // additional class(es) to apply to the <Option /> elements
 		optionComponent: React.PropTypes.func,      // option component to render in dropdown
 		optionRenderer: React.PropTypes.func,       // optionRenderer: function (option) {}
 		options: React.PropTypes.array,             // array of options
@@ -77,6 +79,7 @@ const Select = React.createClass({
 		simpleValue: React.PropTypes.bool,          // pass the value to onChange as a simple value (legacy pre 1.0 mode), defaults to false
 		style: React.PropTypes.object,              // optional style to apply to the control
 		tabIndex: React.PropTypes.string,           // optional tab index of the control
+		tabSelectsValue: React.PropTypes.bool,      // whether to treat tabbing out while focused to be value selection
 		value: React.PropTypes.any,                 // initial field value
 		valueComponent: React.PropTypes.func,       // value component to render
 		valueKey: React.PropTypes.string,           // path of the label value in option objects
@@ -111,12 +114,14 @@ const Select = React.createClass({
 			multi: false,
 			noResultsText: 'No results found',
 			onBlurResetsInput: true,
+			openAfterFocus: false,
 			optionComponent: Option,
 			placeholder: 'Select...',
 			required: false,
 			scrollMenuIntoView: true,
 			searchable: true,
 			simpleValue: false,
+			tabSelectsValue: true,
 			valueComponent: Value,
 			valueKey: 'value',
 		};
@@ -192,6 +197,12 @@ const Select = React.createClass({
 	focus () {
 		if (!this.refs.input) return;
 		this.refs.input.focus();
+
+		if (this.props.openAfterFocus) {
+			this.setState({
+				isOpen: true,
+			});
+		}
 	},
 
 	blurInput() {
@@ -347,7 +358,7 @@ const Select = React.createClass({
 				}
 			return;
 			case 9: // tab
-				if (event.shiftKey || !this.state.isOpen) {
+				if (event.shiftKey || !this.state.isOpen || !this.props.tabSelectsValue) {
 					return;
 				}
 				this.selectFocusedOption();
@@ -712,7 +723,7 @@ const Select = React.createClass({
 					labelKey: this.props.labelKey,
 					options,
 					selectValue: this.selectValue,
-					valueArray
+					valueArray,
 				});
 			} else {
 				let Option = this.props.optionComponent;
@@ -722,7 +733,7 @@ const Select = React.createClass({
 					let isSelected = valueArray && valueArray.indexOf(option) > -1;
 					let isFocused = option === focusedOption;
 					let optionRef = isFocused ? 'focused' : null;
-					let optionClass = classNames({
+					let optionClass = classNames(this.props.optionClassName, {
 						'Select-option': true,
 						'is-selected': isSelected,
 						'is-focused': isFocused,
