@@ -186,7 +186,7 @@ const Select = React.createClass({
 		if (this.props.scrollMenuIntoView && this.refs.menuContainer) {
 			var menuContainerRect = this.refs.menuContainer.getBoundingClientRect();
 			if (window.innerHeight < menuContainerRect.bottom + this.props.menuBuffer) {
-				window.scrollTo(0, window.scrollY + menuContainerRect.bottom + this.props.menuBuffer - window.innerHeight);
+				window.scrollBy(0, menuContainerRect.bottom + this.props.menuBuffer - window.innerHeight);
 			}
 		}
 		if (prevProps.disabled !== this.props.disabled) {
@@ -290,8 +290,8 @@ const Select = React.createClass({
 	handleMouseDownOnMenu (event) {
 		// if the event was triggered by a mousedown and not the primary
 		// button, or if the component is disabled, ignore it.
- 	  if (this.props.disabled || (event.type === 'mousedown' && event.button !== 0)) {
-		  return;
+		if (this.props.disabled || (event.type === 'mousedown' && event.button !== 0)) {
+			return;
 		}
 		event.stopPropagation();
 		event.preventDefault();
@@ -322,9 +322,9 @@ const Select = React.createClass({
 	},
 
 	handleInputBlur (event) {
- 		if (this.refs.menu && document.activeElement.isEqualNode(this.refs.menu)) {
- 			return;
- 		}
+		if (this.refs.menu && document.activeElement.isEqualNode(this.refs.menu)) {
+			return;
+		}
 
 		if (this.props.onBlur) {
 			this.props.onBlur(event);
