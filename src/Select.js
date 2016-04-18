@@ -29,7 +29,6 @@ const Select = React.createClass({
 	propTypes: {
 		addLabelText: React.PropTypes.string,       // placeholder displayed when you want to add a label on a multi-value input
 		allowCreate: React.PropTypes.bool,          // whether to allow creation of new entries
-		alwaysOpenOnFocus: React.PropTypes.bool,		// always open options menu on focus
 		autoBlur: React.PropTypes.bool,
 		autofocus: React.PropTypes.bool,            // autofocus the component on mount
 		autosize: React.PropTypes.bool,							// whether to enable autosizing or not
@@ -46,6 +45,7 @@ const Select = React.createClass({
 		ignoreAccents: React.PropTypes.bool,        // whether to strip diacritics when filtering
 		ignoreCase: React.PropTypes.bool,           // whether to perform case-insensitive filtering
 		inputProps: React.PropTypes.object,         // custom attributes for the Input
+		inputRenderer: React.PropTypes.func,        // returns a custom input component
 		isLoading: React.PropTypes.bool,            // whether the Select is loading externally or not (such as options being loaded)
 		joinValues: React.PropTypes.bool,           // joins multiple values into a single form field with the delimiter (legacy mode)
 		labelKey: React.PropTypes.string,           // path of the label value in option objects
@@ -311,7 +311,7 @@ const Select = React.createClass({
 	},
 
 	handleInputFocus (event) {
-		var isOpen = this.state.isOpen || this._openAfterFocus || this.props.alwaysOpenOnFocus;
+		var isOpen = this.state.isOpen || this._openAfterFocus;
 		if (this.props.onFocus) {
 			this.props.onFocus(event);
 		}
@@ -608,49 +608,53 @@ const Select = React.createClass({
 	},
 
 	renderInput (valueArray) {
-		var className = classNames('Select-input', this.props.inputProps.className);
-		if (this.props.disabled || !this.props.searchable) {
+		if (this.props.inputRenderer) {
+			return this.props.inputRenderer();
+		} else {
+			var className = classNames('Select-input', this.props.inputProps.className);
+			if (this.props.disabled || !this.props.searchable) {
+				return (
+					<div
+						{...this.props.inputProps}
+						className={className}
+						tabIndex={this.props.tabIndex || 0}
+						onBlur={this.handleInputBlur}
+						onFocus={this.handleInputFocus}
+						ref="input"
+						style={{ border: 0, width: 1, display:'inline-block' }}/>
+				);
+			}
+			if (this.props.autosize) {
+				return (
+					<Input
+						{...this.props.inputProps}
+						className={className}
+						tabIndex={this.props.tabIndex}
+						onBlur={this.handleInputBlur}
+						onChange={this.handleInputChange}
+						onFocus={this.handleInputFocus}
+						minWidth="5"
+						ref="input"
+						required={this.state.required}
+						value={this.state.inputValue}
+					/>
+				);
+			}
 			return (
-				<div
-					{...this.props.inputProps}
-					className={className}
-					tabIndex={this.props.tabIndex || 0}
-					onBlur={this.handleInputBlur}
-					onFocus={this.handleInputFocus}
-					ref="input"
-					style={{ border: 0, width: 1, display:'inline-block' }}/>
+				<div className={ className }>
+					<input
+						{...this.props.inputProps}
+						tabIndex={this.props.tabIndex}
+						onBlur={this.handleInputBlur}
+						onChange={this.handleInputChange}
+						onFocus={this.handleInputFocus}
+						ref="input"
+						required={this.state.required}
+						value={this.state.inputValue}
+					/>
+				</div>
 			);
 		}
-		if (this.props.autosize) {
-			return (
-				<Input
-					{...this.props.inputProps}
-					className={className}
-					tabIndex={this.props.tabIndex}
-					onBlur={this.handleInputBlur}
-					onChange={this.handleInputChange}
-					onFocus={this.handleInputFocus}
-					minWidth="5"
-					ref="input"
-					required={this.state.required}
-					value={this.state.inputValue}
-				/>
-			);
-		}
-		return (
-			<div className={ className }>
-				<input
-					{...this.props.inputProps}
-					tabIndex={this.props.tabIndex}
-					onBlur={this.handleInputBlur}
-					onChange={this.handleInputChange}
-					onFocus={this.handleInputFocus}
-					ref="input"
-					required={this.state.required}
-					value={this.state.inputValue}
-				/>
-			</div>
-		);
 	},
 
 	renderClear () {
