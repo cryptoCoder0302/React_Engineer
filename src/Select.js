@@ -29,7 +29,6 @@ const Select = React.createClass({
 	propTypes: {
 		addLabelText: React.PropTypes.string,       // placeholder displayed when you want to add a label on a multi-value input
 		allowCreate: React.PropTypes.bool,          // whether to allow creation of new entries
-		openOnFocus: React.PropTypes.bool,          // always open options menu on focus
 		autoBlur: React.PropTypes.bool,             // automatically blur the component when an option is selected
 		autofocus: React.PropTypes.bool,            // autofocus the component on mount
 		autosize: React.PropTypes.bool,             // whether to enable autosizing or not
@@ -53,7 +52,7 @@ const Select = React.createClass({
 		matchProp: React.PropTypes.string,          // (any|label|value) which option property to filter on
 		menuBuffer: React.PropTypes.number,         // optional buffer (in px) between the bottom of the viewport and the bottom of the menu
 		menuContainerStyle: React.PropTypes.object, // optional style to apply to the menu container
-		menuRenderer: React.PropTypes.func,					// renders a custom menu with options
+		menuRenderer: React.PropTypes.func,         // renders a custom menu with options
 		menuStyle: React.PropTypes.object,          // optional style to apply to the menu
 		multi: React.PropTypes.bool,                // multi-value input
 		name: React.PropTypes.string,               // generates a hidden <input /> tag with this field name for html forms
@@ -69,12 +68,14 @@ const Select = React.createClass({
 		onOpen: React.PropTypes.func,               // fires when the menu is opened
 		onValueClick: React.PropTypes.func,         // onClick handler for value labels: function (value, event) {}
 		openAfterFocus: React.PropTypes.bool,		// boolean to enable opening dropdown when focused
+		openOnFocus: React.PropTypes.bool,          // always open options menu on focus
 		optionClassName: React.PropTypes.string,    // additional class(es) to apply to the <Option /> elements
 		optionComponent: React.PropTypes.func,      // option component to render in dropdown
 		optionRenderer: React.PropTypes.func,       // optionRenderer: function (option) {}
 		options: React.PropTypes.array,             // array of options
 		placeholder: stringOrNode,                  // field placeholder, displayed when there's no value
 		required: React.PropTypes.bool,             // applies HTML5 required attribute when needed
+		resetValue: React.PropTypes.any,            // value to use when you clear the control
 		scrollMenuIntoView: React.PropTypes.bool,   // boolean to enable the viewport to shift so that the full menu fully visible when engaged
 		searchable: React.PropTypes.bool,           // whether to enable searching feature or not
 		simpleValue: React.PropTypes.bool,          // pass the value to onChange as a simple value (legacy pre 1.0 mode), defaults to false
@@ -119,6 +120,7 @@ const Select = React.createClass({
 			optionComponent: Option,
 			placeholder: 'Select...',
 			required: false,
+			resetValue: null,
 			scrollMenuIntoView: true,
 			searchable: true,
 			simpleValue: false,
@@ -135,8 +137,18 @@ const Select = React.createClass({
 			isLoading: false,
 			isOpen: false,
 			isPseudoFocused: false,
-			required: this.props.required && this.handleRequired(this.props.value, this.props.multi)
+			required: false,
 		};
+	},
+
+	componentWillMount () {
+		const valueArray = this.getValueArray(this.props.value);
+
+		if (this.props.required) {
+			this.setState({
+				required: this.handleRequired(valueArray[0], this.props.multi),
+			});
+		}
 	},
 
 	componentDidMount () {
@@ -146,9 +158,11 @@ const Select = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		if (this.props.value !== nextProps.value && nextProps.required) {
+		const valueArray = this.getValueArray(nextProps.value);
+
+		if (nextProps.required) {
 			this.setState({
-				required: this.handleRequired(nextProps.value, nextProps.multi),
+				required: this.handleRequired(valueArray[0], nextProps.multi),
 			});
 		}
 	},
@@ -171,9 +185,6 @@ const Select = React.createClass({
 			this.hasScrolledToOption = false;
 		}
 
-		if (prevState.inputValue !== this.state.inputValue && this.props.onInputChange) {
-			this.props.onInputChange(this.state.inputValue);
-		}
 		if (this._scrollToFocusedOptionOnUpdate && this.refs.focused && this.refs.menu) {
 			this._scrollToFocusedOptionOnUpdate = false;
 			var focusedDOM = ReactDOM.findDOMNode(this.refs.focused);
@@ -343,10 +354,18 @@ const Select = React.createClass({
 	},
 
 	handleInputChange (event) {
+		let newInputValue = event.target.value;
+		if (this.state.inputValue !== event.target.value && this.props.onInputChange) {
+			let nextState = this.props.onInputChange(newInputValue);
+			// Note: != used deliberately here to catch undefined and null
+			if (nextState != null) {
+				newInputValue = '' + nextState;
+			}
+		}
 		this.setState({
 			isOpen: true,
 			isPseudoFocused: false,
-			inputValue: event.target.value,
+			inputValue: newInputValue
 		});
 	},
 
@@ -419,8 +438,7 @@ const Select = React.createClass({
 		return op[this.props.labelKey];
 	},
 
-	getValueArray () {
-		let value = this.props.value;
+	getValueArray (value) {
 		if (this.props.multi) {
 			if (typeof value === 'string') value = value.split(this.props.delimiter);
 			if (!Array.isArray(value)) {
@@ -475,19 +493,19 @@ const Select = React.createClass({
 	},
 
 	addValue (value) {
-		var valueArray = this.getValueArray();
+		var valueArray = this.getValueArray(this.props.value);
 		this.setValue(valueArray.concat(value));
 	},
 
 	popValue () {
-		var valueArray = this.getValueArray();
+		var valueArray = this.getValueArray(this.props.value);
 		if (!valueArray.length) return;
 		if (valueArray[valueArray.length-1].clearableValue === false) return;
 		this.setValue(valueArray.slice(0, valueArray.length - 1));
 	},
 
 	removeValue (value) {
-		var valueArray = this.getValueArray();
+		var valueArray = this.getValueArray(this.props.value);
 		this.setValue(valueArray.filter(i => i !== value));
 		this.focus();
 	},
@@ -500,7 +518,7 @@ const Select = React.createClass({
 		}
 		event.stopPropagation();
 		event.preventDefault();
-		this.setValue(null);
+		this.setValue(this.props.resetValue);
 		this.setState({
 			isOpen: false,
 			inputValue: '',
@@ -822,7 +840,7 @@ const Select = React.createClass({
 	},
 
 	render () {
-		let valueArray = this.getValueArray();
+		let valueArray = this.getValueArray(this.props.value);
 		let options = this._visibleOptions = this.filterOptions(this.props.multi ? valueArray : null);
 		let isOpen = this.state.isOpen;
 		if (this.props.multi && !options.length && valueArray.length && !this.state.inputValue) isOpen = false;
