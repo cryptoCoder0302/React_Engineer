@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom';
 import Select from 'react-select';
 
 import Contributors from './components/Contributors';
-import GithubUsers from './components/GithubUsers';
 import CustomComponents from './components/CustomComponents';
 import CustomRender from './components/CustomRender';
 import Multiselect from './components/Multiselect';
@@ -19,7 +18,6 @@ ReactDOM.render(
 		<Multiselect label="Multiselect" />
 		<Virtualized label="Virtualized" />
 		<Contributors label="Contributors (Async)" />
-		<GithubUsers label="Github users (Async with fetch.js)" />
 		<NumericSelect label="Numeric Values" />
 		<CustomRender label="Custom Render Methods"/>
 		<CustomComponents label="Custom Placeholder, Option and Value Components" />
