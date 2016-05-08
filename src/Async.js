@@ -120,6 +120,7 @@ const Async = React.createClass({
 		}
 		if (this.props.ignoreAccents) input = stripDiacritics(input);
 		if (this.props.ignoreCase) input = input.toLowerCase();
+
 		this._lastInput = input;
 		if (input.length < this.props.minimumInput) {
 			return this.resetState();
@@ -141,9 +142,10 @@ const Async = React.createClass({
 		let { isLoading, options } = this.state;
 		if (this.props.isLoading) isLoading = true;
 		let placeholder = isLoading ? this.props.loadingPlaceholder : this.props.placeholder;
-		if (!options.length) {
-			if (this._lastInput.length < this.props.minimumInput) noResultsText = this.props.searchPromptText;
-			if (isLoading) noResultsText = this.props.searchingText;
+		if (isLoading) {
+			noResultsText = this.props.searchingText;
+		} else if (!options.length && this._lastInput.length < this.props.minimumInput) {
+			noResultsText = this.props.searchPromptText;
 		}
 		return (
 			<Select
