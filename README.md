@@ -88,7 +88,7 @@ You can enable multi-value selection by setting `multi={true}`. In this mode:
 * The selected values are submitted in multiple `<input type="hidden">` fields, use `joinValues` to submit joined values in a single field instead
 * The values of the selected items are joined using the `delimiter` prop to create the input value when `joinValues` is true
 * A simple value, if provided, will be split using the `delimiter` prop
-* The `onChange` event provides an array of the selected options as the second argument
+* The `onChange` event provides an array of selected options _or_ a comma-separated string of values (eg "1,2,3") if `simpleValue` is true
 * The first argument to `onChange` is always a string, regardless of whether the values of the selected options are numbers or strings
 * By default, only options in the `options` array can be selected. Setting `allowCreate` to true allows new options to be created if they do not already exist.
 * By default, selected options can be cleared. To disable the possibility of clearing a particular option, add `clearableValue: false` to that option:
@@ -210,6 +210,12 @@ For multi-select inputs, when providing a custom `filterOptions` method, remembe
 
 The `menuRenderer` property can be used to override the default drop-down list of options.
 This should be done when the list is large (hundreds or thousands of items) for faster rendering.
+Windowing libraries like [`react-virtualized`](https://github.com/bvaughn/react-virtualized) can then be used to more efficiently render the drop-down menu like so.
+The easiest way to do this is with the [`react-virtualized-select`](https://github.com/bvaughn/react-virtualized-select/) HOC.
+This component decorates a `Select` and uses the react-virtualized `VirtualScroll` component to render options.
+Demo and documentation for this component are available [here](https://bvaughn.github.io/react-virtualized-select/).
+
+You can also specify your own custom renderer.
 The custom `menuRenderer` property accepts the following named parameters:
 
 | Parameter | Type | Description |
@@ -220,37 +226,6 @@ The custom `menuRenderer` property accepts the following named parameters:
 | options | `Array<Object>` | Ordered array of options to render. |
 | selectValue | `Function` | Callback to select a new option; receives the option as a parameter. |
 | valueArray | `Array<Object>` | Array of currently selected options. |
-
-Windowing libraries like [`react-virtualized`](https://github.com/bvaughn/react-virtualized) can then be used to more efficiently render the drop-down menu like so:
-
-```js
-menuRenderer({ focusedOption, focusOption, labelKey, options, selectValue, valueArray }) {
-  const focusedOptionIndex = options.indexOf(focusedOption);
-  const option = options[index];
-  const isFocusedOption = option === focusedOption;
-
-  return (
-    <VirtualScroll
-      ref="VirtualScroll"
-      height={200}
-      rowHeight={35}
-      rowRenderer={(index) => (
-        <div
-          onMouseOver={() => focusOption(option)}
-          onClick={() => selectValue(option)}
-        >
-          {option[labelKey]}
-        </div>
-      )}
-      rowsCount={options.length}
-      scrollToIndex={focusedOptionIndex}
-      width={200}
-    />
-  )
-}
-```
-
-Check out the demo site for a more complete example of this.
 
 ### Updating input values with onInputChange
 
