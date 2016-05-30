@@ -135,10 +135,7 @@ const Async = React.createClass({
 			isLoading: true,
 		});
 		let responseHandler = this.getResponseHandler(input);
-		let inputPromise = thenPromise(this.props.loadOptions(input, responseHandler), responseHandler);
-		return inputPromise ? inputPromise.then(() => {
-			return input;
-		}) : input;
+		return thenPromise(this.props.loadOptions(input, responseHandler), responseHandler);
 	},
 	render () {
 		let { noResultsText } = this.props;
