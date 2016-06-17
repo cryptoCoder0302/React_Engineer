@@ -80,6 +80,7 @@ const Select = React.createClass({
 		optionComponent: React.PropTypes.func,      // option component to render in dropdown
 		optionRenderer: React.PropTypes.func,       // optionRenderer: function (option) {}
 		options: React.PropTypes.array,             // array of options
+		pageSize: React.PropTypes.number,           // number of entries to page when using page up/down keys
 		placeholder: stringOrNode,                  // field placeholder, displayed when there's no value
 		required: React.PropTypes.bool,             // applies HTML5 required attribute when needed
 		resetValue: React.PropTypes.any,            // value to use when you clear the control
@@ -126,6 +127,7 @@ const Select = React.createClass({
 			onBlurResetsInput: true,
 			openAfterFocus: false,
 			optionComponent: Option,
+			pageSize: 5,
 			placeholder: 'Select...',
 			required: false,
 			resetValue: null,
@@ -356,7 +358,8 @@ const Select = React.createClass({
 	},
 
 	handleInputBlur (event) {
-		if (this.refs.menu && document.activeElement === this.refs.menu) {
+		// The check for menu.contains(activeElement) is necessary to prevent IE11's scrollbar from closing the menu in certain contexts.
+		if (this.refs.menu && (this.refs.menu === document.activeElement || this.refs.menu.contains(document.activeElement))) {
 			this.focus();
 			return;
 		}
@@ -423,6 +426,18 @@ const Select = React.createClass({
 			break;
 			case 40: // down
 				this.focusNextOption();
+			break;
+			case 33: // page up
+				this.focusPageUpOption();
+			break;
+			case 34: // page down
+				this.focusPageDownOption();
+			break;
+			case 35: // end key
+				this.focusEndOption();
+			break;
+			case 36: // home key
+				this.focusStartOption();
 			break;
 			// case 188: // ,
 			// 	if (this.props.allowCreate && this.props.multi) {
@@ -562,6 +577,22 @@ const Select = React.createClass({
 		this.focusAdjacentOption('previous');
 	},
 
+	focusPageUpOption () {
+		this.focusAdjacentOption('page_up');
+	},
+
+	focusPageDownOption () {
+		this.focusAdjacentOption('page_down');
+	},
+
+	focusStartOption () {
+		this.focusAdjacentOption('start');
+	},
+
+	focusEndOption () {
+		this.focusAdjacentOption('end');
+	},
+
 	focusAdjacentOption (dir) {
 		var options = this._visibleOptions
 			.map((option, index) => ({ option, index }))
@@ -590,6 +621,24 @@ const Select = React.createClass({
 				focusedIndex = focusedIndex - 1;
 			} else {
 				focusedIndex = options.length - 1;
+			}
+		} else if (dir === 'start') {
+			focusedIndex = 0;
+		} else if (dir === 'end') {
+			focusedIndex = options.length - 1;
+		} else if (dir === 'page_up') {
+			var potentialIndex = focusedIndex - this.props.pageSize;
+			if ( potentialIndex < 0 ) {
+				focusedIndex = 0;
+			} else {
+				focusedIndex = potentialIndex;
+			}
+		} else if (dir === 'page_down') {
+			var potentialIndex = focusedIndex + this.props.pageSize;
+			if ( potentialIndex > options.length - 1 ) {
+				focusedIndex = options.length - 1;
+			} else {
+				focusedIndex = potentialIndex;
 			}
 		}
 
@@ -872,7 +921,7 @@ const Select = React.createClass({
 		if (!options.length) return null;
 
 		let focusedOption = this.state.focusedOption || selectedOption;
-		if (focusedOption) {
+		if (focusedOption && !focusedOption.disabled) {
 			const focusedOptionIndex = options.indexOf(focusedOption);
 			if (focusedOptionIndex !== -1) {
 				return focusedOptionIndex;
@@ -933,7 +982,8 @@ const Select = React.createClass({
 			!this.props.disabled &&
 			valueArray.length &&
 			!this.state.inputValue &&
-			this.state.isFocused) {
+			this.state.isFocused &&
+			this.props.backspaceRemoves) {
 			removeMessage = (
 				<span id={this._instancePrefix + '-backspace-remove-message'} className="Select-aria-only" aria-live="assertive">
 					{this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])}
