@@ -358,8 +358,7 @@ const Select = React.createClass({
 	},
 
 	handleInputBlur (event) {
-		// The check for menu.contains(activeElement) is necessary to prevent IE11's scrollbar from closing the menu in certain contexts.
-		if (this.refs.menu && (this.refs.menu === document.activeElement || this.refs.menu.contains(document.activeElement))) {
+		if (this.refs.menu && document.activeElement === this.refs.menu) {
 			this.focus();
 			return;
 		}
@@ -513,23 +512,20 @@ const Select = React.createClass({
 	},
 
 	selectValue (value) {
-		//NOTE: update value in the callback to make sure the input value is empty so that there are no sttyling issues (Chrome had issue otherwise)
 		this.hasScrolledToOption = false;
 		if (this.props.multi) {
+			this.addValue(value);
 			this.setState({
 				inputValue: '',
 				focusedIndex: null
-			}, () => {
-				this.addValue(value);
 			});
 		} else {
 			this.setState({
 				isOpen: false,
 				inputValue: '',
 				isPseudoFocused: this.state.isFocused,
-			}, () => {
-				this.setValue(value);
 			});
+			this.setValue(value);
 		}
 	},
 
