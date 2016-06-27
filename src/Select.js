@@ -358,8 +358,7 @@ const Select = React.createClass({
 	},
 
 	handleInputBlur (event) {
-		// The check for menu.contains(activeElement) is necessary to prevent IE11's scrollbar from closing the menu in certain contexts.
-		if (this.refs.menu && (this.refs.menu === document.activeElement || this.refs.menu.contains(document.activeElement))) {
+		if (this.refs.menu && document.activeElement === this.refs.menu) {
 			this.focus();
 			return;
 		}
