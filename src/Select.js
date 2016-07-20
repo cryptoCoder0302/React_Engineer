@@ -53,7 +53,6 @@ const Select = React.createClass({
 		ignoreCase: React.PropTypes.bool,           // whether to perform case-insensitive filtering
 		inputProps: React.PropTypes.object,         // custom attributes for the Input
 		inputRenderer: React.PropTypes.func,        // returns a custom input component
-		instanceId: React.PropTypes.string,         // set the components instanceId
 		isLoading: React.PropTypes.bool,            // whether the Select is loading externally or not (such as options being loaded)
 		joinValues: React.PropTypes.bool,           // joins multiple values into a single form field with the delimiter (legacy mode)
 		labelKey: React.PropTypes.string,           // path of the label value in option objects
@@ -144,7 +143,6 @@ const Select = React.createClass({
 
 	getInitialState () {
 		return {
-			instanceId: this.props.instanceId || ++instanceId,
 			inputValue: '',
 			isFocused: false,
 			isLoading: false,
@@ -154,9 +152,8 @@ const Select = React.createClass({
 		};
 	},
 
-	componentWillMount() {
-		const { instanceId } = this.state;
-		this._instancePrefix = 'react-select-' + (instanceId) + '-';
+	componentWillMount () {
+		this._instancePrefix = 'react-select-' + (++instanceId) + '-';
 		const valueArray = this.getValueArray(this.props.value);
 
 		if (this.props.required) {
@@ -717,7 +714,7 @@ const Select = React.createClass({
 						onRemove={this.removeValue}
 						value={value}
 					>
-						{renderLabel(value)}
+						{renderLabel(value, 1)}
 						<span className="Select-aria-only">&nbsp;</span>
 					</ValueComponent>
 				);
@@ -732,7 +729,7 @@ const Select = React.createClass({
 					onClick={onClick}
 					value={valueArray[0]}
 				>
-					{renderLabel(valueArray[0])}
+					{renderLabel(valueArray[0], 1)}
 				</ValueComponent>
 			);
 		}
@@ -907,7 +904,7 @@ const Select = React.createClass({
 							isSelected={isSelected}
 							ref={optionRef}
 							>
-							{renderLabel(option)}
+							{renderLabel(option, 1)}
 						</Option>
 					);
 				});
