@@ -105,8 +105,8 @@
 	white-space: nowrap;
 }
 
-.has-value.Select--single > .Select-control .Select-value,
-.has-value.is-pseudo-focused.Select--single > .Select-control .Select-value {
+.has-value.Select--single:not(.is-focused) > .Select-control > .Select-value,
+.has-value.is-pseudo-focused.Select--single > .Select-control > .Select-value {
 	.Select-value-label {
 		color: $select-text-color;
 	}
@@ -114,10 +114,8 @@
 		cursor: pointer;
 		text-decoration: none;
 
-		&:hover,
-		&:focus {
+		&:hover {
 			color: $select-link-hover-color;
-			outline: none;
 			text-decoration: underline;
 		}
 	}
@@ -208,14 +206,6 @@
 
 .Select--multi .Select-multi-value-wrapper {
   display: inline-block;
-}
-.Select .Select-aria-only {
-	display: inline-block;
-	height: 1px;
-	width: 1px;
-	margin: -1px;
-	clip: rect(0,0,0,0);
-	overflow: hidden;
 }
 
 
