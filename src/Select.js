@@ -144,6 +144,7 @@ const Select = React.createClass({
 		return {
 			inputValue: '',
 			isFocused: false,
+			isLoading: false,
 			isOpen: false,
 			isPseudoFocused: false,
 			required: false,
