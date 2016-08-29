@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Input from 'react-input-autosize';
 import classNames from 'classnames';
+import blacklist from 'blacklist';
 
 import stripDiacritics from './utils/stripDiacritics';
 
@@ -130,6 +131,7 @@ const Select = React.createClass({
 			pageSize: 5,
 			placeholder: 'Select...',
 			required: false,
+			resetValue: null,
 			scrollMenuIntoView: true,
 			searchable: true,
 			simpleValue: false,
@@ -579,21 +581,11 @@ const Select = React.createClass({
 		}
 		event.stopPropagation();
 		event.preventDefault();
-		this.setValue(this.getResetValue());
+		this.setValue(this.props.resetValue);
 		this.setState({
 			isOpen: false,
 			inputValue: '',
 		}, this.focus);
-	},
-
-	getResetValue() {
-		if (this.props.resetValue !== undefined) {
-			return this.props.resetValue;
-		} else if (this.props.multi) {
-			return [];
-		} else {
-			return null;
-		}
 	},
 
 	focusOption (option) {
@@ -722,7 +714,7 @@ const Select = React.createClass({
 						onRemove={this.removeValue}
 						value={value}
 					>
-						{renderLabel(value)}
+						{renderLabel(value, i)}
 						<span className="Select-aria-only">&nbsp;</span>
 					</ValueComponent>
 				);
@@ -737,7 +729,7 @@ const Select = React.createClass({
 					onClick={onClick}
 					value={valueArray[0]}
 				>
-					{renderLabel(valueArray[0])}
+					{renderLabel(valueArray[0], i)}
 				</ValueComponent>
 			);
 		}
@@ -778,7 +770,7 @@ const Select = React.createClass({
 			});
 
 			if (this.props.disabled || !this.props.searchable) {
-				const { inputClassName, ...divProps } = this.props.inputProps;
+				const divProps = blacklist(this.props.inputProps, 'inputClassName');
 				return (
 					<div
 						{...divProps}
@@ -912,7 +904,7 @@ const Select = React.createClass({
 							isSelected={isSelected}
 							ref={optionRef}
 							>
-							{renderLabel(option)}
+							{renderLabel(option, i)}
 						</Option>
 					);
 				});
