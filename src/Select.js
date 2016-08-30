@@ -56,6 +56,7 @@ const Select = React.createClass({
 		ignoreCase: React.PropTypes.bool,           // whether to perform case-insensitive filtering
 		inputProps: React.PropTypes.object,         // custom attributes for the Input
 		inputRenderer: React.PropTypes.func,        // returns a custom input component
+		instanceId: React.PropTypes.string,         // set the components instanceId
 		isLoading: React.PropTypes.bool,            // whether the Select is loading externally or not (such as options being loaded)
 		joinValues: React.PropTypes.bool,           // joins multiple values into a single form field with the delimiter (legacy mode)
 		labelKey: React.PropTypes.string,           // path of the label value in option objects
@@ -73,6 +74,7 @@ const Select = React.createClass({
 		onBlurResetsInput: React.PropTypes.bool,    // whether input is cleared on blur
 		onChange: React.PropTypes.func,             // onChange handler: function (newValue) {}
 		onClose: React.PropTypes.func,              // fires when the menu is closed
+		onCloseResetsInput: React.PropTypes.bool,		// whether input is cleared when menu is closed through the arrow
 		onFocus: React.PropTypes.func,              // onFocus handler: function (event) {}
 		onInputChange: React.PropTypes.func,        // onInputChange handler: function (inputValue) {}
 		onMenuScrollToBottom: React.PropTypes.func, // fires when the menu is scrolled to the bottom; can be used to paginate options
@@ -129,6 +131,7 @@ const Select = React.createClass({
 			multi: false,
 			noResultsText: 'No results found',
 			onBlurResetsInput: true,
+			onCloseResetsInput: true,
 			openAfterFocus: false,
 			optionComponent: Option,
 			pageSize: 5,
@@ -153,8 +156,8 @@ const Select = React.createClass({
 		};
 	},
 
-	componentWillMount () {
-		this._instancePrefix = 'react-select-' + (++instanceId) + '-';
+	componentWillMount() {
+		this._instancePrefix = 'react-select-' + (this.props.instanceId || ++instanceId) + '-';
 		const valueArray = this.getValueArray(this.props.value);
 
 		if (this.props.required) {
@@ -189,27 +192,27 @@ const Select = React.createClass({
 
 	componentDidUpdate (prevProps, prevState) {
 		// focus to the selected option
-		if (this.refs.menu && this.refs.focused && this.state.isOpen && !this.hasScrolledToOption) {
-			let focusedOptionNode = ReactDOM.findDOMNode(this.refs.focused);
-			let menuNode = ReactDOM.findDOMNode(this.refs.menu);
+		if (this.menu && this.focused && this.state.isOpen && !this.hasScrolledToOption) {
+			let focusedOptionNode = ReactDOM.findDOMNode(this.focused);
+			let menuNode = ReactDOM.findDOMNode(this.menu);
 			menuNode.scrollTop = focusedOptionNode.offsetTop;
 			this.hasScrolledToOption = true;
 		} else if (!this.state.isOpen) {
 			this.hasScrolledToOption = false;
 		}
 
-		if (this._scrollToFocusedOptionOnUpdate && this.refs.focused && this.refs.menu) {
+		if (this._scrollToFocusedOptionOnUpdate && this.focused && this.menu) {
 			this._scrollToFocusedOptionOnUpdate = false;
-			var focusedDOM = ReactDOM.findDOMNode(this.refs.focused);
-			var menuDOM = ReactDOM.findDOMNode(this.refs.menu);
+			var focusedDOM = ReactDOM.findDOMNode(this.focused);
+			var menuDOM = ReactDOM.findDOMNode(this.menu);
 			var focusedRect = focusedDOM.getBoundingClientRect();
 			var menuRect = menuDOM.getBoundingClientRect();
 			if (focusedRect.bottom > menuRect.bottom || focusedRect.top < menuRect.top) {
 				menuDOM.scrollTop = (focusedDOM.offsetTop + focusedDOM.clientHeight - menuDOM.offsetHeight);
 			}
 		}
-		if (this.props.scrollMenuIntoView && this.refs.menuContainer) {
-			var menuContainerRect = this.refs.menuContainer.getBoundingClientRect();
+		if (this.props.scrollMenuIntoView && this.menuContainer) {
+			var menuContainerRect = this.menuContainer.getBoundingClientRect();
 			if (window.innerHeight < menuContainerRect.bottom + this.props.menuBuffer) {
 				window.scrollBy(0, menuContainerRect.bottom + this.props.menuBuffer - window.innerHeight);
 			}
@@ -221,8 +224,8 @@ const Select = React.createClass({
 	},
 
 	focus () {
-		if (!this.refs.input) return;
-		this.refs.input.focus();
+		if (!this.input) return;
+		this.input.focus();
 
 		if (this.props.openAfterFocus) {
 			this.setState({
@@ -232,8 +235,8 @@ const Select = React.createClass({
 	},
 
 	blurInput() {
-		if (!this.refs.input) return;
-		this.refs.input.blur();
+		if (!this.input) return;
+		this.input.blur();
 	},
 
 	handleTouchMove (event) {
@@ -293,7 +296,7 @@ const Select = React.createClass({
 			// Call focus() again here to be safe.
 			this.focus();
 
-			let input = this.refs.input;
+			let input = this.input;
 			if (typeof input.getInput === 'function') {
 				// Get the actual DOM input if the ref is an <Input /> component
 				input = input.getInput();
@@ -345,11 +348,19 @@ const Select = React.createClass({
 	},
 
 	closeMenu () {
-		this.setState({
-			isOpen: false,
-			isPseudoFocused: this.state.isFocused && !this.props.multi,
-			inputValue: '',
-		});
+		if(this.props.onCloseResetsInput) {
+			this.setState({
+				isOpen: false,
+				isPseudoFocused: this.state.isFocused && !this.props.multi,
+				inputValue: ''
+			});
+		}	else {
+			this.setState({
+				isOpen: false,
+				isPseudoFocused: this.state.isFocused && !this.props.multi,
+				inputValue: this.state.inputValue
+			});
+		}
 		this.hasScrolledToOption = false;
 	},
 
@@ -367,7 +378,7 @@ const Select = React.createClass({
 
 	handleInputBlur (event) {
 		// The check for menu.contains(activeElement) is necessary to prevent IE11's scrollbar from closing the menu in certain contexts.
-		if (this.refs.menu && (this.refs.menu === document.activeElement || this.refs.menu.contains(document.activeElement))) {
+		if (this.menu && (this.menu === document.activeElement || this.menu.contains(document.activeElement))) {
 			this.focus();
 			return;
 		}
@@ -740,7 +751,7 @@ const Select = React.createClass({
 					onClick={onClick}
 					value={valueArray[0]}
 				>
-					{renderLabel(valueArray[0], i)}
+					{renderLabel(valueArray[0])}
 				</ValueComponent>
 			);
 		}
@@ -775,7 +786,7 @@ const Select = React.createClass({
 				onBlur: this.handleInputBlur,
 				onChange: this.handleInputChange,
 				onFocus: this.handleInputFocus,
-				ref: 'input',
+				ref: ref => this.input = ref,
 				required: this.state.required,
 				value: this.state.inputValue
 			});
@@ -793,7 +804,7 @@ const Select = React.createClass({
 						tabIndex={this.props.tabIndex || 0}
 						onBlur={this.handleInputBlur}
 						onFocus={this.handleInputFocus}
-						ref="input"
+						ref={ref => this.input = ref}
 						aria-readonly={'' + !!this.props.disabled}
 						style={{ border: 0, width: 1, display:'inline-block' }}/>
 				);
@@ -938,7 +949,7 @@ const Select = React.createClass({
 			return (
 				<input
 					type="hidden"
-					ref="value"
+					ref={ref => this.value = ref}
 					name={this.props.name}
 					value={value}
 					disabled={this.props.disabled} />
@@ -979,8 +990,8 @@ const Select = React.createClass({
 		}
 
 		return (
-			<div ref="menuContainer" className="Select-menu-outer" style={this.props.menuContainerStyle}>
-				<div ref="menu" role="listbox" className="Select-menu" id={this._instancePrefix + '-list'}
+			<div ref={ref => this.menuContainer = ref} className="Select-menu-outer" style={this.props.menuContainerStyle}>
+				<div ref={ref => this.menu = ref} role="listbox" className="Select-menu" id={this._instancePrefix + '-list'}
 						 style={this.props.menuStyle}
 						 onScroll={this.handleMenuScroll}
 						 onMouseDown={this.handleMouseDownOnMenu}>
@@ -1030,11 +1041,11 @@ const Select = React.createClass({
 		}
 
 		return (
-			<div ref="wrapper"
+			<div ref={ref => this.wrapper = ref}
 				 className={className}
 				 style={this.props.wrapperStyle}>
 				{this.renderHiddenField(valueArray)}
-				<div ref="control"
+				<div ref={ref => this.control = ref}
 					className="Select-control"
 					style={this.props.style}
 					onKeyDown={this.handleKeyDown}
