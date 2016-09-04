@@ -2549,11 +2549,6 @@ describe('Select', () => {
 				expect(onBlur, 'was called once');
 			});
 
-			/*
-			TODO: This test doesn't work now that we're checking
-			this.menu === document.activeElement in the method. Needs and review to work
-			out whether it's possible to mock this.
-
 			it( 'should focus on the input when the menu is active', () => {
 				instance = createControl({
 					options: defaultOptions
@@ -2567,7 +2562,6 @@ describe('Select', () => {
 
 				expect( instance.input.focus, 'was called once' );
 			} );
-			*/
 
 			it( 'should not focus the input when menu is not active', () => {
 				instance = createControl({
@@ -3330,29 +3324,24 @@ describe('Select', () => {
 		});
 	});
 
-	describe('outside event', () => {
+	describe('clicking outside', () => {
 
 		beforeEach(() => {
+
 			instance = createControl({
 				options: defaultOptions
 			});
+		});
+
+		it('closes the menu', () => {
+
 			TestUtils.Simulate.mouseDown(getSelectControl(instance), { button: 0 });
 			expect(ReactDOM.findDOMNode(instance), 'queried for', '.Select-option',
 				'to have length', 4);
-		});
 
-		it('click closes the menu', () => {
 			TestUtils.Simulate.blur(searchInputNode);
 			expect(ReactDOM.findDOMNode(instance), 'to contain no elements matching', '.Select-option');
 		});
-
-		it('touch closes the menu', () => {
-			const evt = document.createEvent('Event');
-			evt.initEvent('touchstart', true, true);
-			document.querySelector('body').dispatchEvent(evt);
-			expect(ReactDOM.findDOMNode(instance), 'to contain no elements matching', '.Select-option');
-		});
-
 	});
 
 	describe('with autosize=false', () => {

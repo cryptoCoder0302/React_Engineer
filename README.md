@@ -9,11 +9,13 @@ React-Select
 A Select control built with and for [React](http://facebook.github.io/react/index.html). Initially built for use in [KeystoneJS](http://www.keystonejs.com).
 
 
-## New version 1.0.0-rc
+## New version 1.0.0-beta
 
-I've nearly completed a major rewrite of this component (see issue [#568](https://github.com/JedWatson/react-select/issues/568) for details and progress). The new code has been merged into `master`, and `react-select@1.0.0-rc` has been published to npm and bower.
+I've nearly completed a major rewrite of this component (see issue [#568](https://github.com/JedWatson/react-select/issues/568) for details and progress). The new code has been merged into `master`, and `react-select@1.0.0-beta` has been published to npm and bower.
 
-1.0.0 has some breaking changes. The documentation is still being updated for the new API; notes on the changes can be found in [CHANGES.md](https://github.com/JedWatson/react-select/blob/master/CHANGES.md) and will be finalised into [HISTORY.md](https://github.com/JedWatson/react-select/blob/master/HISTORY.md) soon.
+1.0.0 has some breaking changes. The documentation below still needs to be updated for the new API; notes on the changes can be found in [CHANGES.md](https://github.com/JedWatson/react-select/blob/master/CHANGES.md) and will be finalised into [HISTORY.md](https://github.com/JedWatson/react-select/blob/master/HISTORY.md) soon.
+
+Our tests need some major updates to work with the new API (see [#571](https://github.com/JedWatson/react-select/issues/571)) and are causing the build to fail, but the component is stable and robust in actual usage.
 
 Testing, feedback and PRs for the new version are appreciated.
 
@@ -314,6 +316,7 @@ function onInputKeyDown(event) {
 	Property	|	Type		|	Default		|	Description
 :-----------------------|:--------------|:--------------|:--------------------------------
 	addLabelText	|	string	|	'Add "{label}"?'	|	text to display when `allowCreate` is true
+  arrowRenderer | func | undefined | Renders a custom drop-down arrow to be shown in the right-hand side of the select: `arrowRenderer({ onMouseDown })`
 	autoBlur	|	bool | false | Blurs the input element after a selection has been made. Handy for lowering the keyboard on mobile devices
 	autofocus       |       bool    |      undefined        |  autofocus the component on mount
 	autoload 	|	bool	|	true		|	whether to auto-load the default async options set
