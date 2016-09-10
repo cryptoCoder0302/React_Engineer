@@ -4,7 +4,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Select from 'react-select';
 
-import Creatable from './components/Creatable';
 import Contributors from './components/Contributors';
 import GithubUsers from './components/GithubUsers';
 import CustomComponents from './components/CustomComponents';
@@ -23,11 +22,10 @@ ReactDOM.render(
 		<GithubUsers label="Github users (Async with fetch.js)" />
 		<NumericSelect label="Numeric Values" />
 		<CustomRender label="Custom Render Methods"/>
-		<CustomComponents label="Custom Placeholder, Option, Value, and Arrow Components" />
-		<Creatable
-			hint="Enter a value that's NOT in the list, then hit return"
-			label="Custom tag creation"
-		/>
+		<CustomComponents label="Custom Placeholder, Option and Value Components" />
+		{/*
+		<SelectedValuesField label="Option Creation (tags mode)" options={FLAVOURS} allowCreate hint="Enter a value that's NOT in the list, then hit return" />
+		*/}
 	</div>,
 	document.getElementById('example')
 );
