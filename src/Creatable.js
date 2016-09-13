@@ -31,9 +31,6 @@ const Creatable = React.createClass({
     // ({ label: string, labelKey: string, valueKey: string }): Object
 		newOptionCreator: React.PropTypes.func,
 
-		// See Select.propTypes.options
-		options: React.PropTypes.array,
-
     // Creates prompt/placeholder option text.
     // (filterText: string): string
 		promptTextCreator: React.PropTypes.func,
@@ -64,15 +61,13 @@ const Creatable = React.createClass({
 	},
 
 	createNewOption () {
-		const {
-			isValidNewOption,
-			newOptionCreator,
-			options = [],
-			shouldKeyDownEventCreateNewOption
-		} = this.props;
+		const { isValidNewOption, newOptionCreator, shouldKeyDownEventCreateNewOption } = this.props;
+		const { labelKey, options, valueKey } = this.select.props;
 
-		if (isValidNewOption({ label: this.inputValue })) {
-			const option = newOptionCreator({ label: this.inputValue, labelKey: this.labelKey, valueKey: this.valueKey });
+		const inputValue = this.select.getInputValue();
+
+		if (isValidNewOption({ label: inputValue })) {
+			const option = newOptionCreator({ label: inputValue, labelKey, valueKey });
 			const isOptionUnique = this.isOptionUnique({ option });
 
 			// Don't add the same option twice.
@@ -85,38 +80,28 @@ const Creatable = React.createClass({
 	},
 
 	filterOptions (...params) {
-		const { filterOptions, isValidNewOption, options, promptTextCreator } = this.props;
-
-		// Check selected options as well.
-		// Don't display a create-prompt for a value that's selected.
-		const excludeOptions = params[2] || [];
+		const { filterOptions, isValidNewOption, promptTextCreator } = this.props;
 
 		const filteredOptions = filterOptions(...params);
 
-		if (isValidNewOption({ label: this.inputValue })) {
-			const { newOptionCreator } = this.props;
+		const inputValue = this.select
+			? this.select.getInputValue()
+			: '';
 
-			const option = newOptionCreator({
-				label: this.inputValue,
-				labelKey: this.labelKey,
-				valueKey: this.valueKey
-			});
+		if (isValidNewOption({ label: inputValue })) {
+			const { newOptionCreator } = this.props;
+			const { labelKey, options, valueKey } = this.select.props;
+
+			const option = newOptionCreator({ label: inputValue, labelKey, valueKey });
 
 			// TRICKY Compare to all options (not just filtered options) in case option has already been selected).
 			// For multi-selects, this would remove it from the filtered list.
-			const isOptionUnique = this.isOptionUnique({
-				option,
-				options: excludeOptions.concat(filteredOptions)
-			});
+			const isOptionUnique = this.isOptionUnique({ option, options });
 
 			if (isOptionUnique) {
-				const prompt = promptTextCreator(this.inputValue);
+				const prompt = promptTextCreator(inputValue);
 
-				this._createPlaceholderOption = newOptionCreator({
-					label: prompt,
-					labelKey: this.labelKey,
-					valueKey: this.valueKey
-				});
+				this._createPlaceholderOption = newOptionCreator({ label: prompt, labelKey, valueKey });
 
 				filteredOptions.unshift(this._createPlaceholderOption);
 			}
@@ -129,15 +114,20 @@ const Creatable = React.createClass({
 		option,
 		options
 	}) {
+		if (!this.select) {
+			return false;
+		}
+
 		const { isOptionUnique } = this.props;
+		const { labelKey, valueKey } = this.select.props;
 
 		options = options || this.select.filterOptions();
 
 		return isOptionUnique({
-			labelKey: this.labelKey,
+			labelKey,
 			option,
 			options,
-			valueKey: this.valueKey
+			valueKey
 		});
 	},
 
@@ -148,11 +138,6 @@ const Creatable = React.createClass({
 			...params,
 			onSelect: this.onOptionSelect
 		});
-	},
-
-	onInputChange (input) {
-		// This value may be needed in between Select mounts (when this.select is null)
-		this.inputValue = input;
 	},
 
 	onInputKeyDown (event) {
@@ -192,16 +177,9 @@ const Creatable = React.createClass({
 			allowCreate: true,
 			filterOptions: this.filterOptions,
 			menuRenderer: this.menuRenderer,
-			onInputChange: this.onInputChange,
 			onInputKeyDown: this.onInputKeyDown,
 			ref: (ref) => {
 				this.select = ref;
-
-				// These values may be needed in between Select mounts (when this.select is null)
-				if (ref) {
-					this.labelKey = ref.props.labelKey;
-					this.valueKey = ref.props.valueKey;
-				}
 			}
 		};
 
