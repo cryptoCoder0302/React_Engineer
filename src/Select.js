@@ -20,11 +20,12 @@ import Option from './Option';
 import Value from './Value';
 
 function stringifyValue (value) {
-	if (typeof value === 'string') {
+	const valueType = typeof value;
+	if (valueType === 'string') {
 		return value;
-	} else if (typeof value === 'object') {
+	} else if (valueType === 'object') {
 		return JSON.stringify(value);
-	} else if (value || value === 0) {
+	} else if (valueType === 'number' || valueType === 'boolean') {
 		return String(value);
 	} else {
 		return '';
@@ -46,7 +47,7 @@ const Select = React.createClass({
 		addLabelText: React.PropTypes.string,       // placeholder displayed when you want to add a label on a multi-value input
 		'aria-label': React.PropTypes.string,       // Aria label (for assistive tech)
 		'aria-labelledby': React.PropTypes.string,	// HTML ID of an element that should be used as the label (for assistive tech)
-		arrowRenderer: React.PropTypes.func, 				// Create drop-down caret element
+		arrowRenderer: React.PropTypes.func,				// Create drop-down caret element
 		autoBlur: React.PropTypes.bool,             // automatically blur the component when an option is selected
 		autofocus: React.PropTypes.bool,            // autofocus the component on mount
 		autosize: React.PropTypes.bool,             // whether to enable autosizing or not
@@ -496,9 +497,15 @@ const Select = React.createClass({
 				this.focusPageDownOption();
 			break;
 			case 35: // end key
+				if (event.shiftKey) {
+					return;
+				}
 				this.focusEndOption();
 			break;
 			case 36: // home key
+				if (event.shiftKey) {
+					return;
+				}
 				this.focusStartOption();
 			break;
 			default: return;
@@ -555,7 +562,8 @@ const Select = React.createClass({
 	 * @param	{Object}		props	- the Select component's props (or nextProps)
 	 */
 	expandValue (value, props) {
-		if (typeof value !== 'string' && typeof value !== 'number') return value;
+		const valueType = typeof value;
+		if (valueType !== 'string' && valueType !== 'number' && valueType !== 'boolean') return value;
 		let { options, valueKey } = props;
 		if (!options) return;
 		for (var i = 0; i < options.length; i++) {
@@ -917,6 +925,12 @@ const Select = React.createClass({
 		}
 	},
 
+	onOptionRef(ref, isFocused) {
+		if (isFocused) {
+			this.focused = ref;
+		}
+	},
+
 	renderMenu (options, valueArray, focusedOption) {
 		if (options && options.length) {
 			return this.props.menuRenderer({
@@ -933,6 +947,7 @@ const Select = React.createClass({
 				selectValue: this.selectValue,
 				valueArray,
 				valueKey: this.props.valueKey,
+				onOptionRef: this.onOptionRef,
 			});
 		} else if (this.props.noResultsText) {
 			return (
