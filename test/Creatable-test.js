@@ -232,9 +232,4 @@ describe('Creatable', () => {
 		expect(test(188), 'to be', true);
 		expect(test(1), 'to be', false);
 	});
-
-	it('default :onInputKeyDown should run user provided handler.', (done) => {
-		createControl({ onInputKeyDown: event => done() });
-		return creatableInstance.onInputKeyDown({ keyCode: 97 });
-	});
 });
