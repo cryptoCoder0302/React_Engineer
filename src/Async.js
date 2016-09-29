@@ -8,7 +8,10 @@ const propTypes = {
 	children: React.PropTypes.func.isRequired,       // Child function responsible for creating the inner Select component; (props: Object): PropTypes.element
 	ignoreAccents: React.PropTypes.bool,             // strip diacritics when filtering; defaults to true
 	ignoreCase: React.PropTypes.bool,                // perform case-insensitive filtering; defaults to true
-	loadingPlaceholder: PropTypes.string.isRequired, // replaces the placeholder while options are loading
+	loadingPlaceholder: React.PropTypes.oneOfType([  // replaces the placeholder while options are loading 
+		React.PropTypes.string,
+		React.PropTypes.node
+	]),
 	loadOptions: React.PropTypes.func.isRequired,    // callback to load options asynchronously; (inputValue: string, callback: Function): ?Promise
 	options: PropTypes.array.isRequired,             // array of options
 	placeholder: React.PropTypes.oneOfType([         // field placeholder, displayed when there's no value (shared with Select)
@@ -19,7 +22,6 @@ const propTypes = {
 		React.PropTypes.string,
 		React.PropTypes.node
 	]),
-	onInputChange: React.PropTypes.func,             // optional for keeping track of what is being typed
 };
 
 const defaultProps = {
@@ -119,7 +121,7 @@ export default class Async extends Component {
 	}
 
 	_onInputChange (inputValue) {
-		const { ignoreAccents, ignoreCase, onInputChange } = this.props;
+		const { ignoreAccents, ignoreCase } = this.props;
 
 		if (ignoreAccents) {
 			inputValue = stripDiacritics(inputValue);
@@ -127,10 +129,6 @@ export default class Async extends Component {
 
 		if (ignoreCase) {
 			inputValue = inputValue.toLowerCase();
-		}
-
-		if (onInputChange) {
-			onInputChange(inputValue);
 		}
 
 		return this.loadOptions(inputValue);
