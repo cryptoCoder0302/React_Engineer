@@ -72,6 +72,10 @@ export default class Async extends Component {
 		});
 	}
 
+	clearOptions() {
+		this.setState({ options: [] });
+	}
+
 	loadOptions (inputValue) {
 		const { cache, loadOptions } = this.props;
 
@@ -173,8 +177,14 @@ export default class Async extends Component {
 		const props = {
 			noResultsText: this.noResultsText(),
 			placeholder: isLoading ? loadingPlaceholder : placeholder,
-			options: isLoading ? [] : options,
-			ref: (ref) => (this.select = ref)
+			options: (isLoading && loadingPlaceholder) ? [] : options,
+			ref: (ref) => (this.select = ref),
+			onChange: (newValues) => {
+				if (this.props.value && (newValues.length > this.props.value.length)) {
+					this.clearOptions();
+				}
+				this.props.onChange(newValues);
+			}
 		};
 
 		return children({
