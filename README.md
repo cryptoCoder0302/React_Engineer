@@ -339,7 +339,7 @@ function onInputKeyDown(event) {
 	Property	|	Type		|	Default		|	Description
 :-----------------------|:--------------|:--------------|:--------------------------------
 	addLabelText	|	string	|	'Add "{label}"?'	|	text to display when `allowCreate` is true
-  arrowRenderer | func | undefined | Renders a custom drop-down arrow to be shown in the right-hand side of the select: `arrowRenderer({ onMouseDown, isOpen })`
+  arrowRenderer | func | undefined | Renders a custom drop-down arrow to be shown in the right-hand side of the select: `arrowRenderer({ onMouseDown })`
 	autoBlur	|	bool | false | Blurs the input element after a selection has been made. Handy for lowering the keyboard on mobile devices
 	autofocus       |       bool    |      undefined        |  autofocus the component on mount
 	autoload 	|	bool	|	true		|	whether to auto-load the default async options set
@@ -369,7 +369,7 @@ function onInputKeyDown(event) {
 	menuRenderer | func | undefined | Renders a custom menu with options; accepts the following named parameters: `menuRenderer({ focusedOption, focusOption, options, selectValue, valueArray })`
 	multi 		|	bool	|	undefined	|	multi-value input
 	name 		|	string	|	undefined	|	field name, for hidden `<input />` tag
-	noResultsText 	|	string	|	'No results found'	|	placeholder displayed when there are no matching search results or a falsy value to hide it
+	noResultsText 	|	string 	|	'No results found'	|	placeholder displayed when there are no matching search results or a falsy value to hide it (can also be a react component)
 	onBlur 		|	func	|	undefined	|	onBlur handler: `function(event) {}`
 	onBlurResetsInput	|	bool	|	true	|	whether to clear input on blur or not
 	onChange 	|	func	|	undefined	|	onChange handler: `function(newValue) {}`
