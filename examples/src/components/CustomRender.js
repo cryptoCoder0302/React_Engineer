@@ -12,9 +12,7 @@ var DisabledUpsellOptions = React.createClass({
 	},
 	setValue (value) {
 		this.setState({ value });
-		if (value) {
-			console.log('Support level selected:', value.label);
-		}
+		console.log('Support level selected:', value.label);
 	},
 	renderLink: function() {
 		return <a style={{ marginLeft: 5 }} href="/upgrade" target="_blank">Upgrade here!</a>;
