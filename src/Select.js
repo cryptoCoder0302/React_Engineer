@@ -633,6 +633,13 @@ const Select = React.createClass({
 	addValue (value) {
 		var valueArray = this.getValueArray(this.props.value);
 		this.setValue(valueArray.concat(value));
+		const visibleOptions = this._visibleOptions.filter(val => !val.disabled);
+		const index = visibleOptions.indexOf(value);
+		if (visibleOptions.length > index + 1) {
+			this.focusOption(visibleOptions[index + 1]);
+		} else if (index > 0) {
+			this.focusOption(visibleOptions[index - 1]);
+		}
 	},
 
 	popValue () {
@@ -910,7 +917,8 @@ const Select = React.createClass({
 
 	renderArrow () {
 		const onMouseDown = this.handleMouseDownOnArrow;
-		const arrow = this.props.arrowRenderer({ onMouseDown });
+                const isOpen = this.state.isOpen;
+		const arrow = this.props.arrowRenderer({ onMouseDown, isOpen });
 
 		return (
 			<span
@@ -1046,7 +1054,7 @@ const Select = React.createClass({
 
 	render () {
 		let valueArray = this.getValueArray(this.props.value);
-		let options =	this._visibleOptions = this.filterOptions(this.props.multi ? this.getValueArray(this.props.value) : null);
+		let options = this._visibleOptions = this.filterOptions(this.props.multi ? this.getValueArray(this.props.value) : null);
 		let isOpen = this.state.isOpen;
 		if (this.props.multi && !options.length && valueArray.length && !this.state.inputValue) isOpen = false;
 		const focusedOptionIndex = this.getFocusableOptionIndex(valueArray[0]);
