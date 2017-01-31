@@ -205,11 +205,19 @@ const Creatable = React.createClass({
 
 	render () {
 		const {
-			children = defaultChildren,
 			newOptionCreator,
 			shouldKeyDownEventCreateNewOption,
 			...restProps
 		} = this.props;
+
+		let { children } = this.props;
+
+		// We can't use destructuring default values to set the children,
+		// because it won't apply work if `children` is null. A falsy check is
+		// more reliable in real world use-cases.
+		if (!children) {
+			children = defaultChildren;
+		}
 
 		const props = {
 			...restProps,
