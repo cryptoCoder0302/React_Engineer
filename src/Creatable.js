@@ -203,10 +203,6 @@ const Creatable = React.createClass({
 		}
 	},
 
-	focus () {
-		this.select.focus();
-	},
-
 	render () {
 		const {
 			newOptionCreator,
