@@ -37,6 +37,10 @@ const stringOrNode = React.PropTypes.oneOfType([
 	React.PropTypes.string,
 	React.PropTypes.node
 ]);
+const stringOrNumber = React.PropTypes.oneOfType([
+	React.PropTypes.string,
+	React.PropTypes.number
+]);
 
 let instanceId = 1;
 
@@ -46,7 +50,6 @@ const Select = React.createClass({
 
 	propTypes: {
 		addLabelText: React.PropTypes.string,       // placeholder displayed when you want to add a label on a multi-value input
-		'aria-describedby': React.PropTypes.string,	// HTML ID(s) of element(s) that should be used to describe this input (for assistive tech)
 		'aria-label': React.PropTypes.string,       // Aria label (for assistive tech)
 		'aria-labelledby': React.PropTypes.string,	// HTML ID of an element that should be used as the label (for assistive tech)
 		arrowRenderer: React.PropTypes.func,				// Create drop-down caret element
@@ -108,7 +111,7 @@ const Select = React.createClass({
 		searchable: React.PropTypes.bool,           // whether to enable searching feature or not
 		simpleValue: React.PropTypes.bool,          // pass the value to onChange as a simple value (legacy pre 1.0 mode), defaults to false
 		style: React.PropTypes.object,              // optional style to apply to the control
-		tabIndex: React.PropTypes.string,           // optional tab index of the control
+		tabIndex: stringOrNumber,                   // optional tab index of the control
 		tabSelectsValue: React.PropTypes.bool,      // whether to treat tabbing out while focused to be value selection
 		value: React.PropTypes.any,                 // initial field value
 		valueComponent: React.PropTypes.func,       // value component to render
@@ -854,7 +857,6 @@ const Select = React.createClass({
 			'aria-owns': ariaOwns,
 			'aria-haspopup': '' + isOpen,
 			'aria-activedescendant': isOpen ? this._instancePrefix + '-option-' + focusedOptionIndex : this._instancePrefix + '-value',
-			'aria-describedby': this.props['aria-describedby'],
 			'aria-labelledby': this.props['aria-labelledby'],
 			'aria-label': this.props['aria-label'],
 			className: className,
