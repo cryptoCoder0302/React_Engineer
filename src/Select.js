@@ -37,10 +37,6 @@ const stringOrNode = React.PropTypes.oneOfType([
 	React.PropTypes.string,
 	React.PropTypes.node
 ]);
-const stringOrNumber = React.PropTypes.oneOfType([
-	React.PropTypes.string,
-	React.PropTypes.number
-]);
 
 let instanceId = 1;
 
@@ -111,7 +107,7 @@ const Select = React.createClass({
 		searchable: React.PropTypes.bool,           // whether to enable searching feature or not
 		simpleValue: React.PropTypes.bool,          // pass the value to onChange as a simple value (legacy pre 1.0 mode), defaults to false
 		style: React.PropTypes.object,              // optional style to apply to the control
-		tabIndex: stringOrNumber,                   // optional tab index of the control
+		tabIndex: React.PropTypes.string,           // optional tab index of the control
 		tabSelectsValue: React.PropTypes.bool,      // whether to treat tabbing out while focused to be value selection
 		value: React.PropTypes.any,                 // initial field value
 		valueComponent: React.PropTypes.func,       // value component to render
@@ -572,7 +568,13 @@ const Select = React.createClass({
 		/** support optionally passing in the `nextProps` so `componentWillReceiveProps` updates will function as expected */
 		const props = typeof nextProps === 'object' ? nextProps : this.props;
 		if (props.multi) {
-			if (typeof value === 'string') value = value.split(props.delimiter);
+			if (typeof value === 'string') {
+				value = value.split(props.delimiter);
+				// convert string array to numbers array if made of numbers only
+				if (!value.some(isNaN)) {
+					value = value.map(Number);
+				}				
+			}
 			if (!Array.isArray(value)) {
 				if (value === null || value === undefined) return [];
 				value = [value];
