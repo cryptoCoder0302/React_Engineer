@@ -568,13 +568,7 @@ const Select = React.createClass({
 		/** support optionally passing in the `nextProps` so `componentWillReceiveProps` updates will function as expected */
 		const props = typeof nextProps === 'object' ? nextProps : this.props;
 		if (props.multi) {
-			if (typeof value === 'string') {
-				value = value.split(props.delimiter);
-				// convert string array to numbers array if made of numbers only
-				if (!value.some(isNaN)) {
-					value = value.map(Number);
-				}				
-			}
+			if (typeof value === 'string') value = value.split(props.delimiter);
 			if (!Array.isArray(value)) {
 				if (value === null || value === undefined) return [];
 				value = [value];
