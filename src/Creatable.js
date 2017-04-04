@@ -203,10 +203,15 @@ const Creatable = React.createClass({
 		}
 	},
 
+	focus () {
+		this.select.focus();
+	},
+
 	render () {
 		const {
 			newOptionCreator,
 			shouldKeyDownEventCreateNewOption,
+			ref: refProp,
 			...restProps
 		} = this.props;
 
@@ -233,6 +238,9 @@ const Creatable = React.createClass({
 				if (ref) {
 					this.labelKey = ref.props.labelKey;
 					this.valueKey = ref.props.valueKey;
+				}
+				if (refProp) {
+					refProp(ref);
 				}
 			}
 		};
