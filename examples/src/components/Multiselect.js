@@ -1,6 +1,4 @@
 import React from 'react';
-import createClass from 'create-react-class';
-import PropTypes from 'prop-types';
 import Select from 'react-select';
 
 const FLAVOURS = [
@@ -16,10 +14,10 @@ const WHY_WOULD_YOU = [
 	{ label: 'Chocolate (are you crazy?)', value: 'chocolate', disabled: true },
 ].concat(FLAVOURS.slice(1));
 
-var MultiSelectField = createClass({
+var MultiSelectField = React.createClass({
 	displayName: 'MultiSelectField',
 	propTypes: {
-		label: PropTypes.string,
+		label: React.PropTypes.string,
 	},
 	getInitialState () {
 		return {

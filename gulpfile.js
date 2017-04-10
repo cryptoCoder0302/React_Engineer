@@ -9,9 +9,7 @@ var taskConfig = {
 			'classnames',
 			'react-input-autosize',
 			'react',
-			'react-dom',
-			'create-react-class',
-			'prop-types'
+			'react-dom'
 		],
 		less: {
 			path: 'less',
