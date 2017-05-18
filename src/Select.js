@@ -868,17 +868,12 @@ const Select = createClass({
 
 		if (this.props.disabled || !this.props.searchable) {
 			const { inputClassName, ...divProps } = this.props.inputProps;
-
-			const ariaOwns = classNames({
-				[this._instancePrefix + '-list']: isOpen,
-			});
-
 			return (
 				<div
 					{...divProps}
 					role="combobox"
 					aria-expanded={isOpen}
-					aria-owns={ariaOwns}
+					aria-owns={isOpen ? this._instancePrefix + '-list' : this._instancePrefix + '-value'}
 					aria-activedescendant={isOpen ? this._instancePrefix + '-option-' + focusedOptionIndex : this._instancePrefix + '-value'}
 					className={className}
 					tabIndex={this.props.tabIndex || 0}
@@ -903,8 +898,7 @@ const Select = createClass({
 	},
 
 	renderClear () {
-
-		if (!this.props.clearable || this.props.value === undefined || this.props.value === null || this.props.multi && !this.props.value.length || this.props.disabled || this.props.isLoading) return;
+		if (!this.props.clearable || (!this.props.value || this.props.value === 0) || (this.props.multi && !this.props.value.length) || this.props.disabled || this.props.isLoading) return;
 		const clear = this.props.clearRenderer();
 
 		return (
@@ -974,6 +968,7 @@ const Select = createClass({
 			return this.props.menuRenderer({
 				focusedOption,
 				focusOption: this.focusOption,
+				inputValue: this.state.inputValue,
 				instancePrefix: this._instancePrefix,
 				labelKey: this.props.labelKey,
 				onFocus: this.focusOption,
