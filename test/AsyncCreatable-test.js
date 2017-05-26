@@ -59,17 +59,4 @@ describe('AsyncCreatable', () => {
 			class: ['foo']
 		});
 	});
-
-	describe('.focus()', () => {
-		beforeEach(() => {
-			createControl({});
-			TestUtils.Simulate.blur(filterInputNode);
-		});
-
-		it('focuses the search input', () => {
-			expect(filterInputNode, 'not to equal', document.activeElement);
-			creatableInstance.focus();
-			expect(filterInputNode, 'to equal', document.activeElement);
-		});
-	});
 });

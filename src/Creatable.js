@@ -1,56 +1,54 @@
 import React from 'react';
-import createClass from 'create-react-class';
-import PropTypes from 'prop-types';
 import Select from './Select';
 import defaultFilterOptions from './utils/defaultFilterOptions';
 import defaultMenuRenderer from './utils/defaultMenuRenderer';
 
-const Creatable = createClass({
+const Creatable = React.createClass({
 	displayName: 'CreatableSelect',
 
 	propTypes: {
 		// Child function responsible for creating the inner Select component
 		// This component can be used to compose HOCs (eg Creatable and Async)
 		// (props: Object): PropTypes.element
-		children: PropTypes.func,
+		children: React.PropTypes.func,
 
 		// See Select.propTypes.filterOptions
-		filterOptions: PropTypes.any,
+		filterOptions: React.PropTypes.any,
 
 		// Searches for any matching option within the set of options.
 		// This function prevents duplicate options from being created.
 		// ({ option: Object, options: Array, labelKey: string, valueKey: string }): boolean
-		isOptionUnique: PropTypes.func,
+		isOptionUnique: React.PropTypes.func,
 
 	    // Determines if the current input text represents a valid option.
 	    // ({ label: string }): boolean
-	    isValidNewOption: PropTypes.func,
+	    isValidNewOption: React.PropTypes.func,
 
 		// See Select.propTypes.menuRenderer
-		menuRenderer: PropTypes.any,
+		menuRenderer: React.PropTypes.any,
 
 	    // Factory to create new option.
 	    // ({ label: string, labelKey: string, valueKey: string }): Object
-		newOptionCreator: PropTypes.func,
+		newOptionCreator: React.PropTypes.func,
 
 		// input change handler: function (inputValue) {}
-		onInputChange: PropTypes.func,
+		onInputChange: React.PropTypes.func,
 
 		// input keyDown handler: function (event) {}
-		onInputKeyDown: PropTypes.func,
+		onInputKeyDown: React.PropTypes.func,
 
 		// new option click handler: function (option) {}
-		onNewOptionClick: PropTypes.func,
+		onNewOptionClick: React.PropTypes.func,
 
 		// See Select.propTypes.options
-		options: PropTypes.array,
+		options: React.PropTypes.array,
 
 	    // Creates prompt/placeholder option text.
 	    // (filterText: string): string
-		promptTextCreator: PropTypes.func,
+		promptTextCreator: React.PropTypes.func,
 
 		// Decides if a keyDown event (eg its `keyCode`) should result in the creation of a new option.
-		shouldKeyDownEventCreateNewOption: PropTypes.func,
+		shouldKeyDownEventCreateNewOption: React.PropTypes.func,
 	},
 
 	// Default prop methods
@@ -203,10 +201,6 @@ const Creatable = createClass({
 		} else {
 			this.select.selectValue(option);
 		}
-	},
-
-	focus () {
-		this.select.focus();
 	},
 
 	render () {

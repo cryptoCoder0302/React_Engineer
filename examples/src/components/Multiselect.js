@@ -1,6 +1,4 @@
 import React from 'react';
-import createClass from 'create-react-class';
-import PropTypes from 'prop-types';
 import Select from 'react-select';
 
 const FLAVOURS = [
@@ -16,10 +14,10 @@ const WHY_WOULD_YOU = [
 	{ label: 'Chocolate (are you crazy?)', value: 'chocolate', disabled: true },
 ].concat(FLAVOURS.slice(1));
 
-var MultiSelectField = createClass({
+var MultiSelectField = React.createClass({
 	displayName: 'MultiSelectField',
 	propTypes: {
-		label: PropTypes.string,
+		label: React.PropTypes.string,
 	},
 	getInitialState () {
 		return {
@@ -27,6 +25,7 @@ var MultiSelectField = createClass({
 			crazy: false,
 			options: FLAVOURS,
 			value: [],
+			rtl: false,
 		};
 	},
 	handleSelectChange (value) {
@@ -43,11 +42,16 @@ var MultiSelectField = createClass({
 			options: crazy ? WHY_WOULD_YOU : FLAVOURS,
 		});
 	},
+	toggleRtl (e) {
+		let rtl = e.target.checked;
+		this.setState({ rtl });
+	},
+
 	render () {
 		return (
 			<div className="section">
 				<h3 className="section-heading">{this.props.label}</h3>
-				<Select multi simpleValue disabled={this.state.disabled} value={this.state.value} placeholder="Select your favourite(s)" options={this.state.options} onChange={this.handleSelectChange} />
+				<Select multi simpleValue disabled={this.state.disabled} value={this.state.value} placeholder="Select your favourite(s)" options={this.state.options} onChange={this.handleSelectChange} rtl={this.state.rtl} />
 
 				<div className="checkbox-list">
 					<label className="checkbox">
@@ -57,6 +61,10 @@ var MultiSelectField = createClass({
 					<label className="checkbox">
 						<input type="checkbox" className="checkbox-control" checked={this.state.crazy} onChange={this.toggleChocolate} />
 						<span className="checkbox-label">I don't like Chocolate (disabled the option)</span>
+					</label>
+					<label className="checkbox">
+						<input type="checkbox" className="checkbox-control" checked={this.state.rtl} onChange={this.toggleRtl} />
+						<span className="checkbox-label">rtl</span>
 					</label>
 				</div>
 			</div>
