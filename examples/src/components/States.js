@@ -1,13 +1,15 @@
 import React from 'react';
+import createClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import Select from 'react-select';
 
 const STATES = require('../data/states');
 
-var StatesField = React.createClass({
+var StatesField = createClass({
 	displayName: 'StatesField',
 	propTypes: {
-		label: React.PropTypes.string,
-		searchable: React.PropTypes.bool,
+		label: PropTypes.string,
+		searchable: PropTypes.bool,
 	},
 	getDefaultProps () {
 		return {
@@ -22,7 +24,6 @@ var StatesField = React.createClass({
 			searchable: this.props.searchable,
 			selectValue: 'new-south-wales',
 			clearable: true,
-			rtl: false,
 		};
 	},
 	switchCountry (e) {
@@ -52,7 +53,7 @@ var StatesField = React.createClass({
 		return (
 			<div className="section">
 				<h3 className="section-heading">{this.props.label}</h3>
-				<Select ref="stateSelect" autofocus options={options} simpleValue clearable={this.state.clearable} name="selected-state" disabled={this.state.disabled} value={this.state.selectValue} onChange={this.updateValue} searchable={this.state.searchable} rtl={this.state.rtl} />
+				<Select ref="stateSelect" autofocus options={options} simpleValue clearable={this.state.clearable} name="selected-state" disabled={this.state.disabled} value={this.state.selectValue} onChange={this.updateValue} searchable={this.state.searchable} />
 
 				<div style={{ marginTop: 14 }}>
 					<button type="button" onClick={this.focusStateSelect}>Focus Select</button>
@@ -67,10 +68,6 @@ var StatesField = React.createClass({
 					<label className="checkbox" style={{ marginLeft: 10 }}>
 						<input type="checkbox" className="checkbox-control" name="clearable" checked={this.state.clearable} onChange={this.toggleCheckbox}/>
 						<span className="checkbox-label">Clearable</span>
-					</label>
-					<label className="checkbox" style={{ marginLeft: 10 }}>
-						<input type="checkbox" className="checkbox-control" name="rtl" checked={this.state.rtl} onChange={this.toggleCheckbox}/>
-						<span className="checkbox-label">rtl</span>
 					</label>
 				</div>
 				<div className="checkbox-list">

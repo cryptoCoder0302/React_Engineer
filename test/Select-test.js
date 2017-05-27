@@ -691,6 +691,11 @@ describe('Select', () => {
 			expect(onChange, 'was called with', 0);
 		});
 
+        it('displays the X button for 0 value', () => {
+            wrapper.setPropsForChild({ value: 0 });
+            expect(ReactDOM.findDOMNode(instance).querySelector('.Select-clear'), 'not to equal', undefined);
+        });
+
 		describe('with multi=true', () => {
 
 			beforeEach(() => {
@@ -961,6 +966,11 @@ describe('Select', () => {
 			expect(ReactDOM.findDOMNode(instance), 'queried for first', DISPLAYED_SELECTION_SELECTOR,
 					'to have text', 'No');
 		});
+
+        it('displays the X button for false value', () => {
+            wrapper.setPropsForChild({ value: false });
+            expect(ReactDOM.findDOMNode(instance).querySelector('.Select-clear'), 'not to equal', undefined);
+        });
 
 		describe('with multi=true', () => {
 
@@ -3803,6 +3813,19 @@ describe('Select', () => {
 					'to contain', <input role="combobox" aria-labelledby="test-label-id" />);
 			});
 
+			it('passes through the aria-describedby prop', () => {
+
+				instance = createControl({
+					options: defaultOptions,
+					value: 'one',
+					'aria-describedby': 'test-label1-id test-label2-id'
+				});
+
+				expect(instance,
+					'to contain', <input role="combobox" aria-describedby="test-label1-id test-label2-id" />);
+			});
+
+
 			it('passes through the aria-label prop', () => {
 
 				instance = createControl({
@@ -3893,4 +3916,27 @@ describe('Select', () => {
 			expect(input, 'to equal', document.activeElement);
 		});
 	});
+
+	describe('arrowRenderer', () => {
+		beforeEach(() => {
+			options = [
+				{ value: 'one', label: 'One' },
+				{ value: 'two', label: 'Two' },
+				{ value: 'three', label: 'Three' }
+			];
+
+			instance = createControl({
+				name: 'form-field-name',
+				value: 'one',
+				options: options,
+				arrowRenderer: null
+			});
+		});
+
+		it('doesn\'t render arrow if arrowRenderer props is null', () => {
+
+			var arrow = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-arrow-zone')[0];
+
+			expect(arrow, 'to be', undefined);
+		});
 });

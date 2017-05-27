@@ -12,7 +12,7 @@
 // "classic" focused styles: maintain for legacy
 .Select-focus-state-classic() {
 	border-color: @select-input-border-focus lighten(@select-input-border-focus, 5%) lighten(@select-input-border-focus, 5%);
-	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 0 5px -1px fade(@select-input-border-focus,50%);
+	box-shadow: @select-input-box-shadow-focus;
 }
 
 // base
@@ -40,10 +40,6 @@
 		pointer-events: none;
 		opacity: 0.35;
 	}
-	&.Select-rtl {
-		direction: rtl;
-		text-align: right;
-	}
 }
 
 // base
@@ -65,7 +61,7 @@
 	width: 100%;
 
 	&:hover {
-		box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+		box-shadow: @select-input-hover-box-shadow;
 	}
 
 	.Select-input:focus {
@@ -234,12 +230,6 @@
 	text-align: center;
 	vertical-align: middle;
 	width: (@select-arrow-width * 5);
-	padding-right: @select-arrow-width;
-
-	.Select-rtl & {
-		padding-right: 0;
-		padding-left: @select-arrow-width;
-	}
 }
 
 .Select-arrow {
@@ -254,6 +244,10 @@
 .is-open .Select-arrow,
 .Select-arrow-zone:hover > .Select-arrow {
 	border-top-color: @select-arrow-color-hover;
+}
+
+.Select-control > *:last-child {
+  padding-right: @select-right-padding;
 }
 
 .Select--multi .Select-multi-value-wrapper {
