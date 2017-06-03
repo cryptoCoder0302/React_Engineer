@@ -921,10 +921,6 @@ const Select = createClass({
 	},
 
 	renderArrow () {
-		if (this.props.arrowRenderer === null) {
-			return null;
-		}
-
 		const onMouseDown = this.handleMouseDownOnArrow;
                 const isOpen = this.state.isOpen;
 		const arrow = this.props.arrowRenderer({ onMouseDown, isOpen });

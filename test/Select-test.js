@@ -3916,19 +3916,4 @@ describe('Select', () => {
 			expect(input, 'to equal', document.activeElement);
 		});
 	});
-
-	describe('arrowRenderer', () => {
-		beforeEach(() => {
-			instance = createControl({
-				arrowRenderer: null
-			});
-		});
-
-		it('doesn\'t render arrow if arrowRenderer props is null', () => {
-
-			var arrow = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-arrow-zone')[0];
-
-			expect(arrow, 'to be', undefined);
-		});
-	});
 });
