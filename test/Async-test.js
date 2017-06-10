@@ -447,20 +447,4 @@ describe('Async', () => {
 			expect(input, 'to equal', document.activeElement);
 		});
 	});
-
-
-	describe('props sync test', () => {
-		it('should update options on componentWillReceiveProps', () => {
-			createControl({
-			});
-			asyncInstance.componentWillReceiveProps({
-				options: [{
-					label: 'bar',
-					value: 'foo',
-				}]
-			});
-			expect(asyncNode.querySelectorAll('[role=option]').length, 'to equal', 1);
-			expect(asyncNode.querySelector('[role=option]').textContent, 'to equal', 'bar');
-		});
-	});
 });
