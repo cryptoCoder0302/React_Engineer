@@ -226,10 +226,8 @@ const Select = createClass({
 			var menuDOM = ReactDOM.findDOMNode(this.menu);
 			var focusedRect = focusedDOM.getBoundingClientRect();
 			var menuRect = menuDOM.getBoundingClientRect();
-			if (focusedRect.bottom > menuRect.bottom) {
+			if (focusedRect.bottom > menuRect.bottom || focusedRect.top < menuRect.top) {
 				menuDOM.scrollTop = (focusedDOM.offsetTop + focusedDOM.clientHeight - menuDOM.offsetHeight);
-			} else if (focusedRect.top < menuRect.top) {
-				menuDOM.scrollTop = focusedDOM.offsetTop;
 			}
 		}
 		if (this.props.scrollMenuIntoView && this.menuContainer) {
@@ -489,6 +487,7 @@ const Select = createClass({
 				if (event.shiftKey || !this.state.isOpen || !this.props.tabSelectsValue) {
 					return;
 				}
+				event.preventDefault();
 				this.selectFocusedOption();
 			return;
 			case 13: // enter
