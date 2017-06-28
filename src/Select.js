@@ -198,6 +198,8 @@ const Select = createClass({
 			this.setState({
 				required: this.handleRequired(valueArray[0], nextProps.multi),
 			});
+		} else {
+			this.setState({ required: false });
 		}
 	},
 
@@ -487,12 +489,10 @@ const Select = createClass({
 				if (event.shiftKey || !this.state.isOpen || !this.props.tabSelectsValue) {
 					return;
 				}
-				event.preventDefault();
 				this.selectFocusedOption();
 			return;
 			case 13: // enter
 				if (!this.state.isOpen) return;
-				event.preventDefault();
 				event.stopPropagation();
 				this.selectFocusedOption();
 			break;
