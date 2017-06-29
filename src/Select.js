@@ -198,8 +198,6 @@ const Select = createClass({
 			this.setState({
 				required: this.handleRequired(valueArray[0], nextProps.multi),
 			});
-		} else {
-			this.setState({ required: false });
 		}
 	},
 
