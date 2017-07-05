@@ -277,7 +277,7 @@ The default `filterOptions` method scans the options array for matches each time
 This works well but can get slow as the options array grows to several hundred objects.
 For larger options lists a custom filter function like [`react-select-fast-filter-options`](https://github.com/bvaughn/react-select-fast-filter-options) will produce better results.
 
-### Efficiently rendering large lists with windowing
+### Effeciently rendering large lists with windowing
 
 The `menuRenderer` property can be used to override the default drop-down list of options.
 This should be done when the list is large (hundreds or thousands of items) for faster rendering.
@@ -394,6 +394,7 @@ function onInputKeyDown(event) {
 | optionRenderer | func | undefined | function which returns a custom way to render the options in the menu |
 | options | array | undefined | array of options |
 | placeholder | string\|node | 'Select ...' | field placeholder, displayed when there's no value |
+| required | bool | false | applies HTML5 required attribute when needed |
 | scrollMenuIntoView | bool | true | whether the viewport will shift to display the entire menu when engaged |
 | searchable | bool | true | whether to enable searching feature or not |
 | searchPromptText | string\|node | 'Type to search' | label to prompt for search input |

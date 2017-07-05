@@ -1,18 +1,20 @@
 import React from 'react';
+import createClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-class Value extends React.Component {
+const Value = createClass({
 
-	constructor(props) {
-		super(props);
+	displayName: 'Value',
 
-		this.handleMouseDown = this.handleMouseDown.bind(this);
-		this.onRemove = this.onRemove.bind(this);
-		this.handleTouchEndRemove = this.handleTouchEndRemove.bind(this);
-		this.handleTouchMove = this.handleTouchMove.bind(this);
-		this.handleTouchStart = this.handleTouchStart.bind(this);
-	}
+	propTypes: {
+		children: PropTypes.node,
+		disabled: PropTypes.bool,               // disabled prop passed to ReactSelect
+		id: PropTypes.string,                   // Unique id for the value - used for aria
+		onClick: PropTypes.func,                // method to handle click on value label
+		onRemove: PropTypes.func,               // method to handle removal of the value
+		value: PropTypes.object.isRequired,     // the option object for this value
+	},
 
 	handleMouseDown (event) {
 		if (event.type === 'mousedown' && event.button !== 0) {
@@ -26,13 +28,13 @@ class Value extends React.Component {
 		if (this.props.value.href) {
 			event.stopPropagation();
 		}
-	}
+	},
 
 	onRemove (event) {
 		event.preventDefault();
 		event.stopPropagation();
 		this.props.onRemove(this.props.value);
-	}
+	},
 
 	handleTouchEndRemove (event){
 		// Check if the view is being dragged, In this case
@@ -41,17 +43,17 @@ class Value extends React.Component {
 
 		// Fire the mouse events
 		this.onRemove(event);
-	}
+	},
 
 	handleTouchMove (event) {
 		// Set a flag that the view is being dragged
 		this.dragging = true;
-	}
+	},
 
 	handleTouchStart (event) {
 		// Set a flag that the view is not being dragged
 		this.dragging = false;
-	}
+	},
 
 	renderRemoveIcon () {
 		if (this.props.disabled || !this.props.onRemove) return;
@@ -65,7 +67,7 @@ class Value extends React.Component {
 				&times;
 			</span>
 		);
-	}
+	},
 
 	renderLabel () {
 		let className = 'Select-value-label';
@@ -78,7 +80,7 @@ class Value extends React.Component {
 				{this.props.children}
 			</span>
 		);
-	}
+	},
 
 	render () {
 		return (
@@ -91,16 +93,7 @@ class Value extends React.Component {
 			</div>
 		);
 	}
-};
 
-
-Value.propTypes = {
-	children: PropTypes.node,
-	disabled: PropTypes.bool,               // disabled prop passed to ReactSelect
-	id: PropTypes.string,                   // Unique id for the value - used for aria
-	onClick: PropTypes.func,                // method to handle click on value label
-	onRemove: PropTypes.func,               // method to handle removal of the value
-	value: PropTypes.object.isRequired,     // the option object for this value
-};
+});
 
 module.exports = Value;

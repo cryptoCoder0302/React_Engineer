@@ -1,4 +1,5 @@
 import React from 'react';
+import createClass from 'create-react-class';
 import Select from './Select';
 
 function reduce(obj, props = {}){
@@ -10,11 +11,12 @@ function reduce(obj, props = {}){
   }, props);
 }
 
-class AsyncCreatableSelect extends React.Component {
+const AsyncCreatable = createClass({
+	displayName: 'AsyncCreatableSelect',
 
 	focus () {
 		this.select.focus();
-	}
+	},
 
 	render () {
 		return (
@@ -40,7 +42,6 @@ class AsyncCreatableSelect extends React.Component {
 			</Select.Async>
 		);
 	}
-};
+});
 
-module.exports = AsyncCreatableSelect;
-
+module.exports = AsyncCreatable;
