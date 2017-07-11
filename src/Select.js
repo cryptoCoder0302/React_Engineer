@@ -863,7 +863,6 @@ class Select extends React.Component {
 					matchPos: this.props.matchPos,
 					matchProp: this.props.matchProp,
 					valueKey: this.props.valueKey,
-					trimFilter: this.props.trimFilter
 				}
 			);
 		} else {
@@ -1108,7 +1107,6 @@ Select.propTypes = {
     style: PropTypes.object,              // optional style to apply to the control
     tabIndex: PropTypes.string,           // optional tab index of the control
     tabSelectsValue: PropTypes.bool,      // whether to treat tabbing out while focused to be value selection
-    trimFilter: PropTypes.bool,           // whether to trim whitespace around filter value
     value: PropTypes.any,                 // initial field value
     valueComponent: PropTypes.func,       // value component to render
     valueKey: PropTypes.string,           // path of the label value in option objects
@@ -1153,7 +1151,6 @@ Select.defaultProps = {
     searchable: true,
     simpleValue: false,
     tabSelectsValue: true,
-    trimFilter: true,
     valueComponent: Value,
     valueKey: 'value',
 };
