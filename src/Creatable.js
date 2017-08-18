@@ -294,4 +294,4 @@ CreatableSelect.propTypes = {
 };
 
 
-export default CreatableSelect;
+module.exports = CreatableSelect;

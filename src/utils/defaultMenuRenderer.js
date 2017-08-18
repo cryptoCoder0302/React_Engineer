@@ -47,4 +47,4 @@ function menuRenderer ({
 	});
 }
 
-export default menuRenderer;
+module.exports = menuRenderer;

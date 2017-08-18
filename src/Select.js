@@ -3,6 +3,7 @@
   Licensed under the MIT License (MIT), see
   http://jedwatson.github.io/react-select
 */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
@@ -17,18 +18,7 @@ import defaultClearRenderer from './utils/defaultClearRenderer';
 import Option from './Option';
 import Value from './Value';
 
-function stringifyValue (value) {
-	const valueType = typeof value;
-	if (valueType === 'string') {
-		return value;
-	} else if (valueType === 'object') {
-		return JSON.stringify(value);
-	} else if (valueType === 'number' || valueType === 'boolean') {
-		return String(value);
-	} else {
-		return '';
-	}
-}
+const stringifyValue = (value) => typeof value === 'string' ? value : value !== null && JSON.stringify(value) || '';
 
 const stringOrNode = PropTypes.oneOfType([
 	PropTypes.string,
@@ -228,7 +218,6 @@ class Select extends React.Component {
 
 		// for the non-searchable select, toggle the menu
 		if (!this.props.searchable) {
-			// TODO: This code means that if a select is searchable, onClick the options menu will not appear, only on subsequent click will it open.
 			this.focus();
 			return this.setState({
 				isOpen: !this.state.isOpen,
