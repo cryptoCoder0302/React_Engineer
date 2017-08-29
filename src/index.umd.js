@@ -8,8 +8,3 @@ Select.AsyncCreatable = AsyncCreatable;
 Select.Creatable = Creatable;
 
 export default Select;
-export {
-	Async,
-	AsyncCreatable,
-	Creatable
-};
