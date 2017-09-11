@@ -9,7 +9,7 @@ export default {
     input: 'src/index.umd.js',
     output: {
       name: 'Select',
-      file: min ? 'dist/react-select.min.js' : 'dist/react-select.js',
+      file: getDist(min),
       format: 'umd',
     },
     globals: {
@@ -28,10 +28,16 @@ export default {
     ],
     plugins: [
       babel({
-        presets: [['es2015', { 'modules': false }]],
+        babelrc: false,
+        presets: [['es2015', { 'modules': false }], 'stage-0', 'react'],
         plugins: ['external-helpers']
       }),
       resolve(),
       min ? uglify({}, minify) : {},
     ]
 };
+
+
+function getDist (min) {
+  return min ? 'dist/react-select.min.js' : 'dist/react-select.js';
+}

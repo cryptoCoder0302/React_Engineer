@@ -1,5 +1,5 @@
 /*!
-  Copyright (c) 2017 Jed Watson.
+  Copyright (c) 2016 Jed Watson.
   Licensed under the MIT License (MIT), see
   http://jedwatson.github.io/react-select
 */
@@ -98,9 +98,6 @@ class Select extends React.Component {
 			this.setState({
 				required: this.handleRequired(valueArray[0], nextProps.multi),
 			});
-		} else if (this.props.required) {
-			// Used to be required but it's not any more
-			this.setState({ required: false });
 		}
 	}
 
@@ -519,9 +516,8 @@ class Select extends React.Component {
 		//NOTE: update value in the callback to make sure the input value is empty so that there are no styling issues (Chrome had issue otherwise)
 		this.hasScrolledToOption = false;
 		if (this.props.multi) {
-			const updatedValue = this.props.onSelectResetsInput ? '' : this.state.inputValue;
 			this.setState({
-				inputValue: this.handleInputValueChange(updatedValue),
+				inputValue: this.handleInputValueChange(''),
 				focusedIndex: null
 			}, () => {
 				this.addValue(value);
@@ -966,7 +962,7 @@ class Select extends React.Component {
 
 		return (
 			<div ref={ref => this.menuContainer = ref} className="Select-menu-outer" style={this.props.menuContainerStyle}>
-				<div ref={ref => this.menu = ref} role="listbox" tabIndex={-1} className="Select-menu" id={this._instancePrefix + '-list'}
+				<div ref={ref => this.menu = ref} role="listbox" className="Select-menu" id={this._instancePrefix + '-list'}
 						 style={this.props.menuStyle}
 						 onScroll={this.handleMenuScroll}
 						 onMouseDown={this.handleMouseDownOnMenu}>
@@ -1046,10 +1042,10 @@ class Select extends React.Component {
 };
 
 Select.propTypes = {
+    addLabelText: PropTypes.string,       // placeholder displayed when you want to add a label on a multi-value input
     'aria-describedby': PropTypes.string, // HTML ID(s) of element(s) that should be used to describe this input (for assistive tech)
     'aria-label': PropTypes.string,       // Aria label (for assistive tech)
     'aria-labelledby': PropTypes.string,  // HTML ID of an element that should be used as the label (for assistive tech)
-		addLabelText: PropTypes.string,       // placeholder displayed when you want to add a label on a multi-value input
     arrowRenderer: PropTypes.func,        // Create drop-down caret element
     autoBlur: PropTypes.bool,             // automatically blur the component when an option is selected
     autofocus: PropTypes.bool,            // autofocus the component on mount
@@ -1094,7 +1090,6 @@ Select.propTypes = {
     onInputKeyDown: PropTypes.func,       // input keyDown handler: function (event) {}
     onMenuScrollToBottom: PropTypes.func, // fires when the menu is scrolled to the bottom; can be used to paginate options
     onOpen: PropTypes.func,               // fires when the menu is opened
-    onSelectResetsInput: PropTypes.bool,  // whether input is cleared on select (works only for multiselect)
     onValueClick: PropTypes.func,         // onClick handler for value labels: function (value, event) {}
     openAfterFocus: PropTypes.bool,       // boolean to enable opening dropdown when focused
     openOnFocus: PropTypes.bool,          // always open options menu on focus
@@ -1147,7 +1142,6 @@ Select.defaultProps = {
     multi: false,
     noResultsText: 'No results found',
     onBlurResetsInput: true,
-    onSelectResetsInput: true,
     onCloseResetsInput: true,
     optionComponent: Option,
     pageSize: 5,
