@@ -9,7 +9,7 @@ export default {
     input: 'src/index.umd.js',
     output: {
       name: 'Select',
-      file: getDist(min),
+      file: min ? 'dist/react-select.min.js' : 'dist/react-select.js',
       format: 'umd',
     },
     globals: {
@@ -36,8 +36,3 @@ export default {
       min ? uglify({}, minify) : {},
     ]
 };
-
-
-function getDist (min) {
-  return min ? 'dist/react-select.min.js' : 'dist/react-select.js';
-}

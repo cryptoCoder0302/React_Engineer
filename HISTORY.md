@@ -1,7 +1,23 @@
 # React-Select
 
-## Next
+## v1.0.0-rc.6 / 2017-09-10
 
+* fixed; changing `required` prop from `true` to `false` now works as expected, thanks [George Karagkiaouris](https://github.com/karaggeorge)
+* added; new prop `onSelectResetsInput` controls whether the input value is cleared when options are selected, thanks [David Roeca](https://github.com/davidroeca) and [Alexander Nosov](https://github.com/nosovsh)
+* fixed; tabindex parent bug fix for Edge, thanks [George Payne](https://github.com/George-A-Payne)
+* fixed; update selectize link in README.md, thanks [kerumen](https://github.com/kerumen)
+* added; standard issue template, thanks [agirton](https://github.com/agirton)
+* added; new build process using rollup and webpack. Removed grunt. thanks [gwyneplaine](https://github.com/gwyneplaine)
+* fixed; updated contributor docs with the correct node version reference [gwyneplaine](https://github.com/gwyneplaine)
+* fixed; missing method binds in Option, thanks [agirton](https://github.com/agirton)
+* fixed; converted components to use es6 classes, thanks [jochenberger](https://github.com/jochenberger)
+* fixed; console.log example in usage docs, thanks [rohmanhm](https://github.com/rohmanhm)
+* fixed; hide create option after closing menu, thanks [andreme](https://github.com/andreme)
+* fixed; remove circular reference, thanks [agirton](https://github.com/agirton)
+* fixed; readme typo, thanks [ieldanr](https:/github.com/ieldanr)
+* fixed; add missing function binds in Option component, thanks [agirton](https://github.com/agirton) and [blacktemplar](https://github.com/blacktemplar)
+* fixed; re-added fix to [#1580](https://github.com/JedWatson/react-select/issues/1580), thanks [agirton](https://github.com/agirton)
+* fixed; avoid mutating user inputs when ignoring case/accents, thanks [not-an-aardvark](https://github.com/not-an-aardvark)
 * fixed; issues synchronising options props in `Async`, thanks [cbergmiller](https://github.com/cbergmiller)
 * fixed; backspace handling for non-multi select controls, thanks [Jeremy Liberman](https://github.com/MrLeebo)
 

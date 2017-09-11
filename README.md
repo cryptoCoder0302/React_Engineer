@@ -389,11 +389,13 @@ function onInputKeyDown(event) {
 | onInputChange | func | undefined | onInputChange handler/interceptor: `function(inputValue: string): string` |
 | onInputKeyDown | func | undefined | input keyDown handler; call `event.preventDefault()` to override default `Select` behavior: `function(event) {}` |
 | onOpen | func | undefined | handler for when the menu opens: `function () {}` |
+| onSelectResetsInput | bool | true | whether the input value should be reset when options are selected, for `multi`
 | onValueClick | func | undefined | onClick handler for value labels: `function (value, event) {}` |
 | openOnFocus | bool | false | open the options menu when the input gets focus (requires searchable = true) |
 | optionRenderer | func | undefined | function which returns a custom way to render the options in the menu |
 | options | array | undefined | array of options |
 | placeholder | string\|node | 'Select ...' | field placeholder, displayed when there's no value |
+| required | bool | false | applies HTML5 required attribute when needed |
 | scrollMenuIntoView | bool | true | whether the viewport will shift to display the entire menu when engaged |
 | searchable | bool | true | whether to enable searching feature or not |
 | searchPromptText | string\|node | 'Type to search' | label to prompt for search input |
@@ -417,9 +419,9 @@ Right now there's simply a `focus()` method that gives the control focus. All ot
 
 See our [CONTRIBUTING.md](https://github.com/JedWatson/react-select/blob/master/CONTRIBUTING.md) for information on how to contribute.
 
-Thanks to the projects this was inspired by: [Selectize](http://brianreavis.github.io/selectize.js/) (in terms of behaviour and user experience), [React-Autocomplete](https://github.com/rackt/react-autocomplete) (as a quality React Combobox implementation), as well as other select controls including [Chosen](http://harvesthq.github.io/chosen/) and [Select2](http://ivaynberg.github.io/select2/).
+Thanks to the projects this was inspired by: [Selectize](http://selectize.github.io/selectize.js/) (in terms of behaviour and user experience), [React-Autocomplete](https://github.com/rackt/react-autocomplete) (as a quality React Combobox implementation), as well as other select controls including [Chosen](http://harvesthq.github.io/chosen/) and [Select2](http://ivaynberg.github.io/select2/).
 
 
 # License
 
-MIT Licensed. Copyright (c) Jed Watson 2016.
+MIT Licensed. Copyright (c) Jed Watson 2017.
