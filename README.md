@@ -52,12 +52,14 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 ```
 
-You can also use the standalone build by including `react-select.js` and `react-select.css` in your page. (If you do this though you'll also need to include the dependencies.) For example:
+You can also use the standalone UMD build by including `dist/react-select.js` and `dist/react-select.css` in your page. If you do this you'll also need to include the dependencies. For example:
+
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.min.js"></script>
-<script src="https://unpkg.com/classnames/index.js"></script>
-<script src="https://unpkg.com/react-input-autosize/dist/react-input-autosize.js"></script>
+<script src="https://unpkg.com/react@15.6.1/dist/react.js"></script>
+<script src="https://unpkg.com/react-dom@15.6.1/dist/react-dom.js"></script>
+<script src="https://unpkg.com/prop-types@15.5.10/prop-types.js"></script>
+<script src="https://unpkg.com/classnames@2.2.5/index.js"></script>
+<script src="https://unpkg.com/react-input-autosize@2.0.0/dist/react-input-autosize.js"></script>
 <script src="https://unpkg.com/react-select/dist/react-select.js"></script>
 
 <link rel="stylesheet" href="https://unpkg.com/react-select/dist/react-select.css">
@@ -391,7 +393,8 @@ function onInputKeyDown(event) {
 | onOpen | func | undefined | handler for when the menu opens: `function () {}` |
 | onSelectResetsInput | bool | true | whether the input value should be reset when options are selected, for `multi`
 | onValueClick | func | undefined | onClick handler for value labels: `function (value, event) {}` |
-| openOnFocus | bool | false | open the options menu when the input gets focus (requires searchable = true) |
+| openOnClick | bool | true | open the options menu when the control is clicked (requires searchable = true) |
+| openOnFocus | bool | false | open the options menu when the control gets focus (requires searchable = true) |
 | optionRenderer | func | undefined | function which returns a custom way to render the options in the menu |
 | options | array | undefined | array of options |
 | placeholder | string\|node | 'Select ...' | field placeholder, displayed when there's no value |
