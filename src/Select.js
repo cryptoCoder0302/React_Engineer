@@ -806,7 +806,7 @@ class Select extends React.Component {
 			);
 		}
 		return (
-			<div className={ className } key="input-wrap">
+			<div className={ className }>
 				<input {...inputProps} />
 			</div>
 		);
