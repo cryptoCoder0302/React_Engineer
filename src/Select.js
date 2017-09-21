@@ -78,10 +78,7 @@ class Select extends React.Component {
 	}
 
 	componentDidMount () {
-		if (typeof this.props.autofocus !== 'undefined' && typeof console !== 'undefined') {
-			console.warn('Warning: The autofocus prop will be deprecated in react-select1.0.0 in favor of autoFocus to match React\'s autoFocus prop');
-		}
-		if (this.props.autoFocus || this.props.autofocus) {
+		if (this.props.autofocus) {
 			this.focus();
 		}
 	}
@@ -124,8 +121,10 @@ class Select extends React.Component {
 			var menuDOM = ReactDOM.findDOMNode(this.menu);
 			var focusedRect = focusedDOM.getBoundingClientRect();
 			var menuRect = menuDOM.getBoundingClientRect();
-			if (focusedRect.bottom > menuRect.bottom || focusedRect.top < menuRect.top) {
+			if (focusedRect.bottom > menuRect.bottom) {
 				menuDOM.scrollTop = (focusedDOM.offsetTop + focusedDOM.clientHeight - menuDOM.offsetHeight);
+			} else if (focusedRect.top < menuRect.top) {
+				menuDOM.scrollTop = focusedDOM.offsetTop;
 			}
 		}
 		if (this.props.scrollMenuIntoView && this.menuContainer) {
@@ -255,7 +254,7 @@ class Select extends React.Component {
 			});
 		} else {
 			// otherwise, focus the input and open the menu
-			this._openAfterFocus = this.props.openAfterFocus;
+			this._openAfterFocus = this.props.openOnClick;
 			this.focus();
 		}
 	}
@@ -314,7 +313,7 @@ class Select extends React.Component {
 		}
 		this.setState({
 			isFocused: true,
-			isOpen: isOpen
+			isOpen: isOpen,
 		});
 		this._openAfterFocus = false;
 	}
@@ -807,7 +806,7 @@ class Select extends React.Component {
 			);
 		}
 		return (
-			<div className={ className }>
+			<div className={ className } key="input-wrap">
 				<input {...inputProps} />
 			</div>
 		);
@@ -1051,8 +1050,7 @@ Select.propTypes = {
 	addLabelText: PropTypes.string,       // placeholder displayed when you want to add a label on a multi-value input
 	arrowRenderer: PropTypes.func,        // Create drop-down caret element
 	autoBlur: PropTypes.bool,             // automatically blur the component when an option is selected
-	autofocus: PropTypes.bool,            // deprecated; use autoFocus instead
-	autoFocus: PropTypes.bool,            // autofocus the component on mount
+	autofocus: PropTypes.bool,            // autofocus the component on mount
 	autosize: PropTypes.bool,             // whether to enable autosizing or not
 	backspaceRemoves: PropTypes.bool,     // whether backspace removes an item if there is no text input
 	backspaceToRemoveMessage: PropTypes.string,  // Message to use for screenreaders to press backspace to remove the current item - {label} is replaced with the item label
@@ -1097,7 +1095,7 @@ Select.propTypes = {
 	onOpen: PropTypes.func,               // fires when the menu is opened
 	onSelectResetsInput: PropTypes.bool,  // whether input is cleared on select (works only for multiselect)
 	onValueClick: PropTypes.func,         // onClick handler for value labels: function (value, event) {}
-	openAfterFocus: PropTypes.bool,       // boolean to enable opening dropdown when focused
+	openOnClick: PropTypes.bool,          // boolean to control opening the menu when the control is clicked
 	openOnFocus: PropTypes.bool,          // always open options menu on focus
 	optionClassName: PropTypes.string,    // additional class(es) to apply to the <Option /> elements
 	optionComponent: PropTypes.func,      // option component to render in dropdown
@@ -1151,6 +1149,7 @@ Select.defaultProps = {
 	onBlurResetsInput: true,
 	onSelectResetsInput: true,
 	onCloseResetsInput: true,
+	openOnClick: true,
 	optionComponent: Option,
 	pageSize: 5,
 	placeholder: 'Select...',

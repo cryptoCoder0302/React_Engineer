@@ -114,6 +114,7 @@ function clearRenderer() {
 	});
 }
 
+var babelHelpers = {};
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
 } : function (obj) {
@@ -343,6 +344,28 @@ var possibleConstructorReturn = function (self, call) {
 
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+babelHelpers;
 
 var Option = function (_React$Component) {
 	inherits(Option, _React$Component);
@@ -686,8 +709,10 @@ var Select$1 = function (_React$Component) {
 				var menuDOM = ReactDOM.findDOMNode(this.menu);
 				var focusedRect = focusedDOM.getBoundingClientRect();
 				var menuRect = menuDOM.getBoundingClientRect();
-				if (focusedRect.bottom > menuRect.bottom || focusedRect.top < menuRect.top) {
+				if (focusedRect.bottom > menuRect.bottom) {
 					menuDOM.scrollTop = focusedDOM.offsetTop + focusedDOM.clientHeight - menuDOM.offsetHeight;
+				} else if (focusedRect.top < menuRect.top) {
+					menuDOM.scrollTop = focusedDOM.offsetTop;
 				}
 			}
 			if (this.props.scrollMenuIntoView && this.menuContainer) {
@@ -827,7 +852,7 @@ var Select$1 = function (_React$Component) {
 				});
 			} else {
 				// otherwise, focus the input and open the menu
-				this._openAfterFocus = this.props.openAfterFocus;
+				this._openAfterFocus = this.props.openOnClick;
 				this.focus();
 			}
 		}
@@ -1733,7 +1758,7 @@ Select$1.propTypes = {
 	clearRenderer: PropTypes.func, // create clearable x element
 	clearValueText: stringOrNode, // title for the "clear" control
 	clearable: PropTypes.bool, // should it be possible to reset value
-	closeOnSelect: React.PropTypes.bool, // whether to close the menu when a value is selected
+	closeOnSelect: PropTypes.bool, // whether to close the menu when a value is selected
 	deleteRemoves: PropTypes.bool, // whether backspace removes an item if there is no text input
 	delimiter: PropTypes.string, // delimiter to use to join multiple values for the hidden field value
 	disabled: PropTypes.bool, // whether the Select is disabled or not
@@ -1769,7 +1794,7 @@ Select$1.propTypes = {
 	onOpen: PropTypes.func, // fires when the menu is opened
 	onSelectResetsInput: PropTypes.bool, // whether input is cleared on select (works only for multiselect)
 	onValueClick: PropTypes.func, // onClick handler for value labels: function (value, event) {}
-	openAfterFocus: PropTypes.bool, // boolean to enable opening dropdown when focused
+	openOnClick: PropTypes.bool, // boolean to control opening the menu when the control is clicked
 	openOnFocus: PropTypes.bool, // always open options menu on focus
 	optionClassName: PropTypes.string, // additional class(es) to apply to the <Option /> elements
 	optionComponent: PropTypes.func, // option component to render in dropdown
@@ -1823,6 +1848,7 @@ Select$1.defaultProps = {
 	onBlurResetsInput: true,
 	onSelectResetsInput: true,
 	onCloseResetsInput: true,
+	openOnClick: true,
 	optionComponent: Option,
 	pageSize: 5,
 	placeholder: 'Select...',
@@ -1923,7 +1949,7 @@ var Async = function (_Component) {
 
 			var cache = this._cache;
 
-			if (cache && cache.hasOwnProperty(inputValue)) {
+			if (cache && Object.prototype.hasOwnProperty.call(cache, inputValue)) {
 				this.setState({
 					options: cache[inputValue]
 				});

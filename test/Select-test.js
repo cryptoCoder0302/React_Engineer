@@ -39,6 +39,7 @@ class PropsWrapper extends React.Component {
 		super(props);
 		this.state = props || {};
 	}
+
 	setPropsForChild(props) {
 		this.setState(props);
 	}
@@ -2961,7 +2962,7 @@ describe('Select', () => {
 
 				instance = createControl({
 					options: defaultOptions,
-					onFocus: onFocus
+					onFocus: onFocus,
 				});
 			});
 
@@ -2971,27 +2972,51 @@ describe('Select', () => {
 			});
 		});
 
-		describe('openAfterFocus', () => {
-
-			var openAfterFocus;
-
-			beforeEach(() => {
-				openAfterFocus = sinon.spy();
-
+		describe('openOnClick', () => {
+			it('should open the menu on click when true', () => {
 				instance = createControl({
 					options: defaultOptions,
-					openAfterFocus: true
+					openOnClick: true,
+				}, {
+					initialFocus: false,
 				});
+				TestUtils.Simulate.mouseDown(ReactDOM.findDOMNode(instance).querySelector('.Select-control'), { button: 0 });
+				// need to simulate the focus on the input, it does not happen in jsdom
+				findAndFocusInputControl();
+				expect(instance.state.isOpen, 'to be true');
 			});
 
-			it('should show the options when focused', () => {
-				instance.focus();
+			it('should not open the menu on click when false', () => {
+				instance = createControl({
+					options: defaultOptions,
+					openOnClick: false,
+				}, {
+					initialFocus: false,
+				});
+				TestUtils.Simulate.mouseDown(ReactDOM.findDOMNode(instance).querySelector('.Select-control'), { button: 0 });
+				// need to simulate the focus on the input, it does not happen in jsdom
+				findAndFocusInputControl();
+				expect(instance.state.isOpen, 'to be falsy');
+			});
+		});
 
-				if (instance.state.isFocused && instance.state.openAfterFocus) {
-					expect(instance.state.isOpen, 'to equal', true);
-				}
+		describe('openOnFocus', () => {
+			// Note: createControl automatically focuses the control
+			it('should open the menu on focus when true', () => {
+				instance = createControl({
+					options: defaultOptions,
+					openOnFocus: true,
+				});
+				expect(instance.state.isOpen, 'to be true');
 			});
 
+			it('should not open the menu on focus when false', () => {
+				instance = createControl({
+					options: defaultOptions,
+					openOnFocus: false,
+				});
+				expect(instance.state.isOpen, 'to be falsy');
+			});
 		});
 
 		describe('onValueClick', () => {
@@ -3927,45 +3952,6 @@ describe('Select', () => {
 			expect(input, 'not to equal', document.activeElement);
 			instance.focus();
 			expect(input, 'to equal', document.activeElement);
-		});
-	});
-
-	describe('with autoFocus', () => {
-		it('focuses select input on mount', () => {
-			wrapper = createControl({
-				autoFocus: true,
-				options: defaultOptions,
-			});
-			var input = ReactDOM.findDOMNode(instance.input).querySelector('input');
-			expect(input, 'to equal', document.activeElement);
-		});
-		it('with autofocus as well, calls focus() only once', () => {
-			wrapper = createControl({
-				autofocus: true,
-				autoFocus: true,
-				options: defaultOptions,
-			});
-			var focus = sinon.spy(instance, 'focus');
-			instance.componentDidMount();
-			expect(focus, 'was called once');
-		});
-	});
-	describe('with autofocus', () => {
-		it('focuses the select input on mount', () => {
-			wrapper = createControl({
-				autofocus: true,
-				options: defaultOptions,
-			});
-			var input = ReactDOM.findDOMNode(instance.input).querySelector('input');
-			expect(input, 'to equal', document.activeElement);
-		});
-		it('calls console.warn', () => {
-			var warn = sinon.spy(console, 'warn');
-			wrapper = createControl({
-				autofocus: true,
-				options: defaultOptions,
-			});
-			expect(warn, 'was called once');
 		});
 	});
 });
