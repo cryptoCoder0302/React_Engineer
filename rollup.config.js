@@ -13,16 +13,10 @@ const globals = {
 	react: 'React',
 };
 const external = Object.keys(globals);
-const babelOptions = (production) => {
-	let result = {
-		babelrc: false,
-		presets: [['es2015', { modules: false }], 'stage-0', 'react'],
-		plugins: ['external-helpers'],
-	};
-	if (production) {
-		result.plugins.push('transform-react-remove-prop-types');
-	};
-	return result;
+const babelOptions = {
+	babelrc: false,
+	presets: [['es2015', { modules: false }], 'stage-0', 'react'],
+	plugins: ['external-helpers'],
 };
 
 export default [
@@ -33,7 +27,7 @@ export default [
 			format: 'es',
 		},
 		external: external,
-		plugins: [babel(babelOptions(false))],
+		plugins: [babel(babelOptions)],
 	},
 	{
 		input: 'src/index.umd.js',
@@ -44,7 +38,7 @@ export default [
 		},
 		globals: globals,
 		external: external,
-		plugins: [babel(babelOptions(false)), resolve()],
+		plugins: [babel(babelOptions), resolve()],
 	},
 	{
 		input: 'src/index.umd.js',
@@ -55,6 +49,6 @@ export default [
 		},
 		globals: globals,
 		external: external,
-		plugins: [babel(babelOptions(true)), resolve(), uglify({}, minify)],
+		plugins: [babel(babelOptions), resolve(), uglify({}, minify)],
 	},
 ];
