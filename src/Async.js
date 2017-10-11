@@ -91,7 +91,6 @@ export default class Async extends Component {
 			this._callback = null;
 
 			this.setState({
-				isLoading: false,
 				options: cache[inputValue]
 			});
 
