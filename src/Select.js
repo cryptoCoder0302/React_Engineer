@@ -750,7 +750,6 @@ class Select extends React.Component {
 				&& this.state.isFocused
 				&& !this.state.inputValue
 		});
-
 		const inputProps = {
 			...this.props.inputProps,
 			role: 'combobox',
@@ -781,8 +780,8 @@ class Select extends React.Component {
 			const ariaOwns = classNames({
 				[this._instancePrefix + '-list']: isOpen,
 			});
-
 			return (
+				
 				<div
 					{...divProps}
 					role="combobox"
@@ -794,6 +793,7 @@ class Select extends React.Component {
 					onBlur={this.handleInputBlur}
 					onFocus={this.handleInputFocus}
 					ref={ref => this.input = ref}
+					id={divProps.id ? divProps.id : this.props.id}
 					aria-readonly={'' + !!this.props.disabled}
 					style={{ border: 0, width: 1, display:'inline-block' }}/>
 			);
@@ -801,12 +801,12 @@ class Select extends React.Component {
 
 		if (this.props.autosize) {
 			return (
-				<AutosizeInput {...inputProps} minWidth="5" />
+				<AutosizeInput id={this.props.id} {...inputProps} minWidth="5" />
 			);
 		}
 		return (
 			<div className={ className } key="input-wrap">
-				<input {...inputProps} />
+				<input id={this.props.id} {...inputProps} />
 			</div>
 		);
 	}
@@ -870,6 +870,7 @@ class Select extends React.Component {
 					matchPos: this.props.matchPos,
 					matchProp: this.props.matchProp,
 					valueKey: this.props.valueKey,
+					trimFilter: this.props.trimFilter
 				}
 			);
 		} else {
@@ -1054,8 +1055,8 @@ Select.propTypes = {
 	'aria-labelledby': PropTypes.string,  // HTML ID of an element that should be used as the label (for assistive tech)
 	arrowRenderer: PropTypes.func,        // Create drop-down caret element
 	autoBlur: PropTypes.bool,             // automatically blur the component when an option is selected
-	autofocus: PropTypes.bool,            // deprecated; use autoFocus instead
 	autoFocus: PropTypes.bool,            // autofocus the component on mount
+	autofocus: PropTypes.bool,            // deprecated; use autoFocus instead
 	autosize: PropTypes.bool,             // whether to enable autosizing or not
 	backspaceRemoves: PropTypes.bool,     // whether backspace removes an item if there is no text input
 	backspaceToRemoveMessage: PropTypes.string,  // Message to use for screenreaders to press backspace to remove the current item - {label} is replaced with the item label
@@ -1065,12 +1066,13 @@ Select.propTypes = {
 	clearValueText: stringOrNode,         // title for the "clear" control
 	clearable: PropTypes.bool,            // should it be possible to reset value
 	closeOnSelect: PropTypes.bool,        // whether to close the menu when a value is selected
-	deleteRemoves: PropTypes.bool,        // whether backspace removes an item if there is no text input
+	deleteRemoves: PropTypes.bool,        // whether delete removes an item if there is no text input
 	delimiter: PropTypes.string,          // delimiter to use to join multiple values for the hidden field value
 	disabled: PropTypes.bool,             // whether the Select is disabled or not
 	escapeClearsValue: PropTypes.bool,    // whether escape clears the value when the menu is closed
 	filterOption: PropTypes.func,         // method to filter a single option (option, filterString)
 	filterOptions: PropTypes.any,         // boolean to enable default filtering or function to filter the options array ([options], filterString, [values])
+	id: PropTypes.string, 				  // String to set at the input the a custom id, you can use it for the browser test
 	ignoreAccents: PropTypes.bool,        // whether to strip diacritics when filtering
 	ignoreCase: PropTypes.bool,           // whether to perform case-insensitive filtering
 	inputProps: PropTypes.object,         // custom attributes for the Input
@@ -1116,6 +1118,7 @@ Select.propTypes = {
 	style: PropTypes.object,              // optional style to apply to the control
 	tabIndex: PropTypes.string,           // optional tab index of the control
 	tabSelectsValue: PropTypes.bool,      // whether to treat tabbing out while focused to be value selection
+	trimFilter: PropTypes.bool,           // whether to trim whitespace around filter value
 	value: PropTypes.any,                 // initial field value
 	valueComponent: PropTypes.func,       // value component to render
 	valueKey: PropTypes.string,           // path of the label value in option objects
@@ -1162,6 +1165,7 @@ Select.defaultProps = {
 	searchable: true,
 	simpleValue: false,
 	tabSelectsValue: true,
+ 	trimFilter: true,
 	valueComponent: Value,
 	valueKey: 'value',
 };
