@@ -143,7 +143,11 @@ class Select extends React.Component {
 	}
 
 	componentWillUnmount () {
-		this.toggleTouchOutsideEvent(false);
+		if (!document.removeEventListener && document.detachEvent) {
+			document.detachEvent('ontouchstart', this.handleTouchOutside);
+		} else {
+			document.removeEventListener('touchstart', this.handleTouchOutside);
+		}
 	}
 
 	toggleTouchOutsideEvent (enabled) {
@@ -424,7 +428,7 @@ class Select extends React.Component {
 				}
 				this.focusStartOption();
 			break;
-			case 46: // backspace
+			case 46: // delete
 				if (!this.state.inputValue && this.props.deleteRemoves) {
 					event.preventDefault();
 					this.popValue();
@@ -467,9 +471,7 @@ class Select extends React.Component {
 		/** support optionally passing in the `nextProps` so `componentWillReceiveProps` updates will function as expected */
 		const props = typeof nextProps === 'object' ? nextProps : this.props;
 		if (props.multi) {
-			if (typeof value === 'string') {
-				value = value.split(props.delimiter);
-			}
+			if (typeof value === 'string') value = value.split(props.delimiter);
 			if (!Array.isArray(value)) {
 				if (value === null || value === undefined) return [];
 				value = [value];
@@ -491,7 +493,7 @@ class Select extends React.Component {
 		let { options, valueKey } = props;
 		if (!options) return;
 		for (var i = 0; i < options.length; i++) {
-			if (String(options[i][valueKey]) === String(value)) return options[i];
+			if (options[i][valueKey] === value) return options[i];
 		}
 	}
 
@@ -752,6 +754,7 @@ class Select extends React.Component {
 				&& this.state.isFocused
 				&& !this.state.inputValue
 		});
+
 		const inputProps = {
 			...this.props.inputProps,
 			role: 'combobox',
@@ -782,8 +785,8 @@ class Select extends React.Component {
 			const ariaOwns = classNames({
 				[this._instancePrefix + '-list']: isOpen,
 			});
-			return (
 
+			return (
 				<div
 					{...divProps}
 					role="combobox"
@@ -795,7 +798,6 @@ class Select extends React.Component {
 					onBlur={this.handleInputBlur}
 					onFocus={this.handleInputFocus}
 					ref={ref => this.input = ref}
-					id={divProps.id ? divProps.id : this.props.id}
 					aria-readonly={'' + !!this.props.disabled}
 					style={{ border: 0, width: 1, display:'inline-block' }}/>
 			);
@@ -803,18 +805,18 @@ class Select extends React.Component {
 
 		if (this.props.autosize) {
 			return (
-				<AutosizeInput id={this.props.id} {...inputProps} minWidth="5" />
+				<AutosizeInput {...inputProps} minWidth="5" />
 			);
 		}
 		return (
 			<div className={ className } key="input-wrap">
-				<input id={this.props.id} {...inputProps} />
+				<input {...inputProps} />
 			</div>
 		);
 	}
 
 	renderClear () {
-		if (!this.props.clearable || this.props.value === undefined || this.props.value === null || this.props.value === '' || this.props.multi && !this.props.value.length || this.props.disabled || this.props.isLoading) return;
+		if (!this.props.clearable || this.props.value === undefined || this.props.value === null || this.props.multi && !this.props.value.length || this.props.disabled || this.props.isLoading) return;
 		const clear = this.props.clearRenderer();
 
 		return (
@@ -831,15 +833,9 @@ class Select extends React.Component {
 	}
 
 	renderArrow () {
-		if (!this.props.arrowRenderer) return;
-
 		const onMouseDown = this.handleMouseDownOnArrow;
 		const isOpen = this.state.isOpen;
 		const arrow = this.props.arrowRenderer({ onMouseDown, isOpen });
-
-		if (!arrow) {
-			return null;
-		}
 
 		return (
 			<span
@@ -872,7 +868,6 @@ class Select extends React.Component {
 					matchPos: this.props.matchPos,
 					matchProp: this.props.matchProp,
 					valueKey: this.props.valueKey,
-					trimFilter: this.props.trimFilter
 				}
 			);
 		} else {
@@ -1055,10 +1050,11 @@ Select.propTypes = {
 	'aria-describedby': PropTypes.string, // HTML ID(s) of element(s) that should be used to describe this input (for assistive tech)
 	'aria-label': PropTypes.string,       // Aria label (for assistive tech)
 	'aria-labelledby': PropTypes.string,  // HTML ID of an element that should be used as the label (for assistive tech)
+	addLabelText: PropTypes.string,       // placeholder displayed when you want to add a label on a multi-value input
 	arrowRenderer: PropTypes.func,        // Create drop-down caret element
 	autoBlur: PropTypes.bool,             // automatically blur the component when an option is selected
-	autoFocus: PropTypes.bool,            // autofocus the component on mount
 	autofocus: PropTypes.bool,            // deprecated; use autoFocus instead
+	autoFocus: PropTypes.bool,            // autofocus the component on mount
 	autosize: PropTypes.bool,             // whether to enable autosizing or not
 	backspaceRemoves: PropTypes.bool,     // whether backspace removes an item if there is no text input
 	backspaceToRemoveMessage: PropTypes.string,  // Message to use for screenreaders to press backspace to remove the current item - {label} is replaced with the item label
@@ -1068,13 +1064,12 @@ Select.propTypes = {
 	clearValueText: stringOrNode,         // title for the "clear" control
 	clearable: PropTypes.bool,            // should it be possible to reset value
 	closeOnSelect: PropTypes.bool,        // whether to close the menu when a value is selected
-	deleteRemoves: PropTypes.bool,        // whether delete removes an item if there is no text input
+	deleteRemoves: PropTypes.bool,        // whether backspace removes an item if there is no text input
 	delimiter: PropTypes.string,          // delimiter to use to join multiple values for the hidden field value
 	disabled: PropTypes.bool,             // whether the Select is disabled or not
 	escapeClearsValue: PropTypes.bool,    // whether escape clears the value when the menu is closed
 	filterOption: PropTypes.func,         // method to filter a single option (option, filterString)
 	filterOptions: PropTypes.any,         // boolean to enable default filtering or function to filter the options array ([options], filterString, [values])
-	id: PropTypes.string, 				  // String to set at the input the a custom id, you can use it for the browser test
 	ignoreAccents: PropTypes.bool,        // whether to strip diacritics when filtering
 	ignoreCase: PropTypes.bool,           // whether to perform case-insensitive filtering
 	inputProps: PropTypes.object,         // custom attributes for the Input
@@ -1120,7 +1115,6 @@ Select.propTypes = {
 	style: PropTypes.object,              // optional style to apply to the control
 	tabIndex: PropTypes.string,           // optional tab index of the control
 	tabSelectsValue: PropTypes.bool,      // whether to treat tabbing out while focused to be value selection
-	trimFilter: PropTypes.bool,           // whether to trim whitespace around filter value
 	value: PropTypes.any,                 // initial field value
 	valueComponent: PropTypes.func,       // value component to render
 	valueKey: PropTypes.string,           // path of the label value in option objects
@@ -1129,6 +1123,7 @@ Select.propTypes = {
 };
 
 Select.defaultProps = {
+	addLabelText: 'Add "{label}"?',
 	arrowRenderer: defaultArrowRenderer,
 	autosize: true,
 	backspaceRemoves: true,
@@ -1167,7 +1162,6 @@ Select.defaultProps = {
 	searchable: true,
 	simpleValue: false,
 	tabSelectsValue: true,
- 	trimFilter: true,
 	valueComponent: Value,
 	valueKey: 'value',
 };

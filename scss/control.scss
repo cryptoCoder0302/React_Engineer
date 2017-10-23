@@ -54,10 +54,6 @@
 		}
 	}
 
-	&.is-focused > .Select-control {
-		background: $select-input-bg-focus;
-	}
-
 	&.is-focused:not(.is-open) > .Select-control {
 		border-color: $select-input-border-focus lighten($select-input-border-focus, 5%) lighten($select-input-border-focus, 5%);
 		box-shadow: $select-input-box-shadow-focus;
@@ -82,10 +78,6 @@
 				color: $select-link-hover-color;
 				outline: none;
 				text-decoration: underline;
-			}
-
-			&:focus {
-				background: $select-input-bg-focus;
 			}
 		}
 	}
@@ -125,7 +117,6 @@
 
 	.Select-input:focus {
 		outline: none;
-		background: $select-input-bg-focus;
 	}
 }
 

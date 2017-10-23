@@ -718,8 +718,8 @@ describe('Select', () => {
 
 				expect(instance, 'to contain',
 					<span className="Select-multi-value-wrapper">
-						<div><span className="Select-value-label">Two</span></div>
-						<div><span className="Select-value-label">One</span></div>
+                        <div><span className="Select-value-label">Two</span></div>
+                        <div><span className="Select-value-label">One</span></div>
 					</span>);
 			});
 
@@ -738,19 +738,8 @@ describe('Select', () => {
 
 				expect(instance, 'to contain',
 					<span className="Select-multi-value-wrapper">
-						<div><span className="Select-value-label">Three</span></div>
-						<div><span className="Select-value-label">Four</span></div>
-					</span>);
-			});
-			it('supports updating the values as a string', () => {
-				wrapper.setPropsForChild({
-					value: '3,4',
-				});
-
-				expect(instance, 'to contain',
-					<span className="Select-multi-value-wrapper">
-						<div><span className="Select-value-label">Three</span></div>
-						<div><span className="Select-value-label">Four</span></div>
+                        <div><span className="Select-value-label">Three</span></div>
+                        <div><span className="Select-value-label">Four</span></div>
 					</span>);
 			});
 
@@ -775,7 +764,7 @@ describe('Select', () => {
 
 				expect(instance, 'to contain',
 					<span className="Select-multi-value-wrapper">
-						<div><span className="Select-value-label">Zero</span></div>
+                        <div><span className="Select-value-label">Zero</span></div>
 					</span>);
 			});
 
@@ -1616,7 +1605,8 @@ describe('Select', () => {
 				value: 'one',
 				options: options,
 				allowCreate: true,
-				searchable: true
+				searchable: true,
+				addLabelText: 'Add {label} to values?'
 			});
 		});
 
@@ -3511,42 +3501,6 @@ describe('Select', () => {
 			});
 		});
 
-		describe('with trimFilter=true', () => {
-			beforeEach(() => {
-
-				instance = createControl({
-					searchable: true,
-					trimFilter: true,
-					options: defaultOptions
-				});
-			});
-
-			it('finds options for a filter wrapped around with whitespaces', () => {
-
-				typeSearchText('  def  ');
-				var options = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-option');
-				expect(options[0], 'to have text', 'AbcDef');
-				expect(options, 'to have length', 1);
-			});
-		});
-
-		describe('with trimFilter=false', () => {
-			beforeEach(() => {
-
-				instance = createControl({
-					searchable: true,
-					trimFilter: false,
-					options: defaultOptions
-				});
-			});
-
-			it('finds options for a filter wrapped around with whitespaces', () => {
-
-				typeSearchText('  def  ');
-				expect(ReactDOM.findDOMNode(instance), 'to contain no elements matching', '.Select-option');
-			});
-		});
-
 		describe('valueRenderer', () => {
 
 			var valueRenderer;
@@ -3828,24 +3782,6 @@ describe('Select', () => {
 		});
 	});
 
-	describe('custom arrowRenderer option', () => {
-		it('should render the custom arrow', () => {
-			const instance = createControl({
-				options: [1,2,3],
-				arrowRenderer: () => <div className="customArrow" />
-			});
-			expect(ReactDOM.findDOMNode(instance), 'to contain elements matching', '.customArrow');
-		});
-
-		it('should not render the clickable arrow container if the arrowRenderer returns a falsy value', () => {
-			const instance = createControl({
-				options: [1,2,3],
-				arrowRenderer: () => null
-			});
-			expect(ReactDOM.findDOMNode(instance), 'to contain no elements matching', '.Select-arrow-zone');
-		});
-	});
-
 	describe('accessibility', () => {
 
 		describe('with basic searchable control', () => {
@@ -4015,21 +3951,6 @@ describe('Select', () => {
 			expect(input, 'not to equal', document.activeElement);
 			instance.focus();
 			expect(input, 'to equal', document.activeElement);
-		});
-	});
-
-	describe('arrowRenderer', () => {
-		beforeEach(() => {
-			instance = createControl({
-				arrowRenderer: null
-			});
-		});
-
-		it('doesn\'t render arrow if arrowRenderer props is null', () => {
-
-			var arrow = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-arrow-zone')[0];
-
-			expect(arrow, 'to be', undefined);
 		});
 	});
 
