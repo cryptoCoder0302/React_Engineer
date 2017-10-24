@@ -2040,110 +2040,6 @@ describe('Select', () => {
 
 	});
 
-	describe('with removeSelected=false', () => {
-		beforeEach(() => {
-			options = [
-				{ value: 'one', label: 'One' },
-				{ value: 'two', label: 'Two' },
-				{ value: 'three', label: 'Three' },
-				{ value: 'four', label: 'Four' }
-			];
-
-			// Render an instance of the component
-			wrapper = createControlWithWrapper({
-				value: '',
-				options: options,
-				multi: true,
-				closeOnSelect: false,
-				removeSelected: false
-			}, {
-				wireUpOnChangeToValue: true
-			});
-
-			// We need a hack here.
-			// JSDOM (at least v3.x) doesn't appear to support div's with tabindex
-			// This just hacks that we are focused
-			// This is (obviously) implementation dependent, and may need to change
-			instance.setState({
-				isFocused: true
-			});
-		});
-
-		it('does not remove the selected options from the menu', () => {
-
-			clickArrowToOpen();
-
-			var items = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-option');
-
-			// Click the option "Two" to select it
-			expect(items[1], 'to have text', 'Two');
-			TestUtils.Simulate.mouseDown(items[1]);
-			expect(onChange, 'was called times', 1);
-
-			// Now get the list again
-			items = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-option');
-			expect(items[0], 'to have text', 'One');
-			expect(items[1], 'to have text', 'Two');
-			expect(items[2], 'to have text', 'Three');
-			expect(items[3], 'to have text', 'Four');
-			expect(items, 'to have length', 4);
-
-			// Click first item, 'One'
-			TestUtils.Simulate.mouseDown(items[0]);
-			expect(onChange, 'was called times', 2);
-
-			items = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-option');
-			expect(items[0], 'to have text', 'One');
-			expect(items[1], 'to have text', 'Two');
-			expect(items[2], 'to have text', 'Three');
-			expect(items[3], 'to have text', 'Four');
-			expect(items, 'to have length', 4);
-
-			// Click last item, 'Four'
-			TestUtils.Simulate.mouseDown(items[3]);
-			expect(onChange, 'was called times', 3);
-
-			items = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-option');
-			expect(items[0], 'to have text', 'One');
-			expect(items[1], 'to have text', 'Two');
-			expect(items[2], 'to have text', 'Three');
-			expect(items[3], 'to have text', 'Four');
-			expect(items, 'to have length', 4);
-
-			expect(onChange.args, 'to equal', [
-				[[{ value: 'two', label: 'Two' }]],
-				[[{ value: 'two', label: 'Two' }, { value: 'one', label: 'One' }]],
-				[
-					[
-						{ value: 'two', label: 'Two' },
-						{ value: 'one', label: 'One' },
-						{ value: 'four', label: 'Four' },
-					],
-				],
-			]);
-		});
-
-		it('removes a selected value if chosen again', () => {
-
-			clickArrowToOpen();
-
-			var items = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-option');
-
-			// Click the option "Two" to select it
-			TestUtils.Simulate.mouseDown(items[1]);
-			expect(onChange, 'was called times', 1);
-
-			// Click the option "Two" again to deselect it
-			TestUtils.Simulate.mouseDown(items[1]);
-			expect(onChange, 'was called times', 2);
-
-			expect(onChange.args, 'to equal', [
-				[[{ value: 'two', label: 'Two' }]],
-				[[]],
-			]);
-		});
-	});
-
 	describe('with props', () => {
 
 		describe('className', () => {
@@ -3164,7 +3060,7 @@ describe('Select', () => {
 			});
 
 			it('is called when the options are displayed', () => {
-				TestUtils.Simulate.mouseDown(ReactDOM.findDOMNode(instance).querySelector('.Select-control'), { button: 0 });
+				clickArrowToOpen();
 				expect(eventHandler, 'was called once');
 			});
 		});
@@ -3185,10 +3081,9 @@ describe('Select', () => {
 
 			it('is called after the options are hidden', () => {
 				const domNode = ReactDOM.findDOMNode(instance);
-				TestUtils.Simulate.mouseDown(domNode.querySelector('.Select-control'));
+				clickArrowToOpen();
 				eventHandler.reset();
-
-				TestUtils.Simulate.keyDown(domNode.querySelector('input'), { keyCode: 27, key: 'Escape' });
+				pressEscape();
 				expect(eventHandler, 'was called once');
 			});
 		});
