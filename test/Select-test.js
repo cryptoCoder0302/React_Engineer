@@ -1605,8 +1605,7 @@ describe('Select', () => {
 				value: 'one',
 				options: options,
 				allowCreate: true,
-				searchable: true,
-				addLabelText: 'Add {label} to values?'
+				searchable: true
 			});
 		});
 
@@ -2039,6 +2038,110 @@ describe('Select', () => {
 			expect(items, 'to have length', 1);
 		});
 
+	});
+
+	describe('with removeSelected=false', () => {
+		beforeEach(() => {
+			options = [
+				{ value: 'one', label: 'One' },
+				{ value: 'two', label: 'Two' },
+				{ value: 'three', label: 'Three' },
+				{ value: 'four', label: 'Four' }
+			];
+
+			// Render an instance of the component
+			wrapper = createControlWithWrapper({
+				value: '',
+				options: options,
+				multi: true,
+				closeOnSelect: false,
+				removeSelected: false
+			}, {
+				wireUpOnChangeToValue: true
+			});
+
+			// We need a hack here.
+			// JSDOM (at least v3.x) doesn't appear to support div's with tabindex
+			// This just hacks that we are focused
+			// This is (obviously) implementation dependent, and may need to change
+			instance.setState({
+				isFocused: true
+			});
+		});
+
+		it('does not remove the selected options from the menu', () => {
+
+			clickArrowToOpen();
+
+			var items = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-option');
+
+			// Click the option "Two" to select it
+			expect(items[1], 'to have text', 'Two');
+			TestUtils.Simulate.mouseDown(items[1]);
+			expect(onChange, 'was called times', 1);
+
+			// Now get the list again
+			items = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-option');
+			expect(items[0], 'to have text', 'One');
+			expect(items[1], 'to have text', 'Two');
+			expect(items[2], 'to have text', 'Three');
+			expect(items[3], 'to have text', 'Four');
+			expect(items, 'to have length', 4);
+
+			// Click first item, 'One'
+			TestUtils.Simulate.mouseDown(items[0]);
+			expect(onChange, 'was called times', 2);
+
+			items = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-option');
+			expect(items[0], 'to have text', 'One');
+			expect(items[1], 'to have text', 'Two');
+			expect(items[2], 'to have text', 'Three');
+			expect(items[3], 'to have text', 'Four');
+			expect(items, 'to have length', 4);
+
+			// Click last item, 'Four'
+			TestUtils.Simulate.mouseDown(items[3]);
+			expect(onChange, 'was called times', 3);
+
+			items = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-option');
+			expect(items[0], 'to have text', 'One');
+			expect(items[1], 'to have text', 'Two');
+			expect(items[2], 'to have text', 'Three');
+			expect(items[3], 'to have text', 'Four');
+			expect(items, 'to have length', 4);
+
+			expect(onChange.args, 'to equal', [
+				[[{ value: 'two', label: 'Two' }]],
+				[[{ value: 'two', label: 'Two' }, { value: 'one', label: 'One' }]],
+				[
+					[
+						{ value: 'two', label: 'Two' },
+						{ value: 'one', label: 'One' },
+						{ value: 'four', label: 'Four' },
+					],
+				],
+			]);
+		});
+
+		it('removes a selected value if chosen again', () => {
+
+			clickArrowToOpen();
+
+			var items = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-option');
+
+			// Click the option "Two" to select it
+			TestUtils.Simulate.mouseDown(items[1]);
+			expect(onChange, 'was called times', 1);
+
+			// Click the option "Two" again to deselect it
+			TestUtils.Simulate.mouseDown(items[1]);
+			expect(onChange, 'was called times', 2);
+
+			expect(onChange.args, 'to equal', [
+				[[{ value: 'two', label: 'Two' }]],
+				[[]],
+			]);
+		});
 	});
 
 	describe('with props', () => {
@@ -3501,6 +3604,42 @@ describe('Select', () => {
 			});
 		});
 
+		describe('with trimFilter=true', () => {
+			beforeEach(() => {
+
+				instance = createControl({
+					searchable: true,
+					trimFilter: true,
+					options: defaultOptions
+				});
+			});
+
+			it('finds options for a filter wrapped around with whitespaces', () => {
+
+				typeSearchText('  def  ');
+				var options = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-option');
+				expect(options[0], 'to have text', 'AbcDef');
+				expect(options, 'to have length', 1);
+			});
+		});
+
+		describe('with trimFilter=false', () => {
+			beforeEach(() => {
+
+				instance = createControl({
+					searchable: true,
+					trimFilter: false,
+					options: defaultOptions
+				});
+			});
+
+			it('finds options for a filter wrapped around with whitespaces', () => {
+
+				typeSearchText('  def  ');
+				expect(ReactDOM.findDOMNode(instance), 'to contain no elements matching', '.Select-option');
+			});
+		});
+
 		describe('valueRenderer', () => {
 
 			var valueRenderer;
@@ -3782,6 +3921,24 @@ describe('Select', () => {
 		});
 	});
 
+	describe('custom arrowRenderer option', () => {
+		it('should render the custom arrow', () => {
+			const instance = createControl({
+				options: [1,2,3],
+				arrowRenderer: () => <div className="customArrow" />
+			});
+			expect(ReactDOM.findDOMNode(instance), 'to contain elements matching', '.customArrow');
+		});
+
+		it('should not render the clickable arrow container if the arrowRenderer returns a falsy value', () => {
+			const instance = createControl({
+				options: [1,2,3],
+				arrowRenderer: () => null
+			});
+			expect(ReactDOM.findDOMNode(instance), 'to contain no elements matching', '.Select-arrow-zone');
+		});
+	});
+
 	describe('accessibility', () => {
 
 		describe('with basic searchable control', () => {
@@ -3951,6 +4108,21 @@ describe('Select', () => {
 			expect(input, 'not to equal', document.activeElement);
 			instance.focus();
 			expect(input, 'to equal', document.activeElement);
+		});
+	});
+
+	describe('arrowRenderer', () => {
+		beforeEach(() => {
+			instance = createControl({
+				arrowRenderer: null
+			});
+		});
+
+		it('doesn\'t render arrow if arrowRenderer props is null', () => {
+
+			var arrow = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-arrow-zone')[0];
+
+			expect(arrow, 'to be', undefined);
 		});
 	});
 

@@ -106,7 +106,7 @@ The built-in Options renderer also support custom classNames, just add a `classN
 
 You can enable multi-value selection by setting `multi={true}`. In this mode:
 
-* Selected options will be removed from the dropdown menu
+* Selected options will be removed from the dropdown menu by default. If you want them to remain in the list, set `removeSelected={false}`
 * The selected values are submitted in multiple `<input type="hidden">` fields, use `joinValues` to submit joined values in a single field instead
 * The values of the selected items are joined using the `delimiter` prop to create the input value when `joinValues` is true
 * A simple value, if provided, will be split using the `delimiter` prop
@@ -349,7 +349,7 @@ function onInputKeyDown(event) {
 | Property | Type | Default | Description |
 |:---|:---|:---|:---|
 | addLabelText | string | 'Add "{label}"?' | text to display when `allowCreate` is true |
-  arrowRenderer | func | undefined | Renders a custom drop-down arrow to be shown in the right-hand side of the select: `arrowRenderer({ onMouseDown, isOpen })` |
+| arrowRenderer | func | undefined | Renders a custom drop-down arrow to be shown in the right-hand side of the select: `arrowRenderer({ onMouseDown, isOpen })`. Won't render when set to `null`
 | autoBlur | bool | false | Blurs the input element after a selection has been made. Handy for lowering the keyboard on mobile devices |
 | autofocus | bool | undefined | autofocus the component on mount |
 | autoload | bool | true | whether to auto-load the default async options set |

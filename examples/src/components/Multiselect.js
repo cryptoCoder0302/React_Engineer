@@ -23,6 +23,7 @@ var MultiSelectField = createClass({
 	},
 	getInitialState () {
 		return {
+			removeSelected: true,
 			disabled: false,
 			crazy: false,
 			stayOpen: false,
@@ -43,21 +44,26 @@ var MultiSelectField = createClass({
 		const options = crazy ? WHY_WOULD_YOU : FLAVOURS;
 		return (
 			<div className="section">
-				<h3 className="section-heading">{this.props.label}</h3>
+				<h3 className="section-heading">{this.props.label} <a href="https://github.com/JedWatson/react-select/tree/master/examples/src/components/Multiselect.js">(Source)</a></h3>
 				<Select
-					closeOnSelect={!stayOpen}
-					disabled={disabled}
-					multi
-					onChange={this.handleSelectChange}
-					options={options}
-					placeholder="Select your favourite(s)"
-					simpleValue
-					value={value}
-				/>
+          closeOnSelect={!stayOpen}
+          disabled={this.state.disabled}    
+          multi
+          onChange={this.handleSelectChange}
+          options={this.state.options}
+          placeholder="Select your favourite(s)"
+          removeSelected={this.state.removeSelected}
+          simpleValue
+          value={this.state.value}
+        />
 
 				<div className="checkbox-list">
 					<label className="checkbox">
-						<input type="checkbox" className="checkbox-control" name="disabled" checked={disabled} onChange={this.toggleCheckbox} />
+						<input type="checkbox" className="checkbox-control" checked={this.state.removeSelected} onChange={this.toggleRemove} />
+						<span className="checkbox-label">Remove selected options</span>
+					</label>
+					<label className="checkbox">
+						<input type="checkbox" className="checkbox-control" checked={this.state.disabled} onChange={this.toggleDisabled} />
 						<span className="checkbox-label">Disable the control</span>
 					</label>
 					<label className="checkbox">
