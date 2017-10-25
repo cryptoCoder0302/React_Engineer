@@ -32,6 +32,7 @@ var PLACEHOLDER_SELECTOR = '.Select-placeholder';
 var ARROW_UP = { keyCode: 38, key: 'ArrowUp' };
 var ARROW_DOWN = { keyCode: 40, key: 'ArrowDown' };
 var KEY_ENTER = { keyCode: 13, key: 'Enter' };
+var KEY_SPACE = { keyCode: 32, key: 'Space' };
 
 class PropsWrapper extends React.Component {
 
@@ -3060,19 +3061,8 @@ describe('Select', () => {
 			});
 
 			it('is called when the options are displayed', () => {
-				clickArrowToOpen();
+				TestUtils.Simulate.mouseDown(ReactDOM.findDOMNode(instance).querySelector('.Select-control'), { button: 0 });
 				expect(eventHandler, 'was called once');
-			});
-
-			it('is called after dom has rendered', (done) => {
-				instance = createControl({
-					onOpen: () => {
-						expect(instance.menu, 'not to equal', undefined);
-						done();
-					}
-				});
-
-				clickArrowToOpen();
 			});
 		});
 
@@ -3092,9 +3082,10 @@ describe('Select', () => {
 
 			it('is called after the options are hidden', () => {
 				const domNode = ReactDOM.findDOMNode(instance);
-				clickArrowToOpen();
+				TestUtils.Simulate.mouseDown(domNode.querySelector('.Select-control'));
 				eventHandler.reset();
-				pressEscape();
+
+				TestUtils.Simulate.keyDown(domNode.querySelector('input'), { keyCode: 27, key: 'Escape' });
 				expect(eventHandler, 'was called once');
 			});
 		});
@@ -3263,7 +3254,6 @@ describe('Select', () => {
 			});
 
 			it('disabled option link is still clickable', () => {
-				var selectArrow = ReactDOM.findDOMNode(instance).querySelector('.Select-arrow');
 				var selectArrow = ReactDOM.findDOMNode(instance).querySelector('.Select-arrow');
 				TestUtils.Simulate.mouseDown(selectArrow);
 				var options = ReactDOM.findDOMNode(instance).querySelectorAll('.Select-option');
@@ -3985,7 +3975,7 @@ describe('Select', () => {
 					</span>);
 			});
 
-			it('updates the active descendant after a selection', () => {
+			it('updates the active descendant after a selection using enter key', () => {
 
 				return expect(wrapper,
 					'with event', 'keyDown', ARROW_DOWN, 'on', <div className="Select-control" />,
@@ -3999,6 +3989,45 @@ describe('Select', () => {
 						const activeId = input.attributes['aria-activedescendant'].value;
 						expect(ReactDOM.findDOMNode(instance), 'queried for first', '#' + activeId, 'to have text', 'label four');
 					});
+
+			});
+
+			it('expands the drop down when the enter key is pressed', () => {
+
+				return expect(wrapper,
+						'with event', 'keyDown', KEY_ENTER, 'on', <div className="Select-control" />,
+						'queried for', <input role="combobox" />)
+						.then(input => {
+							expect(instance.state.focusedOption, 'to equal', { value: 'one', label: 'label one' });
+						});
+
+			});
+
+			it('updates the active descendant after a selection using space bar', () => {
+
+				return expect(wrapper,
+						'with event', 'keyDown', ARROW_DOWN, 'on', <div className="Select-control" />,
+						'with event', 'keyDown', KEY_SPACE, 'on', <div className="Select-control" />,
+						'queried for', <input role="combobox" />)
+						.then(input => {
+
+							// [ 'three', 'two', 'one' ] is now selected,
+							// therefore in-focus should be 'four'
+
+							const activeId = input.attributes['aria-activedescendant'].value;
+							expect(ReactDOM.findDOMNode(instance), 'queried for first', '#' + activeId, 'to have text', 'label four');
+						});
+
+			});
+
+			it('expands the drop down when the space bar is pressed', () => {
+
+				return expect(wrapper,
+						'with event', 'keyDown', KEY_SPACE, 'on', <div className="Select-control" />,
+						'queried for', <input role="combobox" />)
+						.then(input => {
+							expect(instance.state.focusedOption, 'to equal', { value: 'one', label: 'label one' });
+						});
 
 			});
 		});

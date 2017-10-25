@@ -99,6 +99,14 @@ class Select extends React.Component {
 		}
 	}
 
+	componentWillUpdate (nextProps, nextState) {
+		if (nextState.isOpen !== this.state.isOpen) {
+			this.toggleTouchOutsideEvent(nextState.isOpen);
+			const handler = nextState.isOpen ? nextProps.onOpen : nextProps.onClose;
+			handler && handler();
+		}
+	}
+
 	componentDidUpdate (prevProps, prevState) {
 		// focus to the selected option
 		if (this.menu && this.focused && this.state.isOpen && !this.hasScrolledToOption) {
@@ -131,11 +139,6 @@ class Select extends React.Component {
 		if (prevProps.disabled !== this.props.disabled) {
 			this.setState({ isFocused: false }); // eslint-disable-line react/no-did-update-set-state
 			this.closeMenu();
-		}
-		if (prevState.isOpen !== this.state.isOpen) {
-			this.toggleTouchOutsideEvent(this.state.isOpen);
-			const handler = this.state.isOpen ? this.props.onOpen : this.props.onClose;
-			handler && handler();
 		}
 	}
 
@@ -384,7 +387,10 @@ class Select extends React.Component {
 				this.selectFocusedOption();
 			return;
 			case 13: // enter
-				if (!this.state.isOpen) return;
+				if (!this.state.isOpen) {
+					this.focusNextOption();
+					return;
+				}
 				event.stopPropagation();
 				this.selectFocusedOption();
 			break;
@@ -396,6 +402,17 @@ class Select extends React.Component {
 					this.clearValue(event);
 					event.stopPropagation();
 				}
+			break;
+			case 32: // space
+				if (!this.props.searchable) {
+					event.preventDefault();
+				}
+				if (!this.state.isOpen) {
+					this.focusNextOption();
+					return;
+				}
+				event.stopPropagation();
+				this.selectFocusedOption();
 			break;
 			case 38: // up
 				this.focusPreviousOption();
@@ -778,20 +795,21 @@ class Select extends React.Component {
 				[this._instancePrefix + '-list']: isOpen,
 			});
 			return (
-				
+
 				<div
 					{...divProps}
 					role="combobox"
 					aria-expanded={isOpen}
 					aria-owns={ariaOwns}
 					aria-activedescendant={isOpen ? this._instancePrefix + '-option-' + focusedOptionIndex : this._instancePrefix + '-value'}
+					aria-labelledby={this.props['aria-labelledby']}
+					aria-label={this.props['aria-label']}
 					className={className}
 					tabIndex={this.props.tabIndex || 0}
 					onBlur={this.handleInputBlur}
 					onFocus={this.handleInputFocus}
 					ref={ref => this.input = ref}
-					id={divProps.id ? divProps.id : this.props.id}
-					aria-readonly={'' + !!this.props.disabled}
+					aria-disabled={'' + !!this.props.disabled}
 					style={{ border: 0, width: 1, display:'inline-block' }}/>
 			);
 		}
