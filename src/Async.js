@@ -138,17 +138,7 @@ export default class Async extends Component {
 
 	onInputChange (inputValue) {
 		const { ignoreAccents, ignoreCase, onInputChange } = this.props;
-		let newInputValue = inputValue;
-
-		if (onInputChange) {
-			const value = onInputChange(newInputValue);
-			// Note: != used deliberately here to catch undefined and null
-			if (value != null && typeof value !== 'object') {
-				newInputValue = '' + value;
-			}
-		}
-
-		let transformedInputValue = newInputValue;
+		let transformedInputValue = inputValue;
 
 		if (ignoreAccents) {
 			transformedInputValue = stripDiacritics(transformedInputValue);
@@ -158,11 +148,15 @@ export default class Async extends Component {
 			transformedInputValue = transformedInputValue.toLowerCase();
 		}
 
-		this.setState({ inputValue: newInputValue });
+		if (onInputChange) {
+			onInputChange(transformedInputValue);
+		}
+
+		this.setState({ inputValue });
 		this.loadOptions(transformedInputValue);
 
-		// Return new input value, but without applying toLowerCase() to avoid modifying the user's view case of the input while typing.
-		return newInputValue;
+		// Return the original input value to avoid modifying the user's view of the input while typing.
+		return inputValue;
 	}
 
 	noResultsText() {
