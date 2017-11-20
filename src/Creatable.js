@@ -89,7 +89,7 @@ class CreatableSelect extends React.Component {
 	}) {
 		const { isOptionUnique } = this.props;
 
-		options = options || this.props.options;
+		options = options || this.select.filterOptions();
 
 		return isOptionUnique({
 			labelKey: this.labelKey,
