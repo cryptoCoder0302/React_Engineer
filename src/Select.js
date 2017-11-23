@@ -83,7 +83,7 @@ class Select extends React.Component {
 
 	componentDidMount () {
 		if (typeof this.props.autofocus !== 'undefined' && typeof console !== 'undefined') {
-			console.warn('Warning: The autofocus prop has changed to autoFocus, support will be removed after react-select@1.0');
+			console.warn('Warning: The autofocus prop will be deprecated in react-select1.0.0 in favor of autoFocus to match React\'s autoFocus prop');
 		}
 		if (this.props.autoFocus || this.props.autofocus) {
 			this.focus();
@@ -408,9 +408,10 @@ class Select extends React.Component {
 				}
 			break;
 			case 32: // space
-				if (!this.props.searchable) {
-					event.preventDefault();
+				if (this.props.searchable) {
+					return;
 				}
+				event.preventDefault();
 				if (!this.state.isOpen) {
 					this.focusNextOption();
 					return;
