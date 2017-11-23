@@ -83,7 +83,7 @@ class Select extends React.Component {
 
 	componentDidMount () {
 		if (typeof this.props.autofocus !== 'undefined' && typeof console !== 'undefined') {
-			console.warn('Warning: The autofocus prop will be deprecated in react-select1.0.0 in favor of autoFocus to match React\'s autoFocus prop');
+			console.warn('Warning: The autofocus prop has changed to autoFocus, support will be removed after react-select@1.0');
 		}
 		if (this.props.autoFocus || this.props.autofocus) {
 			this.focus();
@@ -408,10 +408,9 @@ class Select extends React.Component {
 				}
 			break;
 			case 32: // space
-				if (this.props.searchable) {
-					return;
+				if (!this.props.searchable) {
+					event.preventDefault();
 				}
-				event.preventDefault();
 				if (!this.state.isOpen) {
 					this.focusNextOption();
 					return;
@@ -1080,16 +1079,16 @@ class Select extends React.Component {
 };
 
 Select.propTypes = {
-	'aria-describedby': PropTypes.string, // HTML ID(s) of element(s) that should be used to describe this input (for assistive tech)
-	'aria-label': PropTypes.string,       // Aria label (for assistive tech)
-	'aria-labelledby': PropTypes.string,  // HTML ID of an element that should be used as the label (for assistive tech)
-	arrowRenderer: PropTypes.func,        // Create drop-down caret element
+	'aria-describedby': PropTypes.string, // html id(s) of element(s) that should be used to describe this input (for assistive tech)
+	'aria-label': PropTypes.string,       // aria label (for assistive tech)
+	'aria-labelledby': PropTypes.string,  // html id of an element that should be used as the label (for assistive tech)
+	arrowRenderer: PropTypes.func,        // create the drop-down caret element
 	autoBlur: PropTypes.bool,             // automatically blur the component when an option is selected
 	autoFocus: PropTypes.bool,            // autofocus the component on mount
 	autofocus: PropTypes.bool,            // deprecated; use autoFocus instead
 	autosize: PropTypes.bool,             // whether to enable autosizing or not
 	backspaceRemoves: PropTypes.bool,     // whether backspace removes an item if there is no text input
-	backspaceToRemoveMessage: PropTypes.string,  // Message to use for screenreaders to press backspace to remove the current item - {label} is replaced with the item label
+	backspaceToRemoveMessage: PropTypes.string,  // message to use for screenreaders to press backspace to remove the current item - {label} is replaced with the item label
 	className: PropTypes.string,          // className for the outer element
 	clearAllText: stringOrNode,           // title for the "clear" control when multi: true
 	clearRenderer: PropTypes.func,        // create clearable x element
@@ -1102,7 +1101,7 @@ Select.propTypes = {
 	escapeClearsValue: PropTypes.bool,    // whether escape clears the value when the menu is closed
 	filterOption: PropTypes.func,         // method to filter a single option (option, filterString)
 	filterOptions: PropTypes.any,         // boolean to enable default filtering or function to filter the options array ([options], filterString, [values])
-	id: PropTypes.string, 				        // String to set at the input the a custom id, you can use it for the browser test
+	id: PropTypes.string, 				        // html id to set on the input element for accessibility or tests
 	ignoreAccents: PropTypes.bool,        // whether to strip diacritics when filtering
 	ignoreCase: PropTypes.bool,           // whether to perform case-insensitive filtering
 	inputProps: PropTypes.object,         // custom attributes for the Input
@@ -1148,7 +1147,7 @@ Select.propTypes = {
 	searchable: PropTypes.bool,           // whether to enable searching feature or not
 	simpleValue: PropTypes.bool,          // pass the value to onChange as a simple value (legacy pre 1.0 mode), defaults to false
 	style: PropTypes.object,              // optional style to apply to the control
-	tabIndex: stringOrNumber,           // optional tab index of the control
+	tabIndex: stringOrNumber,             // optional tab index of the control
 	tabSelectsValue: PropTypes.bool,      // whether to treat tabbing out while focused to be value selection
 	trimFilter: PropTypes.bool,           // whether to trim whitespace around filter value
 	value: PropTypes.any,                 // initial field value
