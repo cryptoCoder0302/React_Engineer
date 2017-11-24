@@ -220,7 +220,6 @@ class Select extends React.Component {
 		}
 
 		// prevent default event handlers
-		event.stopPropagation();
 		event.preventDefault();
 
 		// for the non-searchable select, toggle the menu
@@ -594,7 +593,6 @@ class Select extends React.Component {
 		if (event && event.type === 'mousedown' && event.button !== 0) {
 			return;
 		}
-		event.stopPropagation();
 		event.preventDefault();
 		this.setValue(this.getResetValue());
 		this.setState({
