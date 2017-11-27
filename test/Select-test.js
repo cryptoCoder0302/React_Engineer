@@ -713,6 +713,7 @@ describe('Select', () => {
 
 				wrapper = createControlWithWrapper({
 					value: [2, 1],
+					name: 'test',
 					options: options,
 					multi: true,
 					searchable: true
@@ -726,6 +727,13 @@ describe('Select', () => {
 						<div><span className="Select-value-label">Two</span></div>
 						<div><span className="Select-value-label">One</span></div>
 					</span>);
+			});
+
+			it('selects the initial hidden value', () => {
+				expect(ReactDOM.findDOMNode(wrapper), 'queried for', '.Select > input','to satisfy', [
+					expect.it('to have attributes', { 'value': '2' }),
+					expect.it('to have attributes', { 'value': '1' })
+				]);
 			});
 
 			it('calls onChange with the correct value when 1 option is selected', () => {
@@ -759,6 +767,17 @@ describe('Select', () => {
 					</span>);
 			});
 
+			it('supports updating the hidden values via props', () => {
+
+				wrapper.setPropsForChild({
+					value: [3, 4]
+				});
+				expect(ReactDOM.findDOMNode(wrapper), 'queried for', '.Select > input','to satisfy', [
+					expect.it('to have attributes', { 'value': '3' }),
+					expect.it('to have attributes', { 'value': '4' })
+				]);
+			});
+
 			it('supports updating the value to a single value', () => {
 
 				wrapper.setPropsForChild({
@@ -769,6 +788,17 @@ describe('Select', () => {
 					<span className="Select-multi-value-wrapper">
                         <div><span className="Select-value-label">One</span></div>
 					</span>);
+			});
+
+			it('supports updating the hidden fields to a single value', () => {
+
+				wrapper.setPropsForChild({
+					value: 1
+				});
+
+				expect(ReactDOM.findDOMNode(wrapper), 'queried for', '.Select > input', 'to satisfy', [
+					expect.it('to have attributes', { 'value': '1' })
+				]);
 			});
 
 			it('supports updating the value to single value of 0', () => {
@@ -782,6 +812,18 @@ describe('Select', () => {
 					<span className="Select-multi-value-wrapper">
 						<div><span className="Select-value-label">Zero</span></div>
 					</span>);
+			});
+
+			it('supports updating the hidden fields to a single of 0', () => {
+
+				// This test is specifically in case there's a "if (value) {... " somewhere
+				wrapper.setPropsForChild({
+					value: 0
+				});
+
+				expect(ReactDOM.findDOMNode(wrapper), 'queried for', '.Select > input', 'to satisfy', [
+					expect.it('to have attributes', { 'value': '0' })
+				]);
 			});
 
 			it('calls onChange with the correct values when multiple options are selected', () => {
