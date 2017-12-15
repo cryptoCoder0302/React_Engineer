@@ -33,6 +33,14 @@ const stringOrNumber = PropTypes.oneOfType([
 
 let instanceId = 1;
 
+function shouldShowInputValue(state, props, isOpen){
+	if (!state.inputValue) return true;
+	if (!props.onSelectResetsInput && !isOpen){
+		return !(!state.isFocused && state.isPseudoFocused);
+	}
+	return false;
+}
+
 class Select extends React.Component {
 	constructor (props) {
 		super(props);
@@ -241,6 +249,7 @@ class Select extends React.Component {
 					isPseudoFocused: false,
 				});
 			}
+
 			return;
 		}
 
@@ -263,6 +272,8 @@ class Select extends React.Component {
 			this.focus();
 
 			let input = this.input;
+			let toOpen = true;
+
 			if (typeof input.getInput === 'function') {
 				// Get the actual DOM input if the ref is an <AutosizeInput /> component
 				input = input.getInput();
@@ -271,9 +282,14 @@ class Select extends React.Component {
 			// clears the value so that the cursor will be at the end of input when the component re-renders
 			input.value = '';
 
+			if (this._focusAfterClear) {
+				toOpen = false;
+				this._focusAfterClear = false;
+			}
+
 			// if the input is focused, ensure the menu is open
 			this.setState({
-				isOpen: true,
+				isOpen: toOpen,
 				isPseudoFocused: false,
 			});
 		} else {
@@ -310,6 +326,7 @@ class Select extends React.Component {
 		if (this.props.disabled || (event.type === 'mousedown' && event.button !== 0)) {
 			return;
 		}
+
 		event.stopPropagation();
 		event.preventDefault();
 
@@ -335,15 +352,21 @@ class Select extends React.Component {
 
 	handleInputFocus (event) {
 		if (this.props.disabled) return;
-		var isOpen = this.state.isOpen || this._openAfterFocus || this.props.openOnFocus;
+
+		let toOpen = this.state.isOpen || this._openAfterFocus || this.props.openOnFocus;
+		toOpen = this._focusAfterClear ? false : toOpen;  //if focus happens after clear values, don't open dropdown yet.
+
 		if (this.props.onFocus) {
 			this.props.onFocus(event);
 		}
+
 		this.setState({
 			isFocused: true,
-			isOpen: isOpen,
+			isOpen: toOpen,
 		});
+
 		this._openAfterFocus = false;
+		this._focusAfterClear = false;
 	}
 
 	handleInputBlur (event) {
@@ -622,12 +645,16 @@ class Select extends React.Component {
 		if (event && event.type === 'mousedown' && event.button !== 0) {
 			return;
 		}
+
 		event.preventDefault();
+
 		this.setValue(this.getResetValue());
 		this.setState({
 			isOpen: false,
 			inputValue: this.handleInputValueChange(''),
 		}, this.focus);
+
+		this._focusAfterClear = true;
 	}
 
 	getResetValue () {
@@ -772,7 +799,7 @@ class Select extends React.Component {
 					</ValueComponent>
 				);
 			});
-		} else if (!this.state.inputValue) {
+		} else if (shouldShowInputValue(this.state, this.props, isOpen)) {
 			if (isOpen) onClick = null;
 			return (
 				<ValueComponent
@@ -799,6 +826,12 @@ class Select extends React.Component {
 				&& this.state.isFocused
 				&& !this.state.inputValue
 		});
+		let value;
+		if (!this.props.onSelectResetsInput && !isOpen && !this.state.isFocused){
+			value= '';
+		} else {
+			value = this.state.inputValue;
+		}
 		const inputProps = {
 			...this.props.inputProps,
 			role: 'combobox',
@@ -816,7 +849,7 @@ class Select extends React.Component {
 			onFocus: this.handleInputFocus,
 			ref: ref => this.input = ref,
 			required: this.state.required,
-			value: this.state.inputValue,
+			value,
 		};
 
 		if (this.props.inputRenderer) {
