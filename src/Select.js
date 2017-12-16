@@ -33,26 +33,6 @@ const stringOrNumber = PropTypes.oneOfType([
 
 let instanceId = 1;
 
-const shouldShowValue = (state, props, isOpen) => {
-	const { inputValue, isPseudoFocused, isFocused } = state;
-	const { onSelectResetsInput } = props;
-
-	if (!inputValue) return true;
-
-	if (!onSelectResetsInput && !isOpen){
-		return !(!isFocused && isPseudoFocused || isFocused && !isPseudoFocused);
-	}
-
-	return false;
-};
-
-const shouldShowPlaceholder = (state, props, isOpen) => {
-	const { inputValue, isPseudoFocused, isFocused } = state;
-	const { onSelectResetsInput } = props;
-
-	return !inputValue || !onSelectResetsInput && !isOpen && !isPseudoFocused && !isFocused;
-};
-
 class Select extends React.Component {
 	constructor (props) {
 		super(props);
@@ -791,8 +771,7 @@ class Select extends React.Component {
 		let renderLabel = this.props.valueRenderer || this.getOptionLabel;
 		let ValueComponent = this.props.valueComponent;
 		if (!valueArray.length) {
-			const showPlaceholder = shouldShowPlaceholder(this.state, this.props, isOpen);
-			return showPlaceholder ? <div className="Select-placeholder">{this.props.placeholder}</div> : null;
+			return !this.state.inputValue ? <div className="Select-placeholder">{this.props.placeholder}</div> : null;
 		}
 		let onClick = this.props.onValueClick ? this.handleValueClick : null;
 		if (this.props.multi) {
@@ -806,13 +785,14 @@ class Select extends React.Component {
 						onClick={onClick}
 						onRemove={this.removeValue}
 						value={value}
+						placeholder={this.props.placeholder}
 					>
 						{renderLabel(value, i)}
 						<span className="Select-aria-only">&nbsp;</span>
 					</ValueComponent>
 				);
 			});
-		} else if (shouldShowValue(this.state, this.props, isOpen)) {
+		} else if (!this.state.inputValue) {
 			if (isOpen) onClick = null;
 			return (
 				<ValueComponent
@@ -821,6 +801,7 @@ class Select extends React.Component {
 					instancePrefix={this._instancePrefix}
 					onClick={onClick}
 					value={valueArray[0]}
+					placeholder={this.props.placeholder}
 				>
 					{renderLabel(valueArray[0])}
 				</ValueComponent>
@@ -839,12 +820,6 @@ class Select extends React.Component {
 				&& this.state.isFocused
 				&& !this.state.inputValue
 		});
-		let value;
-		if (!this.props.onSelectResetsInput && !isOpen && !this.state.isFocused){
-			value= '';
-		} else {
-			value = this.state.inputValue;
-		}
 		const inputProps = {
 			...this.props.inputProps,
 			role: 'combobox',
@@ -862,7 +837,7 @@ class Select extends React.Component {
 			onFocus: this.handleInputFocus,
 			ref: ref => this.input = ref,
 			required: this.state.required,
-			value,
+			value: this.state.inputValue,
 		};
 
 		if (this.props.inputRenderer) {
