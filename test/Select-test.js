@@ -2990,7 +2990,6 @@ describe('Select', () => {
 					instance = createControl({
 						searchable: false,
 						inputProps: {
-							inputClassName: 'extra-input-class',
 							className: 'extra-class-name',
 							id: 'search-input-id'
 						},
@@ -4435,44 +4434,36 @@ describe('Select', () => {
 				autoFocus: true,
 				options: defaultOptions,
 			});
-			const input = ReactDOM.findDOMNode(instance.input).querySelector('input');
+			var input = ReactDOM.findDOMNode(instance.input).querySelector('input');
 			expect(input, 'to equal', document.activeElement);
 		});
 		it('with autofocus as well, calls focus() only once', () => {
-			const warn = sinon.stub(console, 'warn');
 			wrapper = createControl({
 				autofocus: true,
 				autoFocus: true,
 				options: defaultOptions,
 			});
-			const focus = sinon.spy(instance, 'focus');
+			var focus = sinon.spy(instance, 'focus');
 			instance.componentDidMount();
 			expect(focus, 'was called once');
-
-			warn.restore();
 		});
 	});
 	describe('with autofocus', () => {
 		it('focuses the select input on mount', () => {
-			const warn = sinon.stub(console, 'warn');
 			wrapper = createControl({
 				autofocus: true,
 				options: defaultOptions,
 			});
-			const input = ReactDOM.findDOMNode(instance.input).querySelector('input');
+			var input = ReactDOM.findDOMNode(instance.input).querySelector('input');
 			expect(input, 'to equal', document.activeElement);
-
-			warn.restore();
 		});
 		it('calls console.warn', () => {
-			const warn = sinon.stub(console, 'warn');
+			var warn = sinon.spy(console, 'warn');
 			wrapper = createControl({
 				autofocus: true,
 				options: defaultOptions,
 			});
 			expect(warn, 'was called once');
-
-			warn.restore();
 		});
 	});
 	describe('rtl', () => {
