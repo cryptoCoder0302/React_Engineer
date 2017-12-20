@@ -2990,6 +2990,7 @@ describe('Select', () => {
 					instance = createControl({
 						searchable: false,
 						inputProps: {
+							inputClassName: 'extra-input-class',
 							className: 'extra-class-name',
 							id: 'search-input-id'
 						},
