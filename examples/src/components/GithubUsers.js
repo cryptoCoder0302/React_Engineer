@@ -13,8 +13,7 @@ const GithubUsers = createClass({
 	getInitialState () {
 		return {
 			backspaceRemoves: true,
-			multi: true,
-			creatable: false,
+			multi: true
 		};
 	},
 	onChange (value) {
