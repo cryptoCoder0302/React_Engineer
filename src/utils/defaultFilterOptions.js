@@ -1,11 +1,11 @@
 import stripDiacritics from './stripDiacritics';
 import trim from './trim';
 
-const isValid = value => {
+function isValid(value) {
 	return typeof (value) !== 'undefined' && value !== null && value !== '';
-};
+}
 
-const filterOptions = (options, filterValue, excludeOptions, props) => {
+function filterOptions (options, filterValue, excludeOptions, props) {
 	if (props.ignoreAccents) {
 		filterValue = stripDiacritics(filterValue);
 	}
@@ -25,17 +25,17 @@ const filterOptions = (options, filterValue, excludeOptions, props) => {
 		if (props.filterOption) return props.filterOption.call(this, option, filterValue);
 		if (!filterValue) return true;
 
-		const value = option[props.valueKey];
-		const label = option[props.labelKey];
-		const hasValue = isValid(value);
-		const hasLabel = isValid(label);
+		var value = option[props.valueKey];
+		var label = option[props.labelKey];
+		var hasValue = isValid(value);
+		var hasLabel = isValid(label);
 
 		if (!hasValue && !hasLabel) {
 			return false;
 		}
 
-		let valueTest = hasValue ? String(value) : null;
-		let labelTest = hasLabel ? String(label) : null;
+		var valueTest = hasValue ? String(value) : null;
+		var labelTest = hasLabel ? String(label) : null;
 
 		if (props.ignoreAccents) {
 			if (valueTest && props.matchProp !== 'label') valueTest = stripDiacritics(valueTest);
@@ -55,6 +55,6 @@ const filterOptions = (options, filterValue, excludeOptions, props) => {
 			(labelTest && props.matchProp !== 'value' && labelTest.indexOf(filterValue) >= 0)
 		);
 	});
-};
+}
 
 export default filterOptions;

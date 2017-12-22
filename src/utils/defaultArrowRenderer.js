@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const arrowRenderer = ({ onMouseDown }) => {
+export default function arrowRenderer ({ onMouseDown }) {
 	return (
 		<span
 			className="Select-arrow"
@@ -13,5 +13,3 @@ const arrowRenderer = ({ onMouseDown }) => {
 arrowRenderer.propTypes = {
 	onMouseDown: PropTypes.func,
 };
-
-export default arrowRenderer;

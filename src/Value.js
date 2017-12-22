@@ -1,6 +1,6 @@
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 class Value extends React.Component {
 
@@ -43,12 +43,12 @@ class Value extends React.Component {
 		this.onRemove(event);
 	}
 
-	handleTouchMove () {
+	handleTouchMove (event) {
 		// Set a flag that the view is being dragged
 		this.dragging = true;
 	}
 
-	handleTouchStart () {
+	handleTouchStart (event) {
 		// Set a flag that the view is not being dragged
 		this.dragging = false;
 	}
@@ -91,7 +91,8 @@ class Value extends React.Component {
 			</div>
 		);
 	}
-}
+};
+
 
 Value.propTypes = {
 	children: PropTypes.node,

@@ -1,9 +1,7 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Select from './Select';
-
 import stripDiacritics from './utils/stripDiacritics';
-
 const propTypes = {
 	autoload: PropTypes.bool.isRequired,       // automatically call the `loadOptions` prop on-mount; defaults to true
 	cache: PropTypes.any,                      // object to use to cache results; set to null/false to disable caching
@@ -35,8 +33,6 @@ const propTypes = {
 };
 
 const defaultCache = {};
-
-const defaultChildren = props => <Select {...props} />;
 
 const defaultProps = {
 	autoload: true,
@@ -187,7 +183,7 @@ export default class Async extends Component {
 	}
 
 	render () {
-		const { children, loadingPlaceholder, placeholder } = this.props;
+		const { children, loadingPlaceholder, multi, onChange, placeholder, value } = this.props;
 		const { isLoading, options } = this.state;
 
 		const props = {
@@ -208,3 +204,9 @@ export default class Async extends Component {
 
 Async.propTypes = propTypes;
 Async.defaultProps = defaultProps;
+
+function defaultChildren (props) {
+	return (
+		<Select {...props} />
+	);
+}

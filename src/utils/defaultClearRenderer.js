@@ -1,6 +1,6 @@
 import React from 'react';
 
-const clearRenderer = () => {
+export default function clearRenderer () {
 	return (
 		<span
 			className="Select-clear"
@@ -8,5 +8,3 @@ const clearRenderer = () => {
 		/>
 	);
 };
-
-export default clearRenderer;
