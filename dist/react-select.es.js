@@ -30,10 +30,6 @@ function trim(str) {
     return str.replace(/^\s+|\s+$/g, '');
 }
 
-function isValid(value) {
-	return typeof value !== 'undefined' && value !== null && value !== '';
-}
-
 function filterOptions(options, filterValue, excludeOptions, props) {
 	var _this = this;
 
@@ -57,30 +53,19 @@ function filterOptions(options, filterValue, excludeOptions, props) {
 		if (excludeOptions && excludeOptions.indexOf(option[props.valueKey]) > -1) return false;
 		if (props.filterOption) return props.filterOption.call(_this, option, filterValue);
 		if (!filterValue) return true;
-
-		var value = option[props.valueKey];
-		var label = option[props.labelKey];
-		var hasValue = isValid(value);
-		var hasLabel = isValid(label);
-
-		if (!hasValue && !hasLabel) {
-			return false;
-		}
-
-		var valueTest = hasValue ? String(value) : null;
-		var labelTest = hasLabel ? String(label) : null;
+		var valueTest = String(option[props.valueKey]);
+		var labelTest = String(option[props.labelKey]);
 
 		if (props.ignoreAccents) {
-			if (valueTest && props.matchProp !== 'label') valueTest = stripDiacritics(valueTest);
-			if (labelTest && props.matchProp !== 'value') labelTest = stripDiacritics(labelTest);
+			if (props.matchProp !== 'label') valueTest = stripDiacritics(valueTest);
+			if (props.matchProp !== 'value') labelTest = stripDiacritics(labelTest);
 		}
 
 		if (props.ignoreCase) {
-			if (valueTest && props.matchProp !== 'label') valueTest = valueTest.toLowerCase();
-			if (labelTest && props.matchProp !== 'value') labelTest = labelTest.toLowerCase();
+			if (props.matchProp !== 'label') valueTest = valueTest.toLowerCase();
+			if (props.matchProp !== 'value') labelTest = labelTest.toLowerCase();
 		}
-
-		return props.matchPos === 'start' ? valueTest && props.matchProp !== 'label' && valueTest.substr(0, filterValue.length) === filterValue || labelTest && props.matchProp !== 'value' && labelTest.substr(0, filterValue.length) === filterValue : valueTest && props.matchProp !== 'label' && valueTest.indexOf(filterValue) >= 0 || labelTest && props.matchProp !== 'value' && labelTest.indexOf(filterValue) >= 0;
+		return props.matchPos === 'start' ? props.matchProp !== 'label' && valueTest.substr(0, filterValue.length) === filterValue || props.matchProp !== 'value' && labelTest.substr(0, filterValue.length) === filterValue : props.matchProp !== 'label' && valueTest.indexOf(filterValue) >= 0 || props.matchProp !== 'value' && labelTest.indexOf(filterValue) >= 0;
 	});
 }
 
@@ -640,32 +625,6 @@ var stringOrNumber = PropTypes.oneOfType([PropTypes.string, PropTypes.number]);
 
 var instanceId = 1;
 
-var shouldShowValue = function shouldShowValue(state, props) {
-	var inputValue = state.inputValue,
-	    isPseudoFocused = state.isPseudoFocused,
-	    isFocused = state.isFocused;
-	var onSelectResetsInput = props.onSelectResetsInput;
-
-
-	if (!inputValue) return true;
-
-	if (!onSelectResetsInput) {
-		return !(!isFocused && isPseudoFocused || isFocused && !isPseudoFocused);
-	}
-
-	return false;
-};
-
-var shouldShowPlaceholder = function shouldShowPlaceholder(state, props, isOpen) {
-	var inputValue = state.inputValue,
-	    isPseudoFocused = state.isPseudoFocused,
-	    isFocused = state.isFocused;
-	var onSelectResetsInput = props.onSelectResetsInput;
-
-
-	return !inputValue || !onSelectResetsInput && !isOpen && !isPseudoFocused && !isFocused;
-};
-
 var Select$1 = function (_React$Component) {
 	inherits(Select, _React$Component);
 
@@ -722,10 +681,6 @@ var Select$1 = function (_React$Component) {
 			} else if (this.props.required) {
 				// Used to be required but it's not any more
 				this.setState({ required: false });
-			}
-
-			if (this.state.inputValue && this.props.value !== nextProps.value && nextProps.onSelectResetsInput) {
-				this.setState({ inputValue: this.handleInputValueChange('') });
 			}
 		}
 	}, {
@@ -874,7 +829,6 @@ var Select$1 = function (_React$Component) {
 						isPseudoFocused: false
 					});
 				}
-
 				return;
 			}
 
@@ -897,8 +851,6 @@ var Select$1 = function (_React$Component) {
 				this.focus();
 
 				var input = this.input;
-				var toOpen = true;
-
 				if (typeof input.getInput === 'function') {
 					// Get the actual DOM input if the ref is an <AutosizeInput /> component
 					input = input.getInput();
@@ -907,14 +859,9 @@ var Select$1 = function (_React$Component) {
 				// clears the value so that the cursor will be at the end of input when the component re-renders
 				input.value = '';
 
-				if (this._focusAfterClear) {
-					toOpen = false;
-					this._focusAfterClear = false;
-				}
-
 				// if the input is focused, ensure the menu is open
 				this.setState({
-					isOpen: toOpen,
+					isOpen: true,
 					isPseudoFocused: false
 				});
 			} else {
@@ -931,18 +878,18 @@ var Select$1 = function (_React$Component) {
 			if (this.props.disabled || event.type === 'mousedown' && event.button !== 0) {
 				return;
 			}
-
-			if (this.state.isOpen) {
-				// prevent default event handlers
-				event.stopPropagation();
-				event.preventDefault();
-				// close the menu
-				this.closeMenu();
-			} else {
-				// If the menu isn't open, let the event bubble to the main handleMouseDown
+			// If the menu isn't open, let the event bubble to the main handleMouseDown
+			if (!this.state.isOpen) {
 				this.setState({
 					isOpen: true
 				});
+			}
+			// prevent default event handlers
+			event.stopPropagation();
+			event.preventDefault();
+			// close the menu
+			if (this.state.isOpen) {
+				this.closeMenu();
 			}
 		}
 	}, {
@@ -953,7 +900,6 @@ var Select$1 = function (_React$Component) {
 			if (this.props.disabled || event.type === 'mousedown' && event.button !== 0) {
 				return;
 			}
-
 			event.stopPropagation();
 			event.preventDefault();
 
@@ -981,21 +927,15 @@ var Select$1 = function (_React$Component) {
 		key: 'handleInputFocus',
 		value: function handleInputFocus(event) {
 			if (this.props.disabled) return;
-
-			var toOpen = this.state.isOpen || this._openAfterFocus || this.props.openOnFocus;
-			toOpen = this._focusAfterClear ? false : toOpen; //if focus happens after clear values, don't open dropdown yet.
-
+			var isOpen = this.state.isOpen || this._openAfterFocus || this.props.openOnFocus;
 			if (this.props.onFocus) {
 				this.props.onFocus(event);
 			}
-
 			this.setState({
 				isFocused: true,
-				isOpen: toOpen
+				isOpen: isOpen
 			});
-
 			this._openAfterFocus = false;
-			this._focusAfterClear = false;
 		}
 	}, {
 		key: 'handleInputBlur',
@@ -1065,15 +1005,15 @@ var Select$1 = function (_React$Component) {
 						event.preventDefault();
 						this.popValue();
 					}
-					break;
+					return;
 				case 9:
 					// tab
 					if (event.shiftKey || !this.state.isOpen || !this.props.tabSelectsValue) {
-						break;
+						return;
 					}
 					event.preventDefault();
 					this.selectFocusedOption();
-					break;
+					return;
 				case 13:
 					// enter
 					event.preventDefault();
@@ -1083,10 +1023,10 @@ var Select$1 = function (_React$Component) {
 					} else {
 						this.focusNextOption();
 					}
+					return;
 					break;
 				case 27:
 					// escape
-					event.preventDefault();
 					if (this.state.isOpen) {
 						this.closeMenu();
 						event.stopPropagation();
@@ -1098,60 +1038,57 @@ var Select$1 = function (_React$Component) {
 				case 32:
 					// space
 					if (this.props.searchable) {
-						break;
+						return;
 					}
 					event.preventDefault();
 					if (!this.state.isOpen) {
 						this.focusNextOption();
-						break;
+						return;
 					}
 					event.stopPropagation();
 					this.selectFocusedOption();
 					break;
 				case 38:
 					// up
-					event.preventDefault();
 					this.focusPreviousOption();
 					break;
 				case 40:
 					// down
-					event.preventDefault();
 					this.focusNextOption();
 					break;
 				case 33:
 					// page up
-					event.preventDefault();
 					this.focusPageUpOption();
 					break;
 				case 34:
 					// page down
-					event.preventDefault();
 					this.focusPageDownOption();
 					break;
 				case 35:
 					// end key
 					if (event.shiftKey) {
-						break;
+						return;
 					}
-					event.preventDefault();
 					this.focusEndOption();
 					break;
 				case 36:
 					// home key
 					if (event.shiftKey) {
-						break;
+						return;
 					}
-					event.preventDefault();
 					this.focusStartOption();
 					break;
 				case 46:
 					// delete
-					event.preventDefault();
 					if (!this.state.inputValue && this.props.deleteRemoves) {
+						event.preventDefault();
 						this.popValue();
 					}
-					break;
+					return;
+				default:
+					return;
 			}
+			event.preventDefault();
 		}
 	}, {
 		key: 'handleValueClick',
@@ -1263,8 +1200,8 @@ var Select$1 = function (_React$Component) {
 			if (this.props.closeOnSelect) {
 				this.hasScrolledToOption = false;
 			}
-			var updatedValue = this.props.onSelectResetsInput ? '' : this.state.inputValue;
 			if (this.props.multi) {
+				var updatedValue = this.props.onSelectResetsInput ? '' : this.state.inputValue;
 				this.setState({
 					focusedIndex: null,
 					inputValue: this.handleInputValueChange(updatedValue),
@@ -1281,7 +1218,7 @@ var Select$1 = function (_React$Component) {
 				});
 			} else {
 				this.setState({
-					inputValue: this.handleInputValueChange(updatedValue),
+					inputValue: this.handleInputValueChange(''),
 					isOpen: !this.props.closeOnSelect,
 					isPseudoFocused: this.state.isFocused
 				}, function () {
@@ -1333,16 +1270,12 @@ var Select$1 = function (_React$Component) {
 			if (event && event.type === 'mousedown' && event.button !== 0) {
 				return;
 			}
-
 			event.preventDefault();
-
 			this.setValue(this.getResetValue());
 			this.setState({
 				isOpen: false,
 				inputValue: this.handleInputValueChange('')
 			}, this.focus);
-
-			this._focusAfterClear = true;
 		}
 	}, {
 		key: 'getResetValue',
@@ -1484,8 +1417,7 @@ var Select$1 = function (_React$Component) {
 			var renderLabel = this.props.valueRenderer || this.getOptionLabel;
 			var ValueComponent = this.props.valueComponent;
 			if (!valueArray.length) {
-				var showPlaceholder = shouldShowPlaceholder(this.state, this.props, isOpen);
-				return showPlaceholder ? React.createElement(
+				return !this.state.inputValue ? React.createElement(
 					'div',
 					{ className: 'Select-placeholder' },
 					this.props.placeholder
@@ -1503,8 +1435,7 @@ var Select$1 = function (_React$Component) {
 							key: 'value-' + i + '-' + value[_this6.props.valueKey],
 							onClick: onClick,
 							onRemove: _this6.removeValue,
-							value: value,
-							placeholder: _this6.props.placeholder
+							value: value
 						},
 						renderLabel(value, i),
 						React.createElement(
@@ -1514,7 +1445,7 @@ var Select$1 = function (_React$Component) {
 						)
 					);
 				});
-			} else if (shouldShowValue(this.state, this.props)) {
+			} else if (!this.state.inputValue) {
 				if (isOpen) onClick = null;
 				return React.createElement(
 					ValueComponent,
@@ -1523,8 +1454,7 @@ var Select$1 = function (_React$Component) {
 						disabled: this.props.disabled,
 						instancePrefix: this._instancePrefix,
 						onClick: onClick,
-						value: valueArray[0],
-						placeholder: this.props.placeholder
+						value: valueArray[0]
 					},
 					renderLabel(valueArray[0])
 				);
@@ -1540,13 +1470,6 @@ var Select$1 = function (_React$Component) {
 			var isOpen = !!this.state.isOpen;
 
 			var ariaOwns = classNames((_classNames = {}, defineProperty(_classNames, this._instancePrefix + '-list', isOpen), defineProperty(_classNames, this._instancePrefix + '-backspace-remove-message', this.props.multi && !this.props.disabled && this.state.isFocused && !this.state.inputValue), _classNames));
-
-			var value = this.state.inputValue;
-			if (value && !this.props.onSelectResetsInput && !this.state.isFocused) {
-				// it hides input value when it is not focused and was not reset on select
-				value = '';
-			}
-
 			var inputProps = _extends({}, this.props.inputProps, {
 				role: 'combobox',
 				'aria-expanded': '' + isOpen,
@@ -1565,7 +1488,7 @@ var Select$1 = function (_React$Component) {
 					return _this7.input = _ref;
 				},
 				required: this.state.required,
-				value: value
+				value: this.state.inputValue
 			});
 
 			if (this.props.inputRenderer) {
@@ -2260,7 +2183,7 @@ var CreatableSelect = function (_React$Component) {
 
 			if (isValidNewOption({ label: this.inputValue })) {
 				var option = newOptionCreator({ label: this.inputValue, labelKey: this.labelKey, valueKey: this.valueKey });
-				var _isOptionUnique = this.isOptionUnique({ option: option, options: options });
+				var _isOptionUnique = this.isOptionUnique({ option: option });
 
 				// Don't add the same option twice.
 				if (_isOptionUnique) {
@@ -2454,10 +2377,6 @@ function isOptionUnique(_ref3) {
 	    options = _ref3.options,
 	    labelKey = _ref3.labelKey,
 	    valueKey = _ref3.valueKey;
-
-	if (!options || !options.length) {
-		return true;
-	}
 
 	return options.filter(function (existingOption) {
 		return existingOption[labelKey] === option[labelKey] || existingOption[valueKey] === option[valueKey];
