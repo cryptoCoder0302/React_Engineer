@@ -1,6 +1,7 @@
 // @flow
 
 const npsUtils = require('nps-utils');
+const path = require('path');
 const series = npsUtils.series;
 const rimraf = npsUtils.rimraf;
 const concurrent = npsUtils.concurrent;
