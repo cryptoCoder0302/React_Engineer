@@ -4,7 +4,16 @@
 // This file does away with named imports in favor of a single export default.
 
 import Select from './Select';
-import { components } from './components/index';
+import Async from './Async';
+import AsyncCreatable from './AsyncCreatable';
+import Creatable from './Creatable';
+import Value from './Value';
+import Option from './Option';
 
-Select.components = components;
+Select.Async = Async;
+Select.AsyncCreatable = AsyncCreatable;
+Select.Creatable = Creatable;
+Select.Value = Value;
+Select.Option = Option;
+
 export default Select;
