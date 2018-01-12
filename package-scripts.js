@@ -17,7 +17,6 @@ module.exports = {
       ),
       rollup: 'rollup --config',
       babel: 'babel src -d lib',
-      watch: 'babel src -d lib -w',
       examples: series(
         rimraf('examples/dist'),
         'webpack --progress -p',
