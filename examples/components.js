@@ -2,7 +2,7 @@
 // @jsx glam
 
 import glam from 'glam';
-import React from 'react';
+import React, { Component } from 'react';
 
 export const Hr = () => (
   <div
