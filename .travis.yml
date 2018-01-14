@@ -1,8 +1,12 @@
 sudo: false
 language: node_js
 node_js:
-  - "v4"
+  - "v8"
+
+before_script:
+  - npm start & sleep 7
+  
 script:
   - npm run lint
-  - npm run test
-  - npm run coveralls
+  - npm run test:jest
+  - npm run test:cypress
