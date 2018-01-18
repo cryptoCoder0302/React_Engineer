@@ -7,7 +7,7 @@ import { CrossIcon } from './indicators';
 import { Div } from '../primitives';
 import { paddingHorizontal } from '../mixins';
 
-export type ValueProps = {
+type ValueProps = {
   isDisabled?: boolean,
   label: string,
   onRemove: (value: any) => void,
@@ -15,7 +15,7 @@ export type ValueProps = {
 };
 
 const MultiValue = ({
-  isDisabled = false,
+  isDisabled,
   label,
   onRemove,
   data,
