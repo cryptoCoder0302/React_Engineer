@@ -9,7 +9,6 @@ import { paddingHorizontal, paddingVertical } from '../mixins';
 
 const Option = ({
   data,
-  isDisabled,
   isFocused,
   isSelected,
   withinGroup,
@@ -21,10 +20,8 @@ const Option = ({
       backgroundColor: isSelected
         ? colors.primary
         : isFocused ? colors.primaryLight : 'transparent',
-      color: isDisabled
-        ? colors.neutral20
-        : isSelected ? colors.neutral0 : 'inherit',
-      cursor: isDisabled ? 'default' : 'pointer',
+      color: isSelected ? colors.neutral0 : 'inherit',
+      cursor: 'default',
       display: 'block',
       fontSize: 'inherit',
       ...paddingHorizontal(spacing.baseUnit * 3),

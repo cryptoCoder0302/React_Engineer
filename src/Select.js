@@ -81,6 +81,7 @@ type State = {
   inputValue: string,
   inputIsHidden: boolean,
   isFocused: boolean,
+  isLoading: boolean,
   focusedOption: OptionType | null,
   menuIsOpen: boolean,
   menuOptions: MenuOptions,
@@ -159,6 +160,7 @@ export default class Select extends Component<Props, State> {
     inputIsHidden: false,
     inputValue: '',
     isFocused: false,
+    isLoading: true,
     menuIsOpen: false,
     menuOptions: { render: [], focusable: [] },
     focusedOption: null,
@@ -226,23 +228,19 @@ export default class Select extends Component<Props, State> {
     const focusable = [];
 
     const toOption = (option, i) => {
-      const isDisabled = this.isDisabled(option);
       const isSelected = this.isSelected(option, selectValue);
-
       if (isMulti && hideSelectedOptions && isSelected) return;
       if (!filterOption(this.getOptionLabel(option), inputValue)) return;
-      if (!isDisabled) {
+      if (!this.isDisabled(option)) {
         focusable.push(option);
       }
-
       return {
         type: 'option',
         label: this.getOptionLabel(option),
         key: `${i}-${this.getOptionValue(option)}`,
-        isDisabled,
         isSelected,
-        onMouseOver: isDisabled ? undefined : () => this.onOptionHover(option),
-        onClick: isDisabled ? undefined : () => this.selectValue(option),
+        onMouseOver: () => this.onOptionHover(option),
+        onClick: () => this.selectValue(option),
         data: option,
       };
     };
@@ -708,9 +706,15 @@ export default class Select extends Component<Props, State> {
   renderClearIndicator() {
     const { ClearIndicator } = this.components;
     const { isClearable, isDisabled } = this.props;
-    const { isFocused } = this.state;
+    const { isFocused, isLoading } = this.state;
 
-    if (!isClearable || !ClearIndicator || isDisabled || !this.hasValue()) {
+    if (
+      !isClearable ||
+      !ClearIndicator ||
+      isDisabled ||
+      !this.hasValue() ||
+      isLoading
+    ) {
       return null;
     }
 
@@ -721,6 +725,14 @@ export default class Select extends Component<Props, State> {
         role="button"
       />
     );
+  }
+  renderLoadingIndicator() {
+    const { LoadingIndicator } = this.components;
+    const { isLoading } = this.state;
+
+    if (!LoadingIndicator || !isLoading) return null;
+
+    return <LoadingIndicator />;
   }
   renderDropdownIndicator() {
     const { DropdownIndicator } = this.components;
@@ -849,6 +861,7 @@ export default class Select extends Component<Props, State> {
             </ValueContainer>
             <IndicatorsContainer>
               {this.renderClearIndicator()}
+              {this.renderLoadingIndicator()}
               {this.renderDropdownIndicator()}
             </IndicatorsContainer>
           </Control>
