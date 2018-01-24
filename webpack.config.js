@@ -1,12 +1,12 @@
-// @flow
-
+const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-  context: path.resolve(__dirname, 'examples'),
+  context: path.resolve(__dirname, 'examples/src'),
   entry: {
-    index: './index.js',
+    app: './app.js',
   },
   output: {
     path: path.resolve(__dirname, 'examples/dist'),
@@ -14,36 +14,52 @@ module.exports = {
     publicPath: '/',
   },
   devServer: {
+    contentBase: path.resolve(__dirname, 'examples/src'),
     port: 8000,
-    historyApiFallback: true,
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: [/node_modules/],
-        use: [
-          {
-            loader: 'babel-loader',
-          },
-        ],
+        use: [{
+          loader: 'babel-loader',
+          options: { presets: ['env'] },
+        }],
       },
       {
-        test: /\.css$/,
-        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+        test: /\.less$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'less-loader'],
+        })
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: 'html-loader',
+          }
+        ]
       },
     ],
   },
   resolve: {
     alias: {
       'react-select': path.resolve(__dirname, 'src/index'),
-    },
+    }
   },
   plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'common',
+      filename: 'common.js',
+      minChunk: 2,
+    }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       inject: false,
-      template: path.resolve(__dirname, 'examples/index.html'),
+      template: path.resolve(__dirname, 'examples/src/index.html')
     }),
-  ],
+    new ExtractTextPlugin('example.css'),
+  ]
 };
