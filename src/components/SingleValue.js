@@ -24,7 +24,7 @@ const SingleValue = ({ getStyles, ...props }: ValueProps) => {
   return (
     <Div
       className={className('single-value', { isDisabled })}
-      css={getStyles(props)}
+      css={getStyles('singleValue', props)}
       {...cleanProps}
     />
   );
