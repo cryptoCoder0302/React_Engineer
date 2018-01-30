@@ -9,8 +9,7 @@
   "multiSelectDefaultValues": ".css-1f99qyp.css-1ycyyax",
   "multiSelectInput": "#react-select-4--input",
   "noOptionsValue": ".css-59b0oj.css-1ycyyax",
-  "firstMultiValueRemove":
-    "#cypress-multi .react-select__multi-value__remove:first",
+  "removeOption": ".react-select__multi-value__remove",
   "singleGroupedInputValue":
     "#cypress-single-grouped .react-select__single-value",
   "singleInputValue": ".react-select__single-value",

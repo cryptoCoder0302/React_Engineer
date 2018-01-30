@@ -9,7 +9,7 @@ import { components as SelectComponents } from '../../src';
 
 import Select from '../../src';
 
-import { Link, Note, H1 } from '../components';
+import { Link, Note } from '../components';
 
 const createOptionForDate = d => {
   const date = moment.isMoment(d) ? d : moment(d);
@@ -178,7 +178,7 @@ export default class App extends Component<*, *> {
     const displayValue = value && value.value ? value.value.toString() : 'null';
     return (
       <div>
-        <H1>Experimental</H1>
+        <h1>Labs</h1>
         <p>
           Wild experiments with react-select v2{' '}
           <Link

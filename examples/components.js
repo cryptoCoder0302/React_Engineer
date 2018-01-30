@@ -61,5 +61,3 @@ export const Note = ({ Tag = 'div', ...props }: { Tag?: string }) => (
     {...props}
   />
 );
-
-export const H1 = (props: any) => <h1 css={{ marginTop: 0 }} {...props} />;
