@@ -3,12 +3,8 @@
 exports[`defaults 1`] = `
 <SelectContainer
   getStyles={[Function]}
-  innerProps={
-    Object {
-      "onKeyDown": [Function],
-    }
-  }
   isDisabled={false}
+  onKeyDown={[Function]}
 >
   <SROnly
     aria-atomic="true"
@@ -20,14 +16,10 @@ exports[`defaults 1`] = `
   </SROnly>
   <Control
     getStyles={[Function]}
-    innerProps={
-      Object {
-        "innerRef": [Function],
-        "onMouseDown": [Function],
-      }
-    }
+    innerRef={[Function]}
     isDisabled={false}
     isFocused={false}
+    onMouseDown={[Function]}
   >
     <ValueContainer
       getStyles={[Function]}

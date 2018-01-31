@@ -7,8 +7,8 @@ import { Div } from '../primitives';
 import { marginHorizontal } from '../mixins';
 import { type PropsWithStyles } from '../types';
 
-type State = { isDisabled: boolean, isMulti: boolean };
-type Props = PropsWithStyles & State;
+type PlaceholderProps = { isDisabled: boolean, isMulti: boolean };
+type Props = PropsWithStyles & PlaceholderProps;
 
 export const css = () => ({
   ...marginHorizontal(spacing.baseUnit / 2),

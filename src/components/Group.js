@@ -9,12 +9,7 @@ import { type PropsWithStyles } from '../types';
 
 type GroupProps = {
   children: Node,
-  Heading: typeof GroupHeading,
-  innerProps: {
-    'aria-expanded': boolean,
-    'aria-label': string,
-    role: 'group',
-  },
+  components: { Heading: typeof GroupHeading },
   label: string,
 };
 type Props = PropsWithStyles & GroupProps;
@@ -22,12 +17,14 @@ type Props = PropsWithStyles & GroupProps;
 export const groupCSS = () => paddingVertical(spacing.baseUnit * 2);
 
 const Group = (props: Props) => {
-  const { children, getStyles, Heading, label, innerProps } = props;
+  const { components, getStyles, children, label, ...cleanProps } = props;
+  const { Heading } = components;
   return (
     <Li
+      aria-label={label}
       className={className('group')}
       css={getStyles('group', props)}
-      {...innerProps}
+      {...cleanProps}
     >
       <Heading getStyles={getStyles}>{label}</Heading>
       <Ul>{children}</Ul>

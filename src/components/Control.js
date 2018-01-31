@@ -1,26 +1,15 @@
 // @flow
-import React, { type Node } from 'react';
+import React from 'react';
 
 import { className } from '../utils';
 import { Div } from '../primitives';
 import { borderRadius, colors, spacing } from '../theme';
-import {
-  type InnerRef,
-  type PropsWithStyles,
-  type MouseEventHandler,
-} from '../types';
+import { type PropsWithStyles } from '../types';
 
-type State = { isDisabled: boolean, isFocused: boolean };
-type Props = PropsWithStyles &
-  State & {
-    children: Node,
-    innerProps: {
-      onMouseDown: MouseEventHandler,
-      innerRef: InnerRef,
-    },
-  };
+type ControlProps = { isDisabled: boolean, isFocused: boolean };
+type Props = PropsWithStyles & ControlProps;
 
-export const css = ({ isDisabled, isFocused }: State) => ({
+export const css = ({ isDisabled, isFocused }: ControlProps) => ({
   alignItems: 'center',
   backgroundColor: isDisabled
     ? colors.neutral5
@@ -47,15 +36,13 @@ export const css = ({ isDisabled, isFocused }: State) => ({
 });
 
 const Control = (props: Props) => {
-  const { children, getStyles, isDisabled, isFocused, innerProps } = props;
+  const { getStyles, isDisabled, isFocused, ...cleanProps } = props;
   return (
     <Div
       className={className('control', { isDisabled, isFocused })}
       css={getStyles('control', props)}
-      {...innerProps}
-    >
-      {children}
-    </Div>
+      {...cleanProps}
+    />
   );
 };
 

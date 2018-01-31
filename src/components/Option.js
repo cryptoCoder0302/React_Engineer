@@ -1,37 +1,16 @@
 // @flow
-import React, { type Node } from 'react';
+import React from 'react';
 
+import type { OptionProps } from '../types';
 import { className } from '../utils';
 import { colors, spacing } from '../theme';
 import { Li } from '../primitives';
 import { paddingHorizontal, paddingVertical } from '../mixins';
-import { type PropsWithStyles, type InnerRef } from '../types';
+import { type PropsWithStyles } from '../types';
 
-type State = {
-  isDisabled: boolean,
-  isFocused: boolean,
-  isSelected: boolean,
-};
-type InnerProps = {
-  'aria-selected': boolean,
-  id: string,
-  innerRef: InnerRef,
-  key: string,
-  onClick: MouseEventHandler,
-  onMouseOver: MouseEventHandler,
-  role: 'option',
-  tabIndex: number,
-};
-type Props = PropsWithStyles &
-  State & {
-    children: Node,
-    data: {},
-    innerProps: InnerProps,
-    label: string,
-    type: 'option',
-  };
+type Props = PropsWithStyles & OptionProps;
 
-export const css = ({ isDisabled, isFocused, isSelected }: State) => ({
+export const css = ({ isDisabled, isFocused, isSelected }: OptionProps) => ({
   backgroundColor: isSelected
     ? colors.primary
     : isFocused ? colors.primaryLight : 'transparent',
@@ -47,26 +26,20 @@ export const css = ({ isDisabled, isFocused, isSelected }: State) => ({
 });
 
 const Option = (props: Props) => {
-  /* eslint-disable no-unused-vars */
   const {
-    children,
-    data, // invalid DOM attr, must be removed before spreading
+    data,
     getStyles,
-    isDisabled, // invalid DOM attr, must be removed before spreading
+    isDisabled,
     isFocused,
     isSelected,
-    innerProps,
+    ...cleanProps
   } = props;
-  /* eslint-enable no-unused-vars */
-
   return (
     <Li
       className={className('option', { isFocused, isSelected })}
       css={getStyles('option', props)}
-      {...innerProps}
-    >
-      {children}
-    </Li>
+      {...cleanProps}
+    />
   );
 };
 

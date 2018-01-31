@@ -164,7 +164,11 @@ const LoadingIcon = ({ isFocused, size = 4 }: LoadingIconProps) => {
   );
 };
 
-export const LoadingIndicator = ({ isFocused, ...props }: IndicatorProps) => (
+export const LoadingIndicator = ({
+  children,
+  isFocused,
+  ...props
+}: IndicatorProps) => (
   <Indicator
     role="presentation"
     className={className(['indicator', 'loading-indicator'])}

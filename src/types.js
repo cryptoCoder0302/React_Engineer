@@ -1,5 +1,6 @@
 // @flow
-import { type ElementRef } from 'react';
+
+type MouseEventHandler = (SyntheticMouseEvent<HTMLElement>) => void;
 
 export type OptionType = {
   [string]: any,
@@ -9,15 +10,8 @@ export type OptionsType = Array<OptionType>;
 
 export type ValueType = OptionType | OptionsType | null | void;
 
-export type FocusEventHandler = (SyntheticFocusEvent<HTMLElement>) => void;
-export type MouseEventHandler = (SyntheticMouseEvent<HTMLElement>) => void;
-export type KeyboardEventHandler = (
-  SyntheticKeyboardEvent<HTMLElement>
-) => void;
-
-export type InnerRef = ElementRef<typeof HTMLElement>;
 export type PropsWithInnerRef = {
-  innerRef: InnerRef,
+  innerRef: (?HTMLElement) => void,
 };
 export type PropsWithStyles = {
   getStyles: (string, any) => {},
