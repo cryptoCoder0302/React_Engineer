@@ -9,7 +9,7 @@ import { components as SelectComponents } from '../../src';
 
 import Select from '../../src';
 
-import { Link, Note } from '../components';
+import { Link, Note, H1 } from '../components';
 
 const createOptionForDate = d => {
   const date = moment.isMoment(d) ? d : moment(d);
@@ -46,6 +46,42 @@ const createCalendarOptions = (date = new Date()) => {
 };
 
 defaultOptions.push(createCalendarOptions());
+
+const suggestions = [
+  'sunday',
+  'saturday',
+  'friday',
+  'thursday',
+  'wednesday',
+  'tuesday',
+  'monday',
+  'december',
+  'november',
+  'october',
+  'september',
+  'august',
+  'july',
+  'june',
+  'may',
+  'april',
+  'march',
+  'february',
+  'january',
+  'yesterday',
+  'tomorrow',
+  'today',
+].reduce((acc, str) => {
+  for (let i = 1; i < str.length; i++) {
+    acc[str.substr(0, i)] = str;
+  }
+  return acc;
+}, {});
+
+const suggest = str =>
+  str
+    .split(/\b/)
+    .map(i => suggestions[i] || i)
+    .join('');
 
 const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
@@ -135,7 +171,7 @@ class DatePicker extends Component<*, *> {
       this.setState({ options: defaultOptions });
       return;
     }
-    const date = chrono.parseDate(value);
+    const date = chrono.parseDate(suggest(value.toLowerCase()));
     if (date) {
       this.setState({
         options: [createOptionForDate(date), createCalendarOptions(date)],
@@ -178,7 +214,7 @@ export default class App extends Component<*, *> {
     const displayValue = value && value.value ? value.value.toString() : 'null';
     return (
       <div>
-        <h1>Labs</h1>
+        <H1>Experimental</H1>
         <p>
           Wild experiments with react-select v2{' '}
           <Link
