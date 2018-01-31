@@ -710,7 +710,6 @@ export default class Select extends Component<Props, State> {
   renderPlaceholderOrValue() {
     const {
       MultiValue,
-      MultiValueContainer,
       MultiValueLabel,
       MultiValueRemove,
       SingleValue,
@@ -735,7 +734,6 @@ export default class Select extends Component<Props, State> {
       return selectValue.map(opt => (
         <MultiValue
           components={{
-            Container: MultiValueContainer,
             Label: MultiValueLabel,
             Remove: MultiValueRemove,
           }}
@@ -818,10 +816,10 @@ export default class Select extends Component<Props, State> {
     const {
       Group,
       GroupHeading,
+      LoadingMessage,
       Menu,
       MenuList,
-      MenuNoticeLoading,
-      MenuNoticeNoOptions,
+      NoOptionsMessage,
       Option,
     } = this.components;
     const { focusedOption, menuIsOpen, menuOptions } = this.state;
@@ -873,9 +871,9 @@ export default class Select extends Component<Props, State> {
         }
       });
     } else if (isLoading) {
-      menuUI = <MenuNoticeLoading getStyles={this.getStyles} />;
+      menuUI = <LoadingMessage>Loading...</LoadingMessage>;
     } else {
-      menuUI = <MenuNoticeNoOptions getStyles={this.getStyles} />;
+      menuUI = <NoOptionsMessage>No options</NoOptionsMessage>;
     }
 
     return (

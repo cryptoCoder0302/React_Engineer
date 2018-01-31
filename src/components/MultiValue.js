@@ -44,7 +44,6 @@ export const multiValueRemoveCSS = () => ({
   },
 });
 
-export const MultiValueContainer = Div;
 export const MultiValueLabel = Div;
 export const MultiValueRemove = Div;
 
@@ -61,19 +60,19 @@ const MultiValue = (props: Props) => {
     ...cleanProps
   } = props;
   const cn = {
-    container: className('multi-value', { isDisabled }),
+    root: className('multi-value', { isDisabled }),
     label: className('multi-value__label'),
     remove: className('multi-value__remove'),
   };
   const css = {
-    container: getStyles('multiValue', props),
+    root: getStyles('multiValue', props),
     label: getStyles('multiValueLabel', props),
     remove: getStyles('multiValueRemove', props),
   };
-  const { Container, Label, Remove } = components;
+  const { Label, Remove } = components;
 
   return (
-    <Container className={cn.container} css={css.container} {...cleanProps}>
+    <Div className={cn.root} css={css.root} {...cleanProps}>
       <Label className={cn.label} css={css.label}>
         {children}
       </Label>
@@ -85,7 +84,7 @@ const MultiValue = (props: Props) => {
       >
         <CrossIcon size={14} />
       </Remove>
-    </Container>
+    </Div>
   );
 };
 
