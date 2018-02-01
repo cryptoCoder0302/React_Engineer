@@ -108,9 +108,10 @@ const daysContainerStyles = {
 };
 
 const Group = props => {
-  const { Heading, getStyles, children, label, innerProps } = props;
+  const { components, getStyles, children, label, ...cleanProps } = props;
+  const { Heading } = components;
   return (
-    <Li aria-label={label} css={getStyles('group', props)} {...innerProps}>
+    <Li aria-label={label} css={getStyles('group', props)} {...cleanProps}>
       <Heading getStyles={getStyles}>{label}</Heading>
       <Div css={daysHeaderStyles}>
         {days.map((day, i) => (
@@ -134,7 +135,16 @@ const getOptionStyles = defaultStyles => ({
 });
 
 const Option = props => {
-  const { data, getStyles, innerRef, innerProps } = props;
+  const {
+    children,
+    data,
+    getStyles,
+    innerRef,
+    isDisabled,
+    isFocused,
+    isSelected,
+    ...cleanProps
+  } = props;
   if (data.display === 'calendar') {
     const defaultStyles = getStyles('option', props);
     const styles = getOptionStyles(defaultStyles);
@@ -145,7 +155,7 @@ const Option = props => {
       }
     }
     return (
-      <Span {...innerProps} css={styles} ref={innerRef}>
+      <Span {...cleanProps} css={styles} ref={innerRef}>
         {data.date.format('D')}
       </Span>
     );
