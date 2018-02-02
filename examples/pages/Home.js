@@ -8,6 +8,7 @@ import Select from '../../src';
 import { colourOptions, groupedOptions } from '../data';
 
 const SelectWithValue = withValue(Select);
+type State = { isDisabled: boolean, isLoading: boolean };
 
 const changes = [
   { icon: '🎨', text: 'CSS-in-JS with a complete styling API' },
@@ -56,27 +57,12 @@ const formatGroupLabel = data => (
   </div>
 );
 
-type State = {
-  isClearable: boolean,
-  isDisabled: boolean,
-  isLoading: boolean,
-  isRtl: boolean,
-};
-
 export default class Home extends Component<*, State> {
-  state = {
-    isClearable: false,
-    isDisabled: false,
-    isLoading: false,
-    isRtl: false,
-  };
-  toggleClearable = () =>
-    this.setState(state => ({ isClearable: !state.isClearable }));
+  state = { isDisabled: false, isLoading: false };
   toggleDisabled = () =>
     this.setState(state => ({ isDisabled: !state.isDisabled }));
   toggleLoading = () =>
     this.setState(state => ({ isLoading: !state.isLoading }));
-  toggleRtl = () => this.setState(state => ({ isRtl: !state.isRtl }));
   render() {
     return (
       <div>
@@ -112,10 +98,8 @@ export default class Home extends Component<*, State> {
           <SelectWithValue
             autoFocus
             defaultValue={colourOptions[0]}
-            isClearable={this.state.isClearable}
             isDisabled={this.state.isDisabled}
             isLoading={this.state.isLoading}
-            isRtl={this.state.isRtl}
             name="color"
             options={colourOptions}
             onFocus={() => {
@@ -127,20 +111,12 @@ export default class Home extends Component<*, State> {
           />
         </div>
         <Note Tag="label">
-          <input type="checkbox" onChange={this.toggleClearable} />
-          Clearable
-        </Note>
-        <Note Tag="label" style={{ marginLeft: '1em' }}>
           <input type="checkbox" onChange={this.toggleDisabled} />
           Disabled
         </Note>
         <Note Tag="label" style={{ marginLeft: '1em' }}>
           <input type="checkbox" onChange={this.toggleLoading} />
           Loading
-        </Note>
-        <Note Tag="label" style={{ marginLeft: '1em' }}>
-          <input type="checkbox" onChange={this.toggleRtl} />
-          RTL
         </Note>
         <h4>Grouped</h4>
         <div>
