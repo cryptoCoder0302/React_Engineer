@@ -14,7 +14,6 @@ import {
 } from './components/index';
 import { SROnly } from './primitives';
 import { defaultStyles, type StylesConfig } from './styles';
-import { ScrollLock } from './components/internal';
 
 import type {
   ActionMeta,
@@ -44,8 +43,6 @@ type Props = {
   autoFocus?: boolean,
   /* Remove the currently focused option when the user presses backspace */
   backspaceRemovesValue: boolean,
-  /* When the user reaches the top/bottom of the menu, prevent scroll on the scroll-parent  */
-  captureMenuScroll: boolean,
   /* Close the select menu when the user selects an option */
   closeMenuOnSelect: boolean,
   /* Custom components to use */
@@ -114,7 +111,6 @@ type Props = {
 
 const defaultProps = {
   backspaceRemovesValue: true,
-  captureMenuScroll: true,
   closeMenuOnSelect: true,
   components: {},
   escapeClearsValue: false,
@@ -858,7 +854,6 @@ export default class Select extends Component<Props, State> {
     } = this.components;
     const { inputValue, focusedOption, menuIsOpen, menuOptions } = this.state;
     const {
-      captureMenuScroll,
       isLoading,
       isMulti,
       maxMenuHeight,
@@ -935,31 +930,19 @@ export default class Select extends Component<Props, State> {
 
     return (
       <Menu onMouseDown={this.onMenuMouseDown} getStyles={this.getStyles}>
-        <ScrollLock enabled={captureMenuScroll}>
-          {({ scrollableRef }) => {
-            // resolve refs for both Select and ScrollLock
-            const innerRef = ref => {
-              this.onMenuRef(ref);
-              scrollableRef(ref);
-            };
-
-            return (
-              <MenuList
-                getStyles={this.getStyles}
-                innerProps={{
-                  'aria-multiselectable': isMulti,
-                  id: this.getElementId('listbox'),
-                  innerRef,
-                  role: 'listbox',
-                }}
-                isMulti={isMulti}
-                maxHeight={maxMenuHeight}
-              >
-                {menuUI}
-              </MenuList>
-            );
+        <MenuList
+          getStyles={this.getStyles}
+          innerProps={{
+            'aria-multiselectable': isMulti,
+            id: this.getElementId('listbox'),
+            innerRef: this.onMenuRef,
+            role: 'listbox',
           }}
-        </ScrollLock>
+          isMulti={isMulti}
+          maxHeight={maxMenuHeight}
+        >
+          {menuUI}
+        </MenuList>
       </Menu>
     );
   }
