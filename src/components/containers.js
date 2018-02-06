@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, type Node, type ElementRef } from 'react';
+import React, { type Node, Component } from 'react';
 
 import { className } from '../utils';
 import { Div } from '../primitives';
@@ -72,7 +72,7 @@ export class ValueContainer extends Component<ValueContainerProps> {
       this.node.scrollTop = this.node.scrollHeight;
     }
   }
-  getScrollContainer = (ref: ElementRef<*>) => {
+  getScrollContainer = (ref: HTMLElement) => {
     this.node = ref;
   };
   render() {
@@ -80,7 +80,7 @@ export class ValueContainer extends Component<ValueContainerProps> {
 
     return (
       <Div
-        innerRef={isMulti ? this.getScrollContainer : undefined}
+        innerRef={isMulti ? this.getScrollContainer : null}
         className={className('value-container', { isMulti, hasValue })}
         css={getStyles('valueContainer', this.props)}
       >

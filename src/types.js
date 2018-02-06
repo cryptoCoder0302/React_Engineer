@@ -1,5 +1,5 @@
 // @flow
-import type { Ref } from 'react';
+import { type ElementRef } from 'react';
 
 export type OptionType = {
   [string]: any,
@@ -15,9 +15,9 @@ export type KeyboardEventHandler = (
   SyntheticKeyboardEvent<HTMLElement>
 ) => void;
 
-export type InnerRef = Ref<*>;
+export type InnerRef = ElementRef<typeof HTMLElement>;
 export type PropsWithInnerRef = {
-  innerRef: Ref<*>,
+  innerRef: InnerRef,
 };
 
 export type PropsWithStyles = {
