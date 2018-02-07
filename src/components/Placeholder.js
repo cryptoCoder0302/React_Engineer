@@ -1,5 +1,5 @@
 // @flow
-import React, { type Node } from 'react';
+import React from 'react';
 
 import { className } from '../utils';
 import { colors, spacing } from '../theme';
@@ -7,10 +7,8 @@ import { Div } from '../primitives';
 import { marginHorizontal } from '../mixins';
 import { type PropsWithStyles } from '../types';
 
-type Props = PropsWithStyles & {
-  children: Node,
-  innerProps: { [string]: any },
-};
+type State = { isDisabled: boolean, isMulti: boolean };
+type Props = PropsWithStyles & State;
 
 export const css = () => ({
   ...marginHorizontal(spacing.baseUnit / 2),
@@ -19,15 +17,13 @@ export const css = () => ({
 });
 
 const Placeholder = (props: Props) => {
-  const { children, getStyles, innerProps } = props;
+  const { getStyles, isDisabled, isMulti, ...cleanProps } = props;
   return (
     <Div
       className={className('placeholder')}
       css={getStyles('placeholder', props)}
-      {...innerProps}
-    >
-      {children}
-    </Div>
+      {...cleanProps}
+    />
   );
 };
 

@@ -11,30 +11,23 @@ type State = { isDisabled: boolean };
 type ValueProps = {
   children: string,
   data: any,
-  innerProps: any,
 };
 type Props = PropsWithStyles & ValueProps & State;
 
 export const css = ({ isDisabled }: State) => ({
   ...marginHorizontal(spacing.baseUnit / 2),
   color: isDisabled ? colors.neutral40 : colors.text,
-  maxWidth: '100%',
-  overflow: 'hidden',
   position: 'absolute',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
 });
 
 const SingleValue = (props: Props) => {
-  const { children, getStyles, isDisabled, innerProps } = props;
+  const { data, getStyles, isDisabled, ...cleanProps } = props;
   return (
     <Div
       className={className('single-value', { isDisabled })}
       css={getStyles('singleValue', props)}
-      {...innerProps}
-    >
-      {children}
-    </Div>
+      {...cleanProps}
+    />
   );
 };
 

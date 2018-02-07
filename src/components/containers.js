@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, type Node, type ElementRef } from 'react';
+import React, { type Node, Component } from 'react';
 
 import { className } from '../utils';
 import { Div } from '../primitives';
@@ -42,7 +42,6 @@ type ValueContainerProps = PropsWithStyles & {
   isMulti: boolean,
   hasValue: boolean,
   maxHeight: number,
-  children: Node,
 };
 export const valueContainerCSS = ({ maxHeight }: ValueContainerProps) => ({
   alignItems: 'baseline',
@@ -53,7 +52,6 @@ export const valueContainerCSS = ({ maxHeight }: ValueContainerProps) => ({
   overflowY: 'auto',
   ...paddingHorizontal(spacing.baseUnit * 2),
   ...paddingVertical(spacing.baseUnit / 2),
-  position: 'relative',
 });
 export class ValueContainer extends Component<ValueContainerProps> {
   shouldScrollBottom: boolean = false;
@@ -69,24 +67,29 @@ export class ValueContainer extends Component<ValueContainerProps> {
     if (!this.props.isMulti) return;
 
     // ensure we're showing items being added by forcing scroll to the bottom
-    if (this.shouldScrollBottom && this.node) {
+    if (this.shouldScrollBottom) {
       this.node.scrollTop = this.node.scrollHeight;
     }
   }
-  getScrollContainer = (ref: ElementRef<*>) => {
+  getScrollContainer = (ref: HTMLElement) => {
     this.node = ref;
   };
   render() {
-    const { children, isMulti, getStyles, hasValue } = this.props;
+    const {
+      isMulti,
+      getStyles,
+      hasValue,
+      maxHeight, // Unused var: invalid DOM attribute, React will warn if not removed
+      ...cleanProps
+    } = this.props;
 
     return (
       <Div
-        innerRef={isMulti ? this.getScrollContainer : undefined}
+        innerRef={isMulti ? this.getScrollContainer : null}
         className={className('value-container', { isMulti, hasValue })}
         css={getStyles('valueContainer', this.props)}
-      >
-        {children}
-      </Div>
+        {...cleanProps}
+      />
     );
   }
 }
@@ -94,21 +97,20 @@ export class ValueContainer extends Component<ValueContainerProps> {
 // ==============================
 // Indicator Container
 // ==============================
-type IndicatorsContainerProps = PropsWithStyles & {
-  children: Node,
-};
+
 export const indicatorsContainerCSS = () => ({
   display: 'flex ',
   flexShrink: 0,
 });
-export const IndicatorsContainer = (props: IndicatorsContainerProps) => {
-  const { children, getStyles } = props;
+export const IndicatorsContainer = ({
+  getStyles,
+  ...props
+}: PropsWithStyles) => {
   return (
     <Div
       className={className('indicators')}
       css={getStyles('indicatorsContainer', props)}
-    >
-      {children}
-    </Div>
+      {...props}
+    />
   );
 };

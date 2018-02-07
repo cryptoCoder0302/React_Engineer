@@ -1,18 +1,22 @@
 // @flow
-import React, { type Node, type Ref } from 'react';
+import React, { type Node } from 'react';
 
 import { className } from '../utils';
 import { Div } from '../primitives';
 import { borderRadius, colors, spacing } from '../theme';
-import type { PropsWithStyles } from '../types';
+import {
+  type InnerRef,
+  type PropsWithStyles,
+  type MouseEventHandler,
+} from '../types';
 
 type State = { isDisabled: boolean, isFocused: boolean };
 type Props = PropsWithStyles &
   State & {
     children: Node,
     innerProps: {
-      onMouseDown: (SyntheticMouseEvent<HTMLElement>) => void,
-      innerRef: Ref<*>,
+      onMouseDown: MouseEventHandler,
+      innerRef: InnerRef,
     },
   };
 

@@ -57,7 +57,6 @@ export const DownChevron = (props: any) => (
 type IndicatorProps = PropsWithStyles & {
   children: ElementType,
   isFocused: boolean,
-  innerProps: any,
 };
 
 export const css = ({ isFocused }: IndicatorProps) => ({
@@ -75,34 +74,28 @@ export const css = ({ isFocused }: IndicatorProps) => ({
   },
 });
 
-export const DropdownIndicator = (props: IndicatorProps) => {
-  const { children, getStyles, innerProps } = props;
-  return (
-    <Div
-      {...innerProps}
-      css={getStyles('indicator', props)}
-      className={className(['indicator', 'dropdown-indicator'])}
-    >
-      {children}
-    </Div>
-  );
+const Indicator = (props: IndicatorProps) => {
+  const { getStyles, isFocused, ...cleanProps } = props;
+  return <Div css={getStyles('indicator', props)} {...cleanProps} />;
 };
+
+export const DropdownIndicator = ({ children, ...props }: IndicatorProps) => (
+  <Indicator
+    className={className(['indicator', 'dropdown-indicator'])}
+    {...props}
+  >
+    {children}
+  </Indicator>
+);
 DropdownIndicator.defaultProps = {
   children: <DownChevron />,
 };
 
-export const ClearIndicator = (props: IndicatorProps) => {
-  const { children, getStyles, innerProps } = props;
-  return (
-    <Div
-      {...innerProps}
-      css={getStyles('indicator', props)}
-      className={className(['indicator', 'clear-indicator'])}
-    >
-      {children}
-    </Div>
-  );
-};
+export const ClearIndicator = ({ children, ...props }: IndicatorProps) => (
+  <Indicator className={className(['indicator', 'clear-indicator'])} {...props}>
+    {children}
+  </Indicator>
+);
 ClearIndicator.defaultProps = {
   children: <CrossIcon />,
 };
@@ -156,18 +149,12 @@ const LoadingAnimation = () => (
   </style>
 );
 
-type LoadingIconProps = IndicatorProps & { isFocused: boolean, size: number };
-export const LoadingIndicator = (props: LoadingIconProps) => {
-  const { getStyles, isFocused, innerProps, size = 4 } = props;
+type LoadingIconProps = { isFocused: boolean, size: number };
+const LoadingIcon = ({ isFocused, size = 4 }: LoadingIconProps) => {
   const clr = isFocused ? colors.text : colors.neutral20;
 
   return (
-    <LoadingContainer
-      {...innerProps}
-      css={getStyles('indicator', props)}
-      className={className(['indicator', 'loading-indicator'])}
-      size={size}
-    >
+    <LoadingContainer size={size}>
       <LoadingAnimation />
       <LoadingDot color={clr} />
       <LoadingDot color={clr} delay={160} offset />
@@ -176,3 +163,13 @@ export const LoadingIndicator = (props: LoadingIconProps) => {
     </LoadingContainer>
   );
 };
+
+export const LoadingIndicator = ({ isFocused, ...props }: IndicatorProps) => (
+  <Indicator
+    role="presentation"
+    className={className(['indicator', 'loading-indicator'])}
+    {...props}
+  >
+    <LoadingIcon isFocused={isFocused} />
+  </Indicator>
+);
