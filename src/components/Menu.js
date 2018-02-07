@@ -2,7 +2,7 @@
 import React, { type Node } from 'react';
 
 import { className } from '../utils';
-import { Div, Ul } from '../primitives';
+import { Div } from '../primitives';
 import { borderRadius, colors, spacing } from '../theme';
 import { marginVertical, paddingHorizontal, paddingVertical } from '../mixins';
 import { type PropsWithStyles, type InnerRef } from '../types';
@@ -67,13 +67,13 @@ export const menuListCSS = ({ maxHeight }: MenuListState) => ({
 export const MenuList = (props: Props) => {
   const { children, getStyles, isMulti, innerProps } = props;
   return (
-    <Ul
+    <Div
       className={className('menu-list', { isMulti })}
       css={getStyles('menuList', props)}
       {...innerProps}
     >
       {children}
-    </Ul>
+    </Div>
   );
 };
 
@@ -92,16 +92,19 @@ export const loadingMessageCSS = noticeCSS;
 
 type NoticeProps = PropsWithStyles & {
   children: Node,
+  innerProps: { [string]: any },
 };
 
 export const NoOptionsMessage = (props: NoticeProps) => {
-  const { getStyles, ...cleanProps } = props;
+  const { children, getStyles, innerProps } = props;
   return (
     <Div
-      className={className('menu-notice menu-notice--no-options')}
+      className={className(['menu-notice', 'menu-notice--no-options'])}
       css={getStyles('noOptionsMessage', props)}
-      {...cleanProps}
-    />
+      {...innerProps}
+    >
+      {children}
+    </Div>
   );
 };
 NoOptionsMessage.defaultProps = {
@@ -109,13 +112,15 @@ NoOptionsMessage.defaultProps = {
 };
 
 export const LoadingMessage = (props: NoticeProps) => {
-  const { getStyles, ...cleanProps } = props;
+  const { children, getStyles, innerProps } = props;
   return (
     <Div
-      className={className('menu-notice menu-notice--loading')}
+      className={className(['menu-notice', 'menu-notice--loading'])}
       css={getStyles('loadingMessage', props)}
-      {...cleanProps}
-    />
+      {...innerProps}
+    >
+      {children}
+    </Div>
   );
 };
 LoadingMessage.defaultProps = {
