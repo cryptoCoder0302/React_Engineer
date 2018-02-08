@@ -2,50 +2,36 @@
 import React, { type Node } from 'react';
 
 import { className } from '../utils';
-import { Div } from '../primitives';
+import { paddingHorizontal, paddingVertical } from '../mixins';
+import { Li, Ul, Strong } from '../primitives';
 import { spacing } from '../theme';
 import { type PropsWithStyles } from '../types';
 
 type GroupProps = {
   children: Node,
   Heading: typeof GroupHeading,
-  headingProps: {
-    'aria-labelledby': string,
-  },
   innerProps: {
     'aria-expanded': boolean,
     'aria-label': string,
     role: 'group',
   },
-  label: Node,
+  label: string,
 };
 type Props = PropsWithStyles & GroupProps;
 
-export const groupCSS = () => ({
-  paddingBottom: spacing.baseUnit * 2,
-  paddingTop: spacing.baseUnit * 2,
-});
+export const groupCSS = () => paddingVertical(spacing.baseUnit * 2);
 
 const Group = (props: Props) => {
-  const {
-    children,
-    getStyles,
-    Heading,
-    headingProps,
-    label,
-    innerProps,
-  } = props;
+  const { children, getStyles, Heading, label, innerProps } = props;
   return (
-    <Div
+    <Li
       className={className('group')}
       css={getStyles('group', props)}
       {...innerProps}
     >
-      <Heading getStyles={getStyles} {...headingProps}>
-        {label}
-      </Heading>
-      <Div>{children}</Div>
-    </Div>
+      <Heading getStyles={getStyles}>{label}</Heading>
+      <Ul>{children}</Ul>
+    </Li>
   );
 };
 
@@ -56,15 +42,14 @@ export const groupHeadingCSS = () => ({
   fontSize: '75%',
   fontWeight: '500',
   marginBottom: '0.25em',
-  paddingLeft: spacing.baseUnit * 3,
-  paddingRight: spacing.baseUnit * 3,
+  ...paddingHorizontal(spacing.baseUnit * 3),
   textTransform: 'uppercase',
 });
 
 export const GroupHeading = (props: any) => {
   const { getStyles, ...cleanProps } = props;
   return (
-    <Div
+    <Strong
       className={className('group-heading')}
       css={getStyles('groupHeading', props)}
       {...cleanProps}

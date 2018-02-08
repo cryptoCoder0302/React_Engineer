@@ -5,13 +5,15 @@ import { borderRadius, colors, spacing } from '../theme';
 import { className } from '../utils';
 import { CrossIcon } from './indicators';
 import { Div } from '../primitives';
+import { paddingHorizontal } from '../mixins';
 import { type PropsWithStyles } from '../types';
 
 export type ValueProps = {
   children: Node,
   components: any,
-  innerProps: any,
+  data: any,
   isDisabled: boolean,
+  label: string,
   removeProps: {
     onClick: any => void,
     onMouseDown: any => void,
@@ -24,24 +26,19 @@ export const multiValueCSS = () => ({
   borderRadius: borderRadius / 2,
   display: 'flex ',
   margin: spacing.baseUnit / 2,
-  minWidth: 0, // resolves flex/text-overflow bug
 });
 export const multiValueLabelCSS = () => ({
   color: colors.text,
   fontSize: '85%',
-  overflow: 'hidden',
   padding: 3,
   paddingLeft: 6,
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
 });
 export const multiValueRemoveCSS = () => ({
   alignItems: 'center',
   borderRadius: borderRadius / 2,
   color: colors.textLight,
   display: 'flex ',
-  paddingLeft: spacing.baseUnit,
-  paddingRight: spacing.baseUnit,
+  ...paddingHorizontal(spacing.baseUnit),
 
   ':hover': {
     backgroundColor: colors.dangerLight,
@@ -57,10 +54,12 @@ const MultiValue = (props: Props) => {
   const {
     children,
     components,
+    data,
     getStyles,
-    innerProps,
     isDisabled,
+    label,
     removeProps,
+    ...cleanProps
   } = props;
   const cn = {
     container: className('multi-value', { isDisabled }),
@@ -75,7 +74,7 @@ const MultiValue = (props: Props) => {
   const { Container, Label, Remove } = components;
 
   return (
-    <Container className={cn.container} css={css.container} {...innerProps}>
+    <Container className={cn.container} css={css.container} {...cleanProps}>
       <Label className={cn.label} css={css.label}>
         {children}
       </Label>

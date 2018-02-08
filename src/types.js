@@ -1,16 +1,11 @@
 // @flow
-import type { Ref } from 'react';
+import { type ElementRef } from 'react';
 
 export type OptionType = {
   [string]: any,
 };
 
 export type OptionsType = Array<OptionType>;
-
-export type GroupType = {
-  options: OptionsType,
-  [string]: any,
-};
 
 export type ValueType = OptionType | OptionsType | null | void;
 
@@ -20,25 +15,12 @@ export type KeyboardEventHandler = (
   SyntheticKeyboardEvent<HTMLElement>
 ) => void;
 
-export type InnerRef = Ref<*>;
+export type InnerRef = ElementRef<typeof HTMLElement>;
 export type PropsWithInnerRef = {
-  innerRef: Ref<*>,
+  innerRef: InnerRef,
 };
-
 export type PropsWithStyles = {
   getStyles: (string, any) => {},
-};
-
-export type CommonProps = {
-  clearValue: () => void,
-  getStyles: (string, any) => {},
-  getValue: () => ValueType,
-  hasValue: boolean,
-  isMulti: boolean,
-  options: OptionsType,
-  selectOption: OptionType => void,
-  selectProps: any,
-  setValue: (ValueType, ActionTypes) => void,
 };
 
 export type ActionTypes =

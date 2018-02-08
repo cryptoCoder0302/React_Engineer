@@ -2,8 +2,9 @@
 import React, { type Node } from 'react';
 
 import { className } from '../utils';
-import { Div } from '../primitives';
+import { Div, Ul } from '../primitives';
 import { borderRadius, colors, spacing } from '../theme';
+import { marginVertical, paddingHorizontal, paddingVertical } from '../mixins';
 import { type PropsWithStyles, type InnerRef } from '../types';
 
 // ==============================
@@ -16,8 +17,7 @@ export const menuCSS = () => ({
   backgroundColor: colors.neutral0,
   boxShadow: `0 0 0 1px ${colors.neutral10a}, 0 4px 11px ${colors.neutral10a}`,
   borderRadius: borderRadius,
-  marginBottom: spacing.baseUnit * 2,
-  marginTop: spacing.baseUnit * 2,
+  ...marginVertical(spacing.baseUnit * 2),
   position: 'absolute',
   top: '100%',
   width: '100%',
@@ -61,20 +61,19 @@ type Props = PropsWithStyles & MenuListProps & MenuListState;
 export const menuListCSS = ({ maxHeight }: MenuListState) => ({
   maxHeight,
   overflowY: 'auto',
-  paddingBottom: spacing.baseUnit,
-  paddingTop: spacing.baseUnit,
+  ...paddingVertical(spacing.baseUnit),
   position: 'relative', // required for offset[Height, Top] > keyboard scroll
 });
 export const MenuList = (props: Props) => {
   const { children, getStyles, isMulti, innerProps } = props;
   return (
-    <Div
+    <Ul
       className={className('menu-list', { isMulti })}
       css={getStyles('menuList', props)}
       {...innerProps}
     >
       {children}
-    </Div>
+    </Ul>
   );
 };
 
@@ -84,7 +83,8 @@ export const MenuList = (props: Props) => {
 
 const noticeCSS = () => ({
   color: colors.neutral40,
-  padding: `${spacing.baseUnit * 2}px ${spacing.baseUnit * 3}px`,
+  ...paddingHorizontal(spacing.baseUnit * 3),
+  ...paddingVertical(spacing.baseUnit * 2),
   textAlign: 'center',
 });
 export const noOptionsMessageCSS = noticeCSS;
@@ -92,19 +92,16 @@ export const loadingMessageCSS = noticeCSS;
 
 type NoticeProps = PropsWithStyles & {
   children: Node,
-  innerProps: { [string]: any },
 };
 
 export const NoOptionsMessage = (props: NoticeProps) => {
-  const { children, getStyles, innerProps } = props;
+  const { getStyles, ...cleanProps } = props;
   return (
     <Div
-      className={className(['menu-notice', 'menu-notice--no-options'])}
+      className={className('menu-notice menu-notice--no-options')}
       css={getStyles('noOptionsMessage', props)}
-      {...innerProps}
-    >
-      {children}
-    </Div>
+      {...cleanProps}
+    />
   );
 };
 NoOptionsMessage.defaultProps = {
@@ -112,15 +109,13 @@ NoOptionsMessage.defaultProps = {
 };
 
 export const LoadingMessage = (props: NoticeProps) => {
-  const { children, getStyles, innerProps } = props;
+  const { getStyles, ...cleanProps } = props;
   return (
     <Div
-      className={className(['menu-notice', 'menu-notice--loading'])}
+      className={className('menu-notice menu-notice--loading')}
       css={getStyles('loadingMessage', props)}
-      {...innerProps}
-    >
-      {children}
-    </Div>
+      {...cleanProps}
+    />
   );
 };
 LoadingMessage.defaultProps = {

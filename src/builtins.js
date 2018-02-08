@@ -1,8 +1,6 @@
 // @flow
 
-import type { GroupType, OptionType } from './types';
-
-export const formatGroupLabel = (group: GroupType): Node => group.label;
+import type { OptionType } from './types';
 
 export const getOptionLabel = (option: OptionType): string => option.label;
 

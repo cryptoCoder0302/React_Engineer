@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import chrono from 'chrono-node';
 
-import { Div, Span } from '../../src/primitives';
+import { Div, Li, Span, Ul } from '../../src/primitives';
 import { components as SelectComponents } from '../../src';
 
 import Select from '../../src';
@@ -110,7 +110,7 @@ const daysContainerStyles = {
 const Group = props => {
   const { Heading, getStyles, children, label, innerProps } = props;
   return (
-    <Div aria-label={label} css={getStyles('group', props)} {...innerProps}>
+    <Li aria-label={label} css={getStyles('group', props)} {...innerProps}>
       <Heading getStyles={getStyles}>{label}</Heading>
       <Div css={daysHeaderStyles}>
         {days.map((day, i) => (
@@ -119,8 +119,8 @@ const Group = props => {
           </Span>
         ))}
       </Div>
-      <Div css={daysContainerStyles}>{children}</Div>
-    </Div>
+      <Ul css={daysContainerStyles}>{children}</Ul>
+    </Li>
   );
 };
 

@@ -1,23 +1,17 @@
 // @flow
-import React, { type ElementRef } from 'react';
+import React from 'react';
 import AutosizeInput from 'react-input-autosize';
 
 import { className } from '../utils';
 import { spacing } from '../theme';
 import { Div } from '../primitives';
+import { marginHorizontal } from '../mixins';
 
-import type { PropsWithStyles } from '../types';
+import type { PropsWithInnerRef, PropsWithStyles } from '../types';
 
-type Props = PropsWithStyles & {
-  innerRef: (ElementRef<*>) => void,
-  isHidden: boolean,
-};
+type Props = PropsWithStyles & PropsWithInnerRef & { isHidden: boolean };
 
-export const css = () => ({
-  margin: spacing.baseUnit / 2,
-  paddingBottom: spacing.baseUnit / 2,
-  paddingTop: spacing.baseUnit / 2,
-});
+export const css = () => marginHorizontal(spacing.baseUnit / 2);
 const inputStyle = isHidden => ({
   background: 0,
   border: 0,
