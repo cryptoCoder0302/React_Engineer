@@ -1,10 +1,9 @@
 {
-  "plugins": ["transform-class-properties", "transform-object-rest-spread"],
-  "presets": ["env", "react"],
-  "ignore": ["node_modules"],
+  "ignore": ["node-modules/**", "src/index.umd.js"],
+  "presets": [ "env", "stage-0", "react"],
   "env": {
     "test": {
-      "plugins": ["istanbul"]
-    }
+      "plugins": ["istanbul"],
+    },
   }
 }

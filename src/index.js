@@ -1,8 +1,30 @@
-// @flow
+import Select from './Select';
+import Async from './Async';
+import AsyncCreatable from './AsyncCreatable';
+import Creatable from './Creatable';
+import Value from './Value';
+import Option from './Option';
 
-import SelectStateful from './StateManager';
+import defaultMenuRenderer from './utils/defaultMenuRenderer';
+import defaultArrowRenderer from './utils/defaultArrowRenderer';
+import defaultClearRenderer from './utils/defaultClearRenderer';
+import defaultFilterOptions from './utils/defaultFilterOptions';
 
-export default SelectStateful;
-export { default as SelectStateless } from './Select';
-export { createFilter } from './filters';
-export { components } from './components/index';
+Select.Async = Async;
+Select.AsyncCreatable = AsyncCreatable;
+Select.Creatable = Creatable;
+Select.Value = Value;
+Select.Option = Option;
+
+export default Select;
+export {
+	Async,
+	AsyncCreatable,
+	Creatable,
+	Value,
+	Option,
+	defaultMenuRenderer,
+	defaultArrowRenderer,
+	defaultClearRenderer,
+	defaultFilterOptions
+};
