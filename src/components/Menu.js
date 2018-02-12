@@ -1,56 +1,52 @@
 // @flow
 import React, { Component, type ElementRef, type Node } from 'react';
 
-import { className, getMenuPlacement } from '../utils';
+import { className, inViewport } from '../utils';
 import { Div } from '../primitives';
 import { borderRadius, colors, spacing } from '../theme';
-import type { InnerRef, MenuPlacement, PropsWithStyles } from '../types';
+import { type PropsWithStyles, type InnerRef } from '../types';
 
 // ==============================
 // Menu
 // ==============================
 
-type MenuProps = PropsWithStyles & {
-  children: Node,
-  menuPlacement: MenuPlacement,
-  menuShouldFlip: boolean,
-  innerProps: Object,
-};
-type MenuState = { placement: MenuPlacement };
+type MenuProps = PropsWithStyles & { children: Node, innerProps: Object };
+type MenuState = { placement: 'bottom' | 'top' };
 
-const placementToCSSProp = { bottom: 'top', top: 'bottom' };
+const placementToPosition = { bottom: 'top', top: 'bottom' };
+
 export const menuCSS = ({ placement }: MenuState) => ({
   backgroundColor: colors.neutral0,
   boxShadow: `0 0 0 1px ${colors.neutral10a}, 0 4px 11px ${colors.neutral10a}`,
   borderRadius: borderRadius,
-  marginBottom: spacing.menuGutter,
-  marginTop: spacing.menuGutter,
+  marginBottom: spacing.baseUnit * 2,
+  marginTop: spacing.baseUnit * 2,
   position: 'absolute',
   width: '100%',
   zIndex: 1,
-  [placementToCSSProp[placement]]: '100%',
+  [placementToPosition[placement]]: '100%',
 });
+const initialState = { placement: 'bottom' };
 
 export class Menu extends Component<MenuProps, MenuState> {
-  state = { placement: this.props.menuPlacement };
+  state = initialState;
   getPlacement = (ref: ElementRef<*>) => {
     if (!ref) return;
 
-    const placement = getMenuPlacement(ref);
-
-    if (!placement) return;
-
-    this.setState({ placement });
+    if (!inViewport(ref)) {
+      this.setState({ placement: 'top' });
+    }
   };
   render() {
-    const { children, getStyles, menuShouldFlip, innerProps } = this.props;
-    const innerRef = menuShouldFlip ? this.getPlacement : null;
+    const { children, getStyles, innerProps } = this.props;
+    const { placement } = this.state;
+    const shouldFlip = placement === 'top';
 
     return (
       <Div
-        className={className('menu')}
+        className={className('menu', { shouldFlip })}
         css={getStyles('menu', { ...this.props, ...this.state })}
-        innerRef={innerRef}
+        innerRef={this.getPlacement}
         {...innerProps}
       >
         {children}

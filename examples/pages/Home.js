@@ -52,14 +52,12 @@ const formatGroupLabel = data => (
     <span style={groupBadgeStyles}>{data.options.length}</span>
   </div>
 );
-const Checkbox = props => <input type="checkbox" {...props} />;
 
 type State = {
   isClearable: boolean,
   isDisabled: boolean,
   isLoading: boolean,
   isRtl: boolean,
-  isSearchable: boolean,
 };
 
 export default class Home extends Component<*, State> {
@@ -68,7 +66,6 @@ export default class Home extends Component<*, State> {
     isDisabled: false,
     isLoading: false,
     isRtl: false,
-    isSearchable: true,
   };
   toggleClearable = () =>
     this.setState(state => ({ isClearable: !state.isClearable }));
@@ -77,16 +74,7 @@ export default class Home extends Component<*, State> {
   toggleLoading = () =>
     this.setState(state => ({ isLoading: !state.isLoading }));
   toggleRtl = () => this.setState(state => ({ isRtl: !state.isRtl }));
-  toggleSearchable = () =>
-    this.setState(state => ({ isSearchable: !state.isSearchable }));
   render() {
-    const {
-      isClearable,
-      isDisabled,
-      isLoading,
-      isRtl,
-      isSearchable,
-    } = this.state;
     return (
       <div>
         <H1>
@@ -121,33 +109,34 @@ export default class Home extends Component<*, State> {
           <Select
             autoFocus
             defaultValue={colourOptions[0]}
-            isClearable={isClearable}
-            isDisabled={isDisabled}
-            isLoading={isLoading}
-            isRtl={isRtl}
-            isSearchable={isSearchable}
+            isClearable={this.state.isClearable}
+            isDisabled={this.state.isDisabled}
+            isLoading={this.state.isLoading}
+            isRtl={this.state.isRtl}
             name="color"
             options={colourOptions}
+            onFocus={() => {
+              console.log('Select Focused');
+            }}
+            onBlur={() => {
+              console.log('Select Blurred');
+            }}
           />
         </div>
         <Note Tag="label">
-          <Checkbox checked={isClearable} onChange={this.toggleClearable} />
+          <input type="checkbox" onChange={this.toggleClearable} />
           Clearable
         </Note>
         <Note Tag="label" style={{ marginLeft: '1em' }}>
-          <Checkbox checked={isSearchable} onChange={this.toggleSearchable} />
-          Searchable
-        </Note>
-        <Note Tag="label" style={{ marginLeft: '1em' }}>
-          <Checkbox checked={isDisabled} onChange={this.toggleDisabled} />
+          <input type="checkbox" onChange={this.toggleDisabled} />
           Disabled
         </Note>
         <Note Tag="label" style={{ marginLeft: '1em' }}>
-          <Checkbox checked={isLoading} onChange={this.toggleLoading} />
+          <input type="checkbox" onChange={this.toggleLoading} />
           Loading
         </Note>
         <Note Tag="label" style={{ marginLeft: '1em' }}>
-          <Checkbox type="checkbox" checked={isRtl} onChange={this.toggleRtl} />
+          <input type="checkbox" onChange={this.toggleRtl} />
           RTL
         </Note>
         <h4>Grouped</h4>

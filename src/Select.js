@@ -3,8 +3,8 @@
 import React, { Component, type ElementRef, type Node } from 'react';
 
 import { createFilter } from './filters';
-import { DummyInput, ScrollLock } from './internal';
-import { cleanValue, noop, scrollIntoView } from './utils';
+import { ScrollLock } from './internal';
+import { cleanValue, scrollIntoView } from './utils';
 import {
   formatGroupLabel,
   getOptionLabel,
@@ -27,7 +27,6 @@ import type {
   FocusEventHandler,
   GroupType,
   KeyboardEventHandler,
-  MenuPlacement,
   OptionsType,
   OptionType,
   ValueType,
@@ -78,7 +77,7 @@ type Props = {
   /* Define an id prefix for the select components e.g. {your-id}-value */
   instanceId?: number | string,
   /* Is the select value clearable */
-  isClearable?: boolean,
+  isClearable: boolean,
   /* Is the select disabled */
   isDisabled: boolean,
   /* Is the select in a state of loading (async) */
@@ -91,8 +90,6 @@ type Props = {
   isMulti: boolean,
   /* Is the select direction right-to-left */
   isRtl: boolean,
-  /* Whether to enable search functionality */
-  isSearchable: boolean,
   /* Async: Text to display when loading options */
   loadingMessage: ({ inputValue: string }) => string,
   /* Maximum height of the menu before scrolling */
@@ -101,10 +98,6 @@ type Props = {
   maxValueHeight: number,
   /* Whether the menu is open */
   menuIsOpen: boolean,
-  /* Default placement of the menu in relation to the control */
-  menuPlacement: MenuPlacement,
-  /* Whether to employ edge detection for the menu, and flip when applicable */
-  menuShouldFlip: boolean,
   /* Name of the HTML Input (optional - without this, no input will be rendered) */
   name?: string,
   /* Text to display when there are no options */
@@ -148,18 +141,16 @@ const defaultProps = {
   getOptionLabel: getOptionLabel,
   getOptionValue: getOptionValue,
   hideSelectedOptions: true,
+  isClearable: false,
   isDisabled: false,
   isLoading: false,
   isMulti: false,
   isRtl: false,
-  isSearchable: true,
   isOptionDisabled: isOptionDisabled,
   loadingMessage: () => 'Loading...',
   maxMenuHeight: 300,
   maxValueHeight: 100,
   menuIsOpen: false,
-  menuPlacement: 'bottom',
-  menuShouldFlip: true,
   noOptionsMessage: () => 'No options',
   options: [],
   placeholder: 'Select...',
@@ -398,13 +389,7 @@ export default class Select extends Component<Props, State> {
     return this.state.menuOptions.focusable.length;
   }
   isClearable(): boolean {
-    const { isClearable, isMulti } = this.props;
-
-    // single select, by default, IS NOT clearable
-    // multi select, by default, IS clearable
-    if (isClearable === undefined) return isMulti;
-
-    return isClearable;
+    return this.props.isClearable || this.props.isMulti;
   }
   isOptionDisabled(option: OptionType): boolean {
     return typeof this.props.isOptionDisabled === 'function'
@@ -755,31 +740,12 @@ export default class Select extends Component<Props, State> {
     );
   }
   renderInput(id: string) {
-    const {
-      isDisabled,
-      isLoading,
-      isSearchable,
-      inputValue,
-      menuIsOpen,
-    } = this.props;
+    const { isDisabled, isLoading, inputValue, menuIsOpen } = this.props;
     const { Input } = this.components;
     const { inputIsHidden } = this.state;
 
-    if (!isSearchable) {
-      // use a dummy input to maintain focus/blur functionality
-      return (
-        <DummyInput
-          onBlur={this.onInputBlur}
-          onChange={noop}
-          onFocus={this.onInputFocus}
-          innerRef={this.onInputRef}
-          value=""
-        />
-      );
-    } else if (isDisabled) {
-      // maintain baseline alignment when the input is removed for disabled state
-      return <div style={{ height: this.inputHeight }} />;
-    }
+    // maintain baseline alignment when the input is removed for disabled state
+    if (isDisabled) return <div style={{ height: this.inputHeight }} />;
 
     // aria attributes makes the JSX "noisy", separated for clarity
     const ariaAttributes = {
@@ -976,8 +942,6 @@ export default class Select extends Component<Props, State> {
       loadingMessage,
       maxMenuHeight,
       menuIsOpen,
-      menuPlacement,
-      menuShouldFlip,
       noOptionsMessage,
     } = this.props;
 
@@ -1051,8 +1015,6 @@ export default class Select extends Component<Props, State> {
           onMouseMove: this.onMenuMouseMove,
         }}
         isLoading={isLoading}
-        menuPlacement={menuPlacement}
-        menuShouldFlip={menuShouldFlip}
       >
         <ScrollLock enabled={captureMenuScroll}>
           <MenuList
