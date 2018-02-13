@@ -10,7 +10,7 @@ you also uncomment the <script> tag in ../index.html that loads the polyfill.
 */
 
 import React, { Component } from 'react';
-import { Code, H1 } from '../../components';
+import { Code, Link, H1 } from '../../components';
 import ExampleWrapper from '../../ExampleWrapper';
 import UsingCallbacks from './UsingCallbacks';
 import UsingPromises from './UsingPromises';
@@ -38,13 +38,21 @@ export default class App extends Component<*, State> {
       <div>
         <H1>Async Variant</H1>
         <p>
+          {' '}
           Use the Async component to load options from a remote source as the
-          user types.
+          user types.{' '}
+          <Link
+            href="https://github.com/JedWatson/react-select/blob/v2/examples/pages/Async.js"
+            target="_blank"
+          >
+            Source
+          </Link>
         </p>
         <p>
           <Code>{"import { Async } from 'react-select'"}</Code>
         </p>
 
+        <h2>Example</h2>
         <ExampleWrapper
           label="Using Callbacks"
           urlPath="/examples/pages/Async/UsingCallbacks.js"

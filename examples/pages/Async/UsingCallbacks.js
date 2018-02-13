@@ -28,6 +28,8 @@ export default class WithCallbacks extends Component<*, State> {
   render() {
     return (
       <div>
+        <h4>Using Callbacks</h4>
+        <pre>inputValue: "{this.state.inputValue}"</pre>
         <AsyncSelect
           autoFocus
           cacheOptions
@@ -35,7 +37,6 @@ export default class WithCallbacks extends Component<*, State> {
           defaultOptions
           onInputChange={this.handleInputChange}
         />
-        <pre>inputValue: "{this.state.inputValue}"</pre>
       </div>
     );
   }
