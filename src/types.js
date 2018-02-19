@@ -47,14 +47,11 @@ export type ActionTypes =
   | 'remove-value'
   | 'pop-value'
   | 'set-value'
-  | 'clear'
-  | 'create-option';
+  | 'clear';
 
 export type ActionMeta = {
   action: ActionTypes,
 };
-
-export type MenuPlacement = 'bottom' | 'top';
 
 export type FocusDirection =
   | 'up'

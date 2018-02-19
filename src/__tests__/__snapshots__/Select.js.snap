@@ -14,13 +14,11 @@ exports[`defaults 1`] = `
   isDisabled={false}
   isFocused={false}
   isMulti={false}
-  isRtl={false}
   options={Array []}
   selectOption={[Function]}
   selectProps={
     Object {
       "backspaceRemovesValue": true,
-      "captureMenuScroll": true,
       "closeMenuOnSelect": true,
       "components": Object {},
       "escapeClearsValue": false,
@@ -29,21 +27,16 @@ exports[`defaults 1`] = `
       "getOptionLabel": [Function],
       "getOptionValue": [Function],
       "hideSelectedOptions": true,
+      "isClearable": true,
       "isDisabled": false,
       "isLoading": false,
       "isMulti": false,
       "isOptionDisabled": [Function],
-      "isRtl": false,
-      "isSearchable": true,
       "loadingMessage": [Function],
       "maxMenuHeight": 300,
       "maxValueHeight": 100,
-      "menuIsOpen": false,
-      "menuPlacement": "bottom",
-      "menuShouldFlip": true,
       "noOptionsMessage": [Function],
       "options": Array [],
-      "pageSize": 5,
       "placeholder": "Select...",
       "screenReaderStatus": [Function],
       "styles": Object {},
@@ -73,13 +66,11 @@ exports[`defaults 1`] = `
     isDisabled={false}
     isFocused={false}
     isMulti={false}
-    isRtl={false}
     options={Array []}
     selectOption={[Function]}
     selectProps={
       Object {
         "backspaceRemovesValue": true,
-        "captureMenuScroll": true,
         "closeMenuOnSelect": true,
         "components": Object {},
         "escapeClearsValue": false,
@@ -88,21 +79,16 @@ exports[`defaults 1`] = `
         "getOptionLabel": [Function],
         "getOptionValue": [Function],
         "hideSelectedOptions": true,
+        "isClearable": true,
         "isDisabled": false,
         "isLoading": false,
         "isMulti": false,
         "isOptionDisabled": [Function],
-        "isRtl": false,
-        "isSearchable": true,
         "loadingMessage": [Function],
         "maxMenuHeight": 300,
         "maxValueHeight": 100,
-        "menuIsOpen": false,
-        "menuPlacement": "bottom",
-        "menuShouldFlip": true,
         "noOptionsMessage": [Function],
         "options": Array [],
-        "pageSize": 5,
         "placeholder": "Select...",
         "screenReaderStatus": [Function],
         "styles": Object {},
@@ -118,14 +104,12 @@ exports[`defaults 1`] = `
       hasValue={false}
       isDisabled={false}
       isMulti={false}
-      isRtl={false}
       maxHeight={100}
       options={Array []}
       selectOption={[Function]}
       selectProps={
         Object {
           "backspaceRemovesValue": true,
-          "captureMenuScroll": true,
           "closeMenuOnSelect": true,
           "components": Object {},
           "escapeClearsValue": false,
@@ -134,21 +118,16 @@ exports[`defaults 1`] = `
           "getOptionLabel": [Function],
           "getOptionValue": [Function],
           "hideSelectedOptions": true,
+          "isClearable": true,
           "isDisabled": false,
           "isLoading": false,
           "isMulti": false,
           "isOptionDisabled": [Function],
-          "isRtl": false,
-          "isSearchable": true,
           "loadingMessage": [Function],
           "maxMenuHeight": 300,
           "maxValueHeight": 100,
-          "menuIsOpen": false,
-          "menuPlacement": "bottom",
-          "menuShouldFlip": true,
           "noOptionsMessage": [Function],
           "options": Array [],
-          "pageSize": 5,
           "placeholder": "Select...",
           "screenReaderStatus": [Function],
           "styles": Object {},
@@ -164,14 +143,12 @@ exports[`defaults 1`] = `
         hasValue={false}
         isDisabled={false}
         isMulti={false}
-        isRtl={false}
         key="placeholder"
         options={Array []}
         selectOption={[Function]}
         selectProps={
           Object {
             "backspaceRemovesValue": true,
-            "captureMenuScroll": true,
             "closeMenuOnSelect": true,
             "components": Object {},
             "escapeClearsValue": false,
@@ -180,21 +157,16 @@ exports[`defaults 1`] = `
             "getOptionLabel": [Function],
             "getOptionValue": [Function],
             "hideSelectedOptions": true,
+            "isClearable": true,
             "isDisabled": false,
             "isLoading": false,
             "isMulti": false,
             "isOptionDisabled": [Function],
-            "isRtl": false,
-            "isSearchable": true,
             "loadingMessage": [Function],
             "maxMenuHeight": 300,
             "maxValueHeight": 100,
-            "menuIsOpen": false,
-            "menuPlacement": "bottom",
-            "menuShouldFlip": true,
             "noOptionsMessage": [Function],
             "options": Array [],
-            "pageSize": 5,
             "placeholder": "Select...",
             "screenReaderStatus": [Function],
             "styles": Object {},
@@ -224,6 +196,7 @@ exports[`defaults 1`] = `
         spellCheck="false"
         tabIndex="0"
         type="text"
+        value=""
       />
     </ValueContainer>
     <IndicatorsContainer
@@ -233,13 +206,11 @@ exports[`defaults 1`] = `
       hasValue={false}
       isDisabled={false}
       isMulti={false}
-      isRtl={false}
       options={Array []}
       selectOption={[Function]}
       selectProps={
         Object {
           "backspaceRemovesValue": true,
-          "captureMenuScroll": true,
           "closeMenuOnSelect": true,
           "components": Object {},
           "escapeClearsValue": false,
@@ -248,21 +219,16 @@ exports[`defaults 1`] = `
           "getOptionLabel": [Function],
           "getOptionValue": [Function],
           "hideSelectedOptions": true,
+          "isClearable": true,
           "isDisabled": false,
           "isLoading": false,
           "isMulti": false,
           "isOptionDisabled": [Function],
-          "isRtl": false,
-          "isSearchable": true,
           "loadingMessage": [Function],
           "maxMenuHeight": 300,
           "maxValueHeight": 100,
-          "menuIsOpen": false,
-          "menuPlacement": "bottom",
-          "menuShouldFlip": true,
           "noOptionsMessage": [Function],
           "options": Array [],
-          "pageSize": 5,
           "placeholder": "Select...",
           "screenReaderStatus": [Function],
           "styles": Object {},
@@ -271,57 +237,6 @@ exports[`defaults 1`] = `
       }
       setValue={[Function]}
     >
-      <IndicatorSeparator
-        clearValue={[Function]}
-        getStyles={[Function]}
-        getValue={[Function]}
-        hasValue={false}
-        innerProps={
-          Object {
-            "role": "presentation",
-          }
-        }
-        isDisabled={false}
-        isFocused={false}
-        isMulti={false}
-        isRtl={false}
-        options={Array []}
-        selectOption={[Function]}
-        selectProps={
-          Object {
-            "backspaceRemovesValue": true,
-            "captureMenuScroll": true,
-            "closeMenuOnSelect": true,
-            "components": Object {},
-            "escapeClearsValue": false,
-            "filterOption": [Function],
-            "formatGroupLabel": [Function],
-            "getOptionLabel": [Function],
-            "getOptionValue": [Function],
-            "hideSelectedOptions": true,
-            "isDisabled": false,
-            "isLoading": false,
-            "isMulti": false,
-            "isOptionDisabled": [Function],
-            "isRtl": false,
-            "isSearchable": true,
-            "loadingMessage": [Function],
-            "maxMenuHeight": 300,
-            "maxValueHeight": 100,
-            "menuIsOpen": false,
-            "menuPlacement": "bottom",
-            "menuShouldFlip": true,
-            "noOptionsMessage": [Function],
-            "options": Array [],
-            "pageSize": 5,
-            "placeholder": "Select...",
-            "screenReaderStatus": [Function],
-            "styles": Object {},
-            "tabSelectsValue": true,
-          }
-        }
-        setValue={[Function]}
-      />
       <DropdownIndicator
         clearValue={[Function]}
         getStyles={[Function]}
@@ -336,13 +251,11 @@ exports[`defaults 1`] = `
         isDisabled={false}
         isFocused={false}
         isMulti={false}
-        isRtl={false}
         options={Array []}
         selectOption={[Function]}
         selectProps={
           Object {
             "backspaceRemovesValue": true,
-            "captureMenuScroll": true,
             "closeMenuOnSelect": true,
             "components": Object {},
             "escapeClearsValue": false,
@@ -351,21 +264,16 @@ exports[`defaults 1`] = `
             "getOptionLabel": [Function],
             "getOptionValue": [Function],
             "hideSelectedOptions": true,
+            "isClearable": true,
             "isDisabled": false,
             "isLoading": false,
             "isMulti": false,
             "isOptionDisabled": [Function],
-            "isRtl": false,
-            "isSearchable": true,
             "loadingMessage": [Function],
             "maxMenuHeight": 300,
             "maxValueHeight": 100,
-            "menuIsOpen": false,
-            "menuPlacement": "bottom",
-            "menuShouldFlip": true,
             "noOptionsMessage": [Function],
             "options": Array [],
-            "pageSize": 5,
             "placeholder": "Select...",
             "screenReaderStatus": [Function],
             "styles": Object {},

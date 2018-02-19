@@ -1,14 +1,14 @@
 // @flow
 
 import React, { Component } from 'react';
-import Select, { type Props as SelectProps } from './Select';
+import Select from './Select';
 import { handleInputChange } from './utils';
-import withState from './stateManager';
 import type { OptionsType } from './types';
 
-type Props = SelectProps & {
+type Props = {
   defaultOptions: OptionsType | boolean,
   loadOptions: (string, (OptionsType) => void) => Promise<*> | void,
+  onInputChange?: string => void,
   cacheOptions: any,
 };
 
@@ -25,8 +25,6 @@ type State = {
   loadedOptions: OptionsType,
   passEmptyOptions: boolean,
 };
-
-const SelectWithState = withState(Select);
 
 export default class Async extends Component<Props, State> {
   static defaultProps = defaultProps;
@@ -75,7 +73,6 @@ export default class Async extends Component<Props, State> {
   }
   handleInputChange = (newValue: string) => {
     const { cacheOptions, onInputChange } = this.props;
-    // TODO
     const inputValue = handleInputChange(newValue, onInputChange);
     if (!inputValue) {
       delete this.lastRequest;
@@ -138,7 +135,7 @@ export default class Async extends Component<Props, State> {
       ? []
       : inputValue && loadedInputValue ? loadedOptions : defaultOptions || [];
     return (
-      <SelectWithState
+      <Select
         {...props}
         options={options}
         filterOption={null}

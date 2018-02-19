@@ -56,29 +56,31 @@ export const DownChevron = (props: any) => (
 
 type IndicatorProps = PropsWithStyles & {
   children: ElementType,
-  innerProps: any,
   isFocused: boolean,
-  isRtl: boolean,
+  innerProps: any,
 };
 
-const baseCSS = ({ isFocused }: IndicatorProps) => ({
-  color: isFocused ? colors.neutral60 : colors.neutral20,
+export const css = ({ isFocused }: IndicatorProps) => ({
+  color: isFocused ? colors.text : colors.neutral20,
+  cursor: 'pointer',
   display: 'flex ',
-  padding: spacing.baseUnit * 2,
-  transition: 'color 150ms',
+  padding: '8px 2px',
+  transition: 'opacity 200ms',
+
+  ':first-child': { paddingLeft: spacing.baseUnit * 2 },
+  ':last-child': { paddingRight: spacing.baseUnit * 2 },
 
   ':hover': {
-    color: isFocused ? colors.neutral100 : colors.neutral40,
+    color: isFocused ? colors.text : colors.neutral40,
   },
 });
 
-export const dropdownIndicatorCSS = baseCSS;
 export const DropdownIndicator = (props: IndicatorProps) => {
   const { children = <DownChevron />, getStyles, innerProps } = props;
   return (
     <Div
       {...innerProps}
-      css={getStyles('dropdownIndicator', props)}
+      css={getStyles('indicator', props)}
       className={className(['indicator', 'dropdown-indicator'])}
     >
       {children}
@@ -86,13 +88,12 @@ export const DropdownIndicator = (props: IndicatorProps) => {
   );
 };
 
-export const clearIndicatorCSS = baseCSS;
 export const ClearIndicator = (props: IndicatorProps) => {
   const { children = <CrossIcon />, getStyles, innerProps } = props;
   return (
     <Div
       {...innerProps}
-      css={getStyles('clearIndicator', props)}
+      css={getStyles('indicator', props)}
       className={className(['indicator', 'clear-indicator'])}
     >
       {children}
@@ -101,35 +102,10 @@ export const ClearIndicator = (props: IndicatorProps) => {
 };
 
 // ==============================
-// Separator
-// ==============================
-
-type SeparatorState = { isDisabled: boolean };
-export const indicatorSeparatorCSS = ({ isDisabled }: SeparatorState) => ({
-  alignSelf: 'stretch',
-  backgroundColor: isDisabled ? colors.neutral10 : colors.neutral20,
-  marginBottom: spacing.baseUnit * 2,
-  marginTop: spacing.baseUnit * 2,
-  width: 1,
-});
-export const IndicatorSeparator = (props: IndicatorProps) => {
-  const { getStyles, innerProps } = props;
-  return (
-    <Span
-      {...innerProps}
-      css={getStyles('indicatorSeparator', props)}
-      className={className('indicator-separator')}
-    />
-  );
-};
-
-// ==============================
 // Loading
 // ==============================
 
 const keyframesName = 'react-select-loading-indicator';
-
-export const loadingIndicatorCSS = baseCSS;
 
 const LoadingContainer = ({ size, ...props }: { size: number }) => (
   <Div
@@ -177,20 +153,20 @@ const loadingAnimation = (
 
 type LoadingIconProps = IndicatorProps & { isFocused: boolean, size: number };
 export const LoadingIndicator = (props: LoadingIconProps) => {
-  const { getStyles, innerProps, isFocused, isRtl, size = 4 } = props;
+  const { getStyles, isFocused, innerProps, size = 4 } = props;
   const clr = isFocused ? colors.text : colors.neutral20;
 
   return (
     <LoadingContainer
       {...innerProps}
-      css={getStyles('loadingIndicator', props)}
+      css={getStyles('indicator', props)}
       className={className(['indicator', 'loading-indicator'])}
       size={size}
     >
       {loadingAnimation}
-      <LoadingDot color={clr} offset={isRtl} />
+      <LoadingDot color={clr} />
       <LoadingDot color={clr} delay={160} offset />
-      <LoadingDot color={clr} delay={320} offset={!isRtl} />
+      <LoadingDot color={clr} delay={320} offset />
       <A11yText>Loading</A11yText>
     </LoadingContainer>
   );

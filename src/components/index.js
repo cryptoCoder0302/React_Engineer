@@ -8,7 +8,6 @@ import {
   ClearIndicator,
   DropdownIndicator,
   LoadingIndicator,
-  IndicatorSeparator,
 } from './indicators';
 
 import Control from './Control';
@@ -31,7 +30,6 @@ export type SelectComponents = {
   Group: typeof Group,
   GroupHeading: typeof GroupHeading,
   IndicatorsContainer: typeof IndicatorsContainer,
-  IndicatorSeparator: typeof IndicatorSeparator,
   Input: typeof Input,
   LoadingIndicator: typeof LoadingIndicator,
   Menu: typeof Menu,
@@ -58,7 +56,6 @@ export const components: SelectComponents = {
   Group: Group,
   GroupHeading: GroupHeading,
   IndicatorsContainer: IndicatorsContainer,
-  IndicatorSeparator: IndicatorSeparator,
   Input: Input,
   LoadingIndicator: LoadingIndicator,
   Menu: Menu,

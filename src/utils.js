@@ -1,22 +1,9 @@
 // @flow
 
-import type { MenuPlacement, OptionsType, ValueType } from './types';
-import { spacing } from './theme';
-
-// ==============================
-// NO OP
-// ==============================
-
-export const noop = () => {};
-
-// ==============================
-// Class Name Prefixer
-// ==============================
+import type { OptionsType, ValueType } from './types';
 
 type State = { [key: string]: boolean };
 type List = Array<string>;
-
-export const CLASS_PREFIX = 'react-select';
 
 /**
  String representation of component state for styling with class names.
@@ -43,19 +30,11 @@ export function className(name: string | List, state?: State): string {
   return arr.map(cn => `${CLASS_PREFIX}__${cn}`).join(' ');
 }
 
-// ==============================
-// Clean Value
-// ==============================
-
 export const cleanValue = (value: ValueType): OptionsType => {
   if (Array.isArray(value)) return value.filter(Boolean);
   if (typeof value === 'object' && value !== null) return [value];
   return [];
 };
-
-// ==============================
-// Handle Input Change
-// ==============================
 
 export function handleInputChange(
   inputValue: string,
@@ -68,9 +47,7 @@ export function handleInputChange(
   return inputValue;
 }
 
-// ==============================
-// Scroll Into View
-// ==============================
+export const CLASS_PREFIX = 'react-select';
 
 export const scrollIntoView = (
   menuEl: HTMLElement,
@@ -96,37 +73,3 @@ export const scrollIntoView = (
 export const toKey = (str: string): string => {
   return str.replace(/\W/g, '-');
 };
-
-// ==============================
-// Get Menu Placement
-// ==============================
-
-type Placement = MenuPlacement | false;
-
-export function getMenuPlacement(element: HTMLElement): Placement {
-  // not enough info to calc properly
-  if (!element || !element.offsetParent) return false;
-
-  const { top: containerTop } = element.offsetParent.getBoundingClientRect();
-  const { height, top } = element.getBoundingClientRect();
-
-  const docEl = document.documentElement;
-  const windowHeight = window.innerHeight || (docEl && docEl.clientHeight) || 0;
-  const menuHeight = height + spacing.menuGutter;
-
-  const spaceBelow = windowHeight - top;
-  const spaceAbove = containerTop - spacing.menuGutter;
-
-  // the menu will fit above, or at least has more space than below
-  if (menuHeight >= spaceBelow && spaceAbove > spaceBelow) {
-    return 'top';
-  }
-
-  // the menu will fit below, or at least has more space than above
-  if (menuHeight >= spaceAbove && spaceBelow > spaceAbove) {
-    return 'bottom';
-  }
-
-  // no edge conflict found
-  return false;
-}
