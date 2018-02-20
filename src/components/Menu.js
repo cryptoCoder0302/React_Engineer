@@ -86,7 +86,6 @@ export const menuListCSS = ({ maxHeight }: MenuListState) => ({
   paddingBottom: spacing.baseUnit,
   paddingTop: spacing.baseUnit,
   position: 'relative', // required for offset[Height, Top] > keyboard scroll
-  WebkitOverflowScrolling: 'touch',
 });
 export const MenuList = (props: Props) => {
   const { children, getStyles, isMulti, innerProps } = props;

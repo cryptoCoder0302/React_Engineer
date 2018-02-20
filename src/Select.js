@@ -33,9 +33,6 @@ import type {
   ValueType,
 } from './types';
 
-type MouseOrTouchEvent =
-  | SyntheticMouseEvent<HTMLElement>
-  | SyntheticTouchEvent<HTMLElement>;
 type FormatOptionLabelContext = 'menu' | 'value';
 type FormatOptionLabelMeta = {
   context: FormatOptionLabelContext,
@@ -197,7 +194,6 @@ export default class Select extends Component<Props, State> {
   blockOptionHover: boolean = false;
   components: SelectComponents;
   commonProps: any; // TODO
-  controlIsDragging: ?boolean;
   controlRef: ElRef;
   focusedOptionRef: ?HTMLElement;
   hasGroups: boolean = false;
@@ -542,7 +538,7 @@ export default class Select extends Component<Props, State> {
   onControlRef = (ref: ElementRef<*>) => {
     this.controlRef = ref;
   };
-  onControlMouseDown = (event: MouseOrTouchEvent) => {
+  onControlMouseDown = (event: SyntheticMouseEvent<HTMLElement>) => {
     if (!this.state.isFocused) {
       this.openAfterFocus = true;
       this.focus();
@@ -554,22 +550,6 @@ export default class Select extends Component<Props, State> {
     if (event.target.tagName !== 'INPUT') {
       event.preventDefault();
     }
-  };
-  onControlTouchStart = () => {
-    this.controlIsDragging = false;
-  };
-  onControlTouchMove = () => {
-    this.controlIsDragging = true;
-  };
-  onControlTouchEnd = (event: SyntheticTouchEvent<HTMLElement>) => {
-    if (this.controlIsDragging) return; // Bail if the user is scrolling
-
-    this.onControlMouseDown(event);
-  };
-  onClearIndicatorTouchEnd = (event: SyntheticTouchEvent<HTMLElement>) => {
-    if (this.controlIsDragging) return; // Bail if the user is scrolling
-
-    this.onClearIndicatorMouseDown(event);
   };
   onKeyDown = (event: SyntheticKeyboardEvent<HTMLElement>) => {
     const {
@@ -755,7 +735,7 @@ export default class Select extends Component<Props, State> {
     event.preventDefault();
     event.stopPropagation();
   };
-  onClearIndicatorMouseDown = (event: MouseOrTouchEvent) => {
+  onClearIndicatorMouseDown = (event: SyntheticMouseEvent<HTMLElement>) => {
     // ignore mouse events that weren't triggered by the primary button
     if (event && event.type === 'mousedown' && event.button !== 0) {
       return;
@@ -912,9 +892,6 @@ export default class Select extends Component<Props, State> {
 
     const innerProps = {
       onMouseDown: this.onClearIndicatorMouseDown,
-      onTouchEnd: this.onClearIndicatorTouchEnd,
-      onTouchMove: this.onControlTouchMove,
-      onTouchStart: this.onControlTouchStart,
       role: 'button',
     };
 
@@ -1179,11 +1156,8 @@ export default class Select extends Component<Props, State> {
         <Control
           {...commonProps}
           innerProps={{
-            innerRef: this.onControlRef,
             onMouseDown: this.onControlMouseDown,
-            onTouchEnd: this.onControlTouchEnd,
-            onTouchMove: this.onControlTouchMove,
-            onTouchStart: this.onControlTouchStart,
+            innerRef: this.onControlRef,
           }}
           isDisabled={isDisabled}
           isFocused={isFocused}
