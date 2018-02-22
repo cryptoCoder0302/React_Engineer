@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import CreatableSelect from '../../../src/Creatable';
 import { colourOptions } from '../../data';
 
-export default class CreatableSingle extends Component<*, State> {
+export default class WithCallbacks extends Component<*, State> {
   handleChange = (newValue: any, actionMeta: any) => {
     console.group('Value Changed');
     console.log(newValue);
@@ -12,12 +12,14 @@ export default class CreatableSingle extends Component<*, State> {
   };
   render() {
     return (
-      <CreatableSelect
-        isClearable
-        autoFocus
-        onChange={this.handleChange}
-        options={colourOptions}
-      />
+      <div>
+        <CreatableSelect
+          isClearable
+          autoFocus
+          onChange={this.handleChange}
+          options={colourOptions}
+        />
+      </div>
     );
   }
 }
