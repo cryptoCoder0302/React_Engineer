@@ -20,8 +20,7 @@ exports[`defaults 1`] = `
   selectProps={
     Object {
       "backspaceRemovesValue": true,
-      "blurInputOnSelect": true,
-      "captureMenuScroll": false,
+      "captureMenuScroll": true,
       "closeMenuOnSelect": true,
       "components": Object {},
       "escapeClearsValue": false,
@@ -83,8 +82,7 @@ exports[`defaults 1`] = `
     selectProps={
       Object {
         "backspaceRemovesValue": true,
-        "blurInputOnSelect": true,
-        "captureMenuScroll": false,
+        "captureMenuScroll": true,
         "closeMenuOnSelect": true,
         "components": Object {},
         "escapeClearsValue": false,
@@ -130,8 +128,7 @@ exports[`defaults 1`] = `
       selectProps={
         Object {
           "backspaceRemovesValue": true,
-          "blurInputOnSelect": true,
-          "captureMenuScroll": false,
+          "captureMenuScroll": true,
           "closeMenuOnSelect": true,
           "components": Object {},
           "escapeClearsValue": false,
@@ -177,8 +174,7 @@ exports[`defaults 1`] = `
         selectProps={
           Object {
             "backspaceRemovesValue": true,
-            "blurInputOnSelect": true,
-            "captureMenuScroll": false,
+            "captureMenuScroll": true,
             "closeMenuOnSelect": true,
             "components": Object {},
             "escapeClearsValue": false,
@@ -246,8 +242,7 @@ exports[`defaults 1`] = `
       selectProps={
         Object {
           "backspaceRemovesValue": true,
-          "blurInputOnSelect": true,
-          "captureMenuScroll": false,
+          "captureMenuScroll": true,
           "closeMenuOnSelect": true,
           "components": Object {},
           "escapeClearsValue": false,
@@ -298,8 +293,7 @@ exports[`defaults 1`] = `
         selectProps={
           Object {
             "backspaceRemovesValue": true,
-            "blurInputOnSelect": true,
-            "captureMenuScroll": false,
+            "captureMenuScroll": true,
             "closeMenuOnSelect": true,
             "components": Object {},
             "escapeClearsValue": false,
@@ -351,8 +345,7 @@ exports[`defaults 1`] = `
         selectProps={
           Object {
             "backspaceRemovesValue": true,
-            "blurInputOnSelect": true,
-            "captureMenuScroll": false,
+            "captureMenuScroll": true,
             "closeMenuOnSelect": true,
             "components": Object {},
             "escapeClearsValue": false,

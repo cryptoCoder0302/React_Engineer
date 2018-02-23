@@ -32,7 +32,7 @@ type Props = PropsWithStyles &
 export const css = ({ isDisabled, isFocused, isSelected }: State) => ({
   backgroundColor: isSelected
     ? colors.primary
-    : isFocused ? colors.primary25 : 'transparent',
+    : isFocused ? colors.primaryLight : 'transparent',
   color: isDisabled
     ? colors.neutral20
     : isSelected ? colors.neutral0 : 'inherit',
@@ -41,12 +41,10 @@ export const css = ({ isDisabled, isFocused, isSelected }: State) => ({
   fontSize: 'inherit',
   padding: `${spacing.baseUnit * 2}px ${spacing.baseUnit * 3}px`,
   width: '100%',
-  userSelect: 'none',
-  WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
 
   // provide some affordance on touch devices
   ':active': {
-    backgroundColor: isSelected ? colors.primary : colors.primary50,
+    backgroundColor: isSelected ? colors.primary : colors.primaryLight,
   },
 });
 

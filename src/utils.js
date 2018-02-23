@@ -130,16 +130,3 @@ export function getMenuPlacement(element: HTMLElement): Placement {
   // no edge conflict found
   return false;
 }
-
-// ==============================
-// Touch Capability Detector
-// ==============================
-
-export function isTouchCapable() {
-  try {
-    document.createEvent('TouchEvent');
-    return true;
-  } catch (e) {
-    return false;
-  }
-}

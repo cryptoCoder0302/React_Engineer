@@ -4,7 +4,7 @@ import React, { Component, type ElementRef, type Node } from 'react';
 
 import { createFilter } from './filters';
 import { DummyInput, ScrollCaptor } from './internal/index';
-import { cleanValue, isTouchCapable, noop, scrollIntoView } from './utils';
+import { cleanValue, noop, scrollIntoView } from './utils';
 import {
   formatGroupLabel,
   getOptionLabel,
@@ -54,8 +54,6 @@ export type Props = {
   autoFocus?: boolean,
   /* Remove the currently focused option when the user presses backspace */
   backspaceRemovesValue: boolean,
-  /* Remove focus from the input when the user selects an option (handy for dismissing the keyboard on touch devices) */
-  blurInputOnSelect: boolean,
   /* When the user reaches the top/bottom of the menu, prevent scroll on the scroll-parent  */
   captureMenuScroll: boolean,
   /* Close the select menu when the user selects an option */
@@ -146,8 +144,7 @@ export type Props = {
 
 const defaultProps = {
   backspaceRemovesValue: true,
-  blurInputOnSelect: isTouchCapable(),
-  captureMenuScroll: !isTouchCapable(),
+  captureMenuScroll: true,
   closeMenuOnSelect: true,
   components: {},
   escapeClearsValue: false,
@@ -208,7 +205,7 @@ export default class Select extends Component<Props, State> {
   inputHeight: ?number = 20;
   inputIsHiddenAfterUpdate: ?boolean;
   instancePrefix: string = '';
-  menuRef: ?ElRef;
+  menuRef: ?HTMLElement;
   openAfterFocus: boolean = false;
   scrollToFocusedOptionOnUpdate: boolean = false;
   state = {
@@ -263,12 +260,6 @@ export default class Select extends Component<Props, State> {
         inputIsHidden: this.inputIsHiddenAfterUpdate,
       });
       delete this.inputIsHiddenAfterUpdate;
-    }
-    // manage touch listeners
-    if (nextProps.menuIsOpen && !this.props.menuIsOpen) {
-      this.startListeningToTouch();
-    } else if (!nextProps.menuIsOpen && this.props.menuIsOpen) {
-      this.stopListeningToTouch();
     }
   }
   componentDidUpdate(prevProps: Props) {
@@ -514,8 +505,7 @@ export default class Select extends Component<Props, State> {
     onChange(newValue, { action });
   };
   selectOption = (newValue: OptionType) => {
-    const { blurInputOnSelect, isMulti } = this.props;
-
+    const { isMulti } = this.props;
     if (isMulti) {
       const { selectValue } = this.state;
       if (this.isOptionSelected(newValue, selectValue)) {
@@ -528,10 +518,6 @@ export default class Select extends Component<Props, State> {
       }
     } else {
       this.setValue(newValue, 'select-option');
-    }
-
-    if (blurInputOnSelect) {
-      this.blurInput();
     }
   };
   removeValue = (removedValue: OptionType) => {
@@ -585,27 +571,6 @@ export default class Select extends Component<Props, State> {
 
     this.onClearIndicatorMouseDown(event);
   };
-  onTouchStart = (event: TouchEvent) => {
-    // close the menu if the user presses outside
-    if (
-      this.controlRef &&
-      !this.controlRef.contains(event.target) &&
-      this.menuRef &&
-      !this.menuRef.contains(event.target)
-    ) {
-      this.blurInput();
-    }
-  };
-  startListeningToTouch() {
-    if (document && document.addEventListener) {
-      document.addEventListener('touchstart', this.onTouchStart, false);
-    }
-  }
-  stopListeningToTouch() {
-    if (document && document.removeEventListener) {
-      document.removeEventListener('touchstart', this.onTouchStart, false);
-    }
-  }
   onKeyDown = (event: SyntheticKeyboardEvent<HTMLElement>) => {
     const {
       backspaceRemovesValue,
@@ -831,7 +796,6 @@ export default class Select extends Component<Props, State> {
       // use a dummy input to maintain focus/blur functionality
       return (
         <DummyInput
-          readOnly
           onBlur={this.onInputBlur}
           onChange={noop}
           onFocus={this.onInputFocus}
