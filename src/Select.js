@@ -4,7 +4,7 @@ import React, { Component, type ElementRef, type Node } from 'react';
 
 import { createFilter } from './filters';
 import { DummyInput, ScrollCaptor } from './internal/index';
-import { cleanValue, noop, scrollIntoView, isMobileDevice } from './utils';
+import { cleanValue, isTouchCapable, noop, scrollIntoView } from './utils';
 import {
   formatGroupLabel,
   getOptionLabel,
@@ -54,6 +54,8 @@ export type Props = {
   autoFocus?: boolean,
   /* Remove the currently focused option when the user presses backspace */
   backspaceRemovesValue: boolean,
+  /* Remove focus from the input when the user selects an option (handy for dismissing the keyboard on touch devices) */
+  blurInputOnSelect: boolean,
   /* When the user reaches the top/bottom of the menu, prevent scroll on the scroll-parent  */
   captureMenuScroll: boolean,
   /* Close the select menu when the user selects an option */
@@ -98,20 +100,16 @@ export type Props = {
   isSearchable: boolean,
   /* Async: Text to display when loading options */
   loadingMessage: ({ inputValue: string }) => string,
-  /* Minimum height of the menu before flipping */
-  minMenuHeight: number,
   /* Maximum height of the menu before scrolling */
   maxMenuHeight: number,
   /* Maximum height of the value container before scrolling */
   maxValueHeight: number,
   /* Whether the menu is open */
   menuIsOpen: boolean,
-  /*
-    Default placement of the menu in relation to the control. Where 'auto'
-    will attempt to scroll the menu into view when possible, and flip to 'top'
-    otherwise.
-  */
+  /* Default placement of the menu in relation to the control */
   menuPlacement: MenuPlacement,
+  /* Whether to employ edge detection for the menu, and flip when applicable */
+  menuShouldFlip: boolean,
   /* Name of the HTML Input (optional - without this, no input will be rendered) */
   name?: string,
   /* Text to display when there are no options */
@@ -138,8 +136,6 @@ export type Props = {
   placeholder: string,
   /* Status to relay to screen readers */
   screenReaderStatus: ({ count: number }) => string,
-  /* Whether the menu should be scrolled into view, when enough space available */
-  scrollMenuIntoView: boolean,
   /* Style modifier methods */
   styles: StylesConfig,
   /* Select the currently focused option when the user presses tab */
@@ -150,7 +146,8 @@ export type Props = {
 
 const defaultProps = {
   backspaceRemovesValue: true,
-  captureMenuScroll: true,
+  blurInputOnSelect: isTouchCapable(),
+  captureMenuScroll: !isTouchCapable(),
   closeMenuOnSelect: true,
   components: {},
   escapeClearsValue: false,
@@ -168,14 +165,13 @@ const defaultProps = {
   loadingMessage: () => 'Loading...',
   maxMenuHeight: 300,
   maxValueHeight: 100,
-  minMenuHeight: 140,
   menuIsOpen: false,
   menuPlacement: 'bottom',
+  menuShouldFlip: true,
   noOptionsMessage: () => 'No options',
   options: [],
   pageSize: 5,
   placeholder: 'Select...',
-  scrollMenuIntoView: !isMobileDevice(),
   screenReaderStatus: ({ count }: { count: number }) =>
     `${count} result${count !== 1 ? 's' : ''} available.`,
   styles: {},
@@ -204,7 +200,6 @@ export default class Select extends Component<Props, State> {
   blockOptionHover: boolean = false;
   components: SelectComponents;
   commonProps: any; // TODO
-  controlIsDragging: ?boolean;
   controlRef: ElRef;
   focusedOptionRef: ?HTMLElement;
   hasGroups: boolean = false;
@@ -212,9 +207,10 @@ export default class Select extends Component<Props, State> {
   inputHeight: ?number = 20;
   inputIsHiddenAfterUpdate: ?boolean;
   instancePrefix: string = '';
-  menuRef: ?HTMLElement;
+  menuRef: ?ElRef;
   openAfterFocus: boolean = false;
   scrollToFocusedOptionOnUpdate: boolean = false;
+  userIsDragging: ?boolean;
   state = {
     focusedOption: null,
     inputIsHidden: false,
@@ -267,6 +263,12 @@ export default class Select extends Component<Props, State> {
         inputIsHidden: this.inputIsHiddenAfterUpdate,
       });
       delete this.inputIsHiddenAfterUpdate;
+    }
+    // manage touch listeners
+    if (nextProps.menuIsOpen && !this.props.menuIsOpen) {
+      this.startListeningToTouch();
+    } else if (!nextProps.menuIsOpen && this.props.menuIsOpen) {
+      this.stopListeningToTouch();
     }
   }
   componentDidUpdate(prevProps: Props) {
@@ -512,7 +514,8 @@ export default class Select extends Component<Props, State> {
     onChange(newValue, { action });
   };
   selectOption = (newValue: OptionType) => {
-    const { isMulti } = this.props;
+    const { blurInputOnSelect, isMulti } = this.props;
+
     if (isMulti) {
       const { selectValue } = this.state;
       if (this.isOptionSelected(newValue, selectValue)) {
@@ -525,6 +528,10 @@ export default class Select extends Component<Props, State> {
       }
     } else {
       this.setValue(newValue, 'select-option');
+    }
+
+    if (blurInputOnSelect) {
+      this.blurInput();
     }
   };
   removeValue = (removedValue: OptionType) => {
@@ -562,21 +569,53 @@ export default class Select extends Component<Props, State> {
       event.preventDefault();
     }
   };
-  onControlTouchStart = () => {
-    this.controlIsDragging = false;
-  };
-  onControlTouchMove = () => {
-    this.controlIsDragging = true;
-  };
   onControlTouchEnd = (event: SyntheticTouchEvent<HTMLElement>) => {
-    if (this.controlIsDragging) return; // Bail if the user is scrolling
+    if (this.userIsDragging) return;
 
     this.onControlMouseDown(event);
   };
   onClearIndicatorTouchEnd = (event: SyntheticTouchEvent<HTMLElement>) => {
-    if (this.controlIsDragging) return; // Bail if the user is scrolling
+    if (this.userIsDragging) return;
 
     this.onClearIndicatorMouseDown(event);
+  };
+  onDropdownIndicatorTouchEnd = (event: SyntheticTouchEvent<HTMLElement>) => {
+    if (this.userIsDragging) return;
+
+    this.onDropdownIndicatorMouseDown(event);
+  };
+  startListeningToTouch() {
+    if (document && document.addEventListener) {
+      document.addEventListener('touchstart', this.onTouchStart, false);
+      document.addEventListener('touchmove', this.onTouchMove, false);
+      document.addEventListener('touchend', this.onTouchEnd, false);
+    }
+  }
+  stopListeningToTouch() {
+    if (document && document.removeEventListener) {
+      document.removeEventListener('touchstart', this.onTouchStart);
+      document.removeEventListener('touchmove', this.onTouchMove);
+      document.removeEventListener('touchend', this.onTouchEnd);
+    }
+  }
+  onTouchStart = () => {
+    this.userIsDragging = false;
+  };
+  onTouchMove = () => {
+    this.userIsDragging = true;
+  };
+  onTouchEnd = (event: TouchEvent) => {
+    if (this.userIsDragging) return;
+
+    // close the menu if the user taps outside
+    if (
+      this.controlRef &&
+      !this.controlRef.contains(event.target) &&
+      this.menuRef &&
+      !this.menuRef.contains(event.target)
+    ) {
+      this.blurInput();
+    }
   };
   onKeyDown = (event: SyntheticKeyboardEvent<HTMLElement>) => {
     const {
@@ -743,7 +782,7 @@ export default class Select extends Component<Props, State> {
     }
     this.setState({ focusedOption });
   };
-  onDropdownIndicatorMouseDown = (event: SyntheticMouseEvent<HTMLElement>) => {
+  onDropdownIndicatorMouseDown = (event: MouseOrTouchEvent) => {
     // ignore mouse events that weren't triggered by the primary button
     if (event && event.type === 'mousedown' && event.button !== 0) {
       return;
@@ -803,6 +842,7 @@ export default class Select extends Component<Props, State> {
       // use a dummy input to maintain focus/blur functionality
       return (
         <DummyInput
+          readOnly
           onBlur={this.onInputBlur}
           onChange={noop}
           onFocus={this.onInputFocus}
@@ -920,8 +960,6 @@ export default class Select extends Component<Props, State> {
     const innerProps = {
       onMouseDown: this.onClearIndicatorMouseDown,
       onTouchEnd: this.onClearIndicatorTouchEnd,
-      onTouchMove: this.onControlTouchMove,
-      onTouchStart: this.onControlTouchStart,
       role: 'button',
     };
 
@@ -956,11 +994,13 @@ export default class Select extends Component<Props, State> {
   }
   renderIndicatorSeparator() {
     const { DropdownIndicator, IndicatorSeparator } = this.components;
+
+    // separator doesn't make sense without the dropdown indicator
     if (!DropdownIndicator || !IndicatorSeparator) return null;
+
     const { commonProps } = this;
     const { isDisabled } = this.props;
     const { isFocused } = this.state;
-
     const innerProps = { role: 'presentation' };
 
     return (
@@ -981,6 +1021,7 @@ export default class Select extends Component<Props, State> {
 
     const innerProps = {
       onMouseDown: this.onDropdownIndicatorMouseDown,
+      onTouchEnd: this.onDropdownIndicatorTouchEnd,
       role: 'button',
     };
 
@@ -1011,12 +1052,11 @@ export default class Select extends Component<Props, State> {
       isLoading,
       isMulti,
       loadingMessage,
-      minMenuHeight,
       maxMenuHeight,
       menuIsOpen,
       menuPlacement,
+      menuShouldFlip,
       noOptionsMessage,
-      scrollMenuIntoView,
     } = this.props;
 
     if (!menuIsOpen) return null;
@@ -1089,10 +1129,8 @@ export default class Select extends Component<Props, State> {
           onMouseMove: this.onMenuMouseMove,
         }}
         isLoading={isLoading}
-        minMenuHeight={minMenuHeight}
-        maxMenuHeight={maxMenuHeight}
         menuPlacement={menuPlacement}
-        scrollMenuIntoView={scrollMenuIntoView}
+        menuShouldFlip={menuShouldFlip}
       >
         <ScrollCaptor isEnabled={captureMenuScroll}>
           <MenuList
@@ -1192,8 +1230,6 @@ export default class Select extends Component<Props, State> {
             innerRef: this.onControlRef,
             onMouseDown: this.onControlMouseDown,
             onTouchEnd: this.onControlTouchEnd,
-            onTouchMove: this.onControlTouchMove,
-            onTouchStart: this.onControlTouchStart,
           }}
           isDisabled={isDisabled}
           isFocused={isFocused}

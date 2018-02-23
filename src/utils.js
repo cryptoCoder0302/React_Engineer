@@ -1,7 +1,7 @@
 // @flow
 
-import raf from 'raf';
-import type { OptionsType, ValueType } from './types';
+import type { MenuPlacement, OptionsType, ValueType } from './types';
+import { spacing } from './theme';
 
 // ==============================
 // NO OP
@@ -69,136 +69,66 @@ export function handleInputChange(
 }
 
 // ==============================
-// Scroll Helpers
+// Scroll Into View
 // ==============================
 
-function isDocumentElement(el: Element) {
-  return [document.documentElement, document.body, window].includes(el);
-}
-
-// Normalized Scroll Top
-// ------------------------------
-
-export function normalizedHeight(el: Element): number {
-  if (isDocumentElement(el)) {
-    return window.innerHeight;
-  }
-
-  return el.clientHeight;
-}
-
-// Normalized scrollTo & scrollTop
-// ------------------------------
-
-export function getScrollTop(el: Element): number {
-  if (isDocumentElement(el)) {
-    return window.pageYOffset;
-  }
-  return el.scrollTop;
-}
-
-export function normalizedScrollTo(el: Element, top: number): void {
-  // with a scroll distance, we perform scroll on the element
-  if (isDocumentElement(el)) {
-    window.scrollTo(0, top);
-    return;
-  }
-
-  // if statement to appease flow
-  if (top) el.scrollTop = top;
-}
-
-// Get Scroll Parent
-// ------------------------------
-
-export function getScrollParent(element: Element): Element {
-  let style = getComputedStyle(element);
-  const excludeStaticParent = style.position === 'absolute';
-  const overflowRx = /(auto|scroll)/;
-  const docEl = ((document.documentElement: any): Element); // suck it, flow...
-
-  if (style.position === 'fixed') return docEl;
-
-  for (let parent = element; (parent = parent.parentElement); ) {
-    style = getComputedStyle(parent);
-    if (excludeStaticParent && style.position === 'static') {
-      continue;
-    }
-    if (overflowRx.test(style.overflow + style.overflowY + style.overflowX)) {
-      return parent;
-    }
-  }
-
-  return docEl;
-}
-
-// Animated Scroll To
-// ------------------------------
-
-/**
-  @param t: time (elapsed)
-  @param b: initial value
-  @param c: amount of change
-  @param d: duration
-*/
-function easeOutCubic(t: number, b: number, c: number, d: number): number {
-  return c * ((t = t / d - 1) * t * t + 1) + b;
-};
-
-export function animatedScrollTo(
-  element: Element,
-  to: number,
-  duration: number = 200
-) {
-  const start = getScrollTop(element);
-  const change = to - start;
-  const increment = 10;
-  let currentTime = 0;
-
-  function animateScroll() {
-    currentTime += increment;
-    const val = easeOutCubic(currentTime, start, change, duration);
-    normalizedScrollTo(element, val);
-    if (currentTime < duration) {
-      raf(animateScroll);
-    }
-  }
-  animateScroll();
-}
-
-// Scroll Into View
-// ------------------------------
-
-export function scrollIntoView(
+export const scrollIntoView = (
   menuEl: HTMLElement,
   focusedEl: HTMLElement
-): void {
+): void => {
+  // TODO: Is there a way to overscroll to group headings?
   const menuRect = menuEl.getBoundingClientRect();
   const focusedRect = focusedEl.getBoundingClientRect();
   const overScroll = focusedEl.offsetHeight / 3;
-
   if (focusedRect.bottom + overScroll > menuRect.bottom) {
-    normalizedScrollTo(
-      menuEl,
-      Math.min(
-        focusedEl.offsetTop +
-          focusedEl.clientHeight -
-          menuEl.offsetHeight +
-          overScroll,
-        menuEl.scrollHeight
-      )
+    menuEl.scrollTop = Math.min(
+      focusedEl.offsetTop +
+        focusedEl.clientHeight -
+        menuEl.offsetHeight +
+        overScroll,
+      menuEl.scrollHeight
     );
   } else if (focusedRect.top - overScroll < menuRect.top) {
-    normalizedScrollTo(menuEl, Math.max(focusedEl.offsetTop - overScroll, 0));
+    menuEl.scrollTop = Math.max(focusedEl.offsetTop - overScroll, 0);
   }
-}
+};
 
-// ==============================
-// String to Key (kebabify)
-// ==============================
-
-export function toKey(str: string): string {
+export const toKey = (str: string): string => {
   return str.replace(/\W/g, '-');
+};
+
+// ==============================
+// Get Menu Placement
+// ==============================
+
+type Placement = MenuPlacement | false;
+
+export function getMenuPlacement(element: HTMLElement): Placement {
+  // not enough info to calc properly
+  if (!element || !element.offsetParent) return false;
+
+  const { top: containerTop } = element.offsetParent.getBoundingClientRect();
+  const { height, top } = element.getBoundingClientRect();
+
+  const docEl = document.documentElement;
+  const windowHeight = window.innerHeight || (docEl && docEl.clientHeight) || 0;
+  const menuHeight = height + spacing.menuGutter;
+
+  const spaceBelow = windowHeight - top;
+  const spaceAbove = containerTop - spacing.menuGutter;
+
+  // the menu will fit above, or at least has more space than below
+  if (menuHeight >= spaceBelow && spaceAbove > spaceBelow) {
+    return 'top';
+  }
+
+  // the menu will fit below, or at least has more space than above
+  if (menuHeight >= spaceAbove && spaceBelow > spaceAbove) {
+    return 'bottom';
+  }
+
+  // no edge conflict found
+  return false;
 }
 
 // ==============================
@@ -212,12 +142,4 @@ export function isTouchCapable() {
   } catch (e) {
     return false;
   }
-}
-
-// ==============================
-// Mobile Device Detector
-// ==============================
-
-export function isMobileDevice() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
