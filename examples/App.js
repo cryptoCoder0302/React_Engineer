@@ -10,6 +10,7 @@ import {
   Animated,
   Async,
   Creatable,
+  Docs,
   Experimental,
   Home,
   NoMatch,
@@ -19,10 +20,10 @@ import {
 
 const borderColor = 'hsl(0, 0%, 88%)';
 const navWidth = 180;
-const appWidth = 640;
+const appWidth = 840;
 const appGutter = 20;
 const contentGutter = 30;
-const pagePadding = 280;
+const pagePadding = 140;
 const smallDevice = '@media (max-width: 769px)';
 const largeDevice = '@media (min-width: 770px)';
 
@@ -78,6 +79,9 @@ const AppContent = props => (
 const Nav = props => (
   <div
     css={{
+      position: 'fixed',
+      zIndex: 2,
+
       [smallDevice]: {
         backgroundColor: 'rgba(255, 255, 255, 0.96)',
         boxShadow: 'inset 0 -1px 0 rgba(0, 0, 0, 0.1)',
@@ -87,7 +91,6 @@ const Nav = props => (
         marginLeft: -appGutter,
         marginRight: -appGutter,
         overflowX: 'auto',
-        position: 'fixed',
         top: 0,
         width: '100%',
         WebkitOverflowScrolling: 'touch',
@@ -97,9 +100,7 @@ const Nav = props => (
         display: 'block',
         float: 'left',
         paddingTop: contentGutter,
-        position: 'fixed',
         width: navWidth,
-        zIndex: 1,
       },
     }}
     {...props}
@@ -143,6 +144,7 @@ const NavItem = ({ selected, ...props }) => (
 );
 const links = [
   { label: 'Home', value: '/' },
+  { label: 'API Docs', value: '/docs' },
   { label: 'Animation', value: '/animated' },
   { label: 'Async Options', value: '/async' },
   { label: 'Creatable Options', value: '/creatable' },
@@ -174,6 +176,7 @@ export default class App extends Component<*> {
               <PageContent>
                 <Switch>
                   <Route exact path="/" component={Home} />
+                  <Route exact path="/docs" component={Docs} />
                   <Route exact path="/animated" component={Animated} />
                   <Route exact path="/async" component={Async} />
                   <Route exact path="/creatable" component={Creatable} />
