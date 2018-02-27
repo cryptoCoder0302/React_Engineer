@@ -51,7 +51,7 @@ export const spacing = {
   /* Used to calculate consistent margin/padding on elements */
   baseUnit,
   /* The minimum height of the control */
-  controlHeight: 38,
+  controlHeight: 36,
   /* The amount of space between the control and menu */
   menuGutter: baseUnit * 2,
 };
