@@ -1,7 +1,7 @@
 // @flow
 
 import raf from 'raf';
-import type { InputActionMeta, OptionsType, ValueType } from './types';
+import type { OptionsType, ValueType } from './types';
 
 // ==============================
 // NO OP
@@ -59,11 +59,10 @@ export const cleanValue = (value: ValueType): OptionsType => {
 
 export function handleInputChange(
   inputValue: string,
-  actionMeta: InputActionMeta,
-  onInputChange?: (string, InputActionMeta) => string | void
+  onInputChange?: string => string | void
 ) {
   if (onInputChange) {
-    const newValue = onInputChange(inputValue, actionMeta);
+    const newValue = onInputChange(inputValue);
     if (typeof newValue === 'string') return newValue;
   }
   return inputValue;

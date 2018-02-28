@@ -34,7 +34,6 @@ import type {
   FocusDirection,
   FocusEventHandler,
   GroupType,
-  InputActionMeta,
   KeyboardEventHandler,
   MenuPlacement,
   OptionsType,
@@ -133,7 +132,7 @@ export type Props = {
   /* Handle focus events on the control */
   onFocus?: FocusEventHandler,
   /* Handle change events on the input */
-  onInputChange: (string, InputActionMeta) => void,
+  onInputChange: string => void,
   /* Handle key down events on the select */
   onKeyDown?: KeyboardEventHandler,
   /* Handle the menu opening */
@@ -334,11 +333,10 @@ export default class Select extends Component<Props, State> {
     this.props.onMenuOpen();
   }
   onMenuClose() {
-    this.onInputChange('', { action: 'menu-close' });
     this.props.onMenuClose();
   }
-  onInputChange(newValue: string, actionMeta: InputActionMeta) {
-    this.props.onInputChange(newValue, actionMeta);
+  onInputChange(newValue: string) {
+    this.props.onInputChange(newValue);
   }
 
   // ==============================
@@ -406,7 +404,10 @@ export default class Select extends Component<Props, State> {
   }
   setValue = (newValue: ValueType, action: ActionTypes = 'set-value') => {
     const { closeMenuOnSelect, isMulti, onChange } = this.props;
-    this.onInputChange('', { action: 'set-value' });
+    // We update the state first because we should clear inputValue when an
+    // option is selected; the onChange event fires when that's reconciled
+    // otherwise the new menu items will be filtered with the old inputValue
+    this.onInputChange('');
     if (closeMenuOnSelect) {
       this.inputIsHiddenAfterUpdate = !isMulti;
       this.onMenuClose();
@@ -680,7 +681,7 @@ export default class Select extends Component<Props, State> {
   handleInputChange = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
     const inputValue = event.currentTarget.value;
     this.inputIsHiddenAfterUpdate = false;
-    this.onInputChange(inputValue, { action: 'input-change' });
+    this.onInputChange(inputValue);
     this.onMenuOpen();
   };
   onInputFocus = (event: SyntheticFocusEvent<HTMLInputElement>) => {
@@ -700,7 +701,7 @@ export default class Select extends Component<Props, State> {
     if (this.props.onBlur) {
       this.props.onBlur(event);
     }
-    this.onInputChange('', { action: 'input-blur' });
+    this.onInputChange('');
     this.onMenuClose();
     this.setState({
       isFocused: false,
@@ -769,7 +770,7 @@ export default class Select extends Component<Props, State> {
       case 27: // escape
         if (menuIsOpen) {
           this.inputIsHiddenAfterUpdate = false;
-          this.onInputChange('', { action: 'menu-close' });
+          this.onInputChange('');
           this.onMenuClose();
         } else if (isClearable && escapeClearsValue) {
           this.clearValue();
@@ -894,7 +895,7 @@ export default class Select extends Component<Props, State> {
             });
           }
         } else {
-          const option = toOption(item, `${itemIndex}`);
+          const option = toOption(item, itemIndex);
           if (option) {
             acc.render.push(option);
             if (!option.isDisabled) acc.focusable.push(item);

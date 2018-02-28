@@ -2,7 +2,7 @@
 
 import React, { Component, type ComponentType } from 'react';
 
-import type { ActionMeta, InputActionMeta, ValueType } from './types';
+import type { ActionMeta, ValueType } from './types';
 
 type Props = {
   defaultInputValue: string,
@@ -51,12 +51,12 @@ const withState = (WrappedComponent: ComponentType<*>) =>
       this.callProp('onChange', value, actionMeta);
       this.setState({ value });
     };
-    onInputChange = (value: any, actionMeta: InputActionMeta) => {
+    onInputChange = (inputValue: any) => {
       // TODO: for backwards compatibility, we allow the prop to return a new
       // value, but now inputValue is a controllable prop we probably shouldn't
-      const newValue = this.callProp('onInputChange', value, actionMeta);
+      const newValue = this.callProp('onInputChange', inputValue);
       this.setState({
-        inputValue: newValue !== undefined ? newValue : value,
+        inputValue: newValue !== undefined ? newValue : inputValue,
       });
     };
     onMenuOpen = () => {
