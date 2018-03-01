@@ -4,9 +4,6 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const webpack = require('webpack');
-require('dotenv').config();
-
 module.exports = {
   context: path.resolve(__dirname, 'docs'),
   entry: {
@@ -46,12 +43,6 @@ module.exports = {
     },
   },
   plugins: [
-    new webpack.DefinePlugin({
-      // $FlowFixMe: This definitely exists here.
-      'process.env.CLIENT_ID': `'${process.env.CLIENT_ID}'`,
-      // $FlowFixMe: This definitely exists here.
-      'process.env.CLIENT_SECRET': `'${process.env.CLIENT_SECRET}'`,
-    }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       inject: false,

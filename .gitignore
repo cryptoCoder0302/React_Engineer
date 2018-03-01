@@ -2,7 +2,6 @@
 lib
 dist
 docs/dist
-.env
 
 # Logs
 logs

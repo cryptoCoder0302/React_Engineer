@@ -1,7 +1,7 @@
 // @flow
 
 import raf from 'raf';
-import type { OptionsType, ValueType } from './types';
+import type { InputActionMeta, OptionsType, ValueType } from './types';
 
 // ==============================
 // NO OP
@@ -59,10 +59,11 @@ export const cleanValue = (value: ValueType): OptionsType => {
 
 export function handleInputChange(
   inputValue: string,
-  onInputChange?: string => string | void
+  actionMeta: InputActionMeta,
+  onInputChange?: (string, InputActionMeta) => string | void
 ) {
   if (onInputChange) {
-    const newValue = onInputChange(inputValue);
+    const newValue = onInputChange(inputValue, actionMeta);
     if (typeof newValue === 'string') return newValue;
   }
   return inputValue;
@@ -146,8 +147,7 @@ function easeOutCubic(t: number, b: number, c: number, d: number): number {
 export function animatedScrollTo(
   element: Element,
   to: number,
-  duration: number = 200,
-  callback: Element => void = noop
+  duration: number = 200
 ) {
   const start = getScrollTop(element);
   const change = to - start;
@@ -160,8 +160,6 @@ export function animatedScrollTo(
     scrollTo(element, val);
     if (currentTime < duration) {
       raf(animateScroll);
-    } else {
-      callback(element);
     }
   }
   animateScroll();

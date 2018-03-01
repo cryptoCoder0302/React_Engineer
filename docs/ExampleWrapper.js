@@ -2,51 +2,18 @@
 
 import glam from 'glam';
 import React, { Component } from 'react';
-import CodeSandboxer, { replaceImports } from 'react-codesandboxer';
-
+import CodeSandboxer from 'react-codesandboxer';
+import pkg from '../package.json';
 import { colors } from '../src/theme';
-import Svg from './Svg';
 
 const user = 'JedWatson';
 const branch = 'v2';
 
 const sourceUrl = `https://github.com/${user}/react-select/tree/${branch}`;
-const rawUrl = `https://raw.githubusercontent.com/${user}/react-select/${branch}`;
-const rawPKGJSON = rawUrl + '/package.json';
-
-const rawDataUrl = rawUrl + '/docs/data.js';
-const rawComponentsUrl = rawUrl + '/docs/styled-components.js';
-const promise = urlPath =>
-  fetch(rawUrl + urlPath)
-    .then(a => a.text())
-    .then(a =>
-      replaceImports(a, [
-        ['../../../src/*', 'react-select/lib/'],
-        ['../../../src', 'react-select'],
-        ['../../data', './data'],
-        ['../../styled-components', './styled-components'],
-      ])
-    );
 
 export default class ExampleWrapper extends Component {
   static defaultProps = { isEditable: true };
-  configPromise = () =>
-    Promise.all([
-      fetch(rawDataUrl).then(a => a.text()),
-      fetch(rawComponentsUrl)
-        .then(a => a.text())
-        .then(a => replaceImports(a, [['../src/*', 'react-select/lib/']])),
-    ]).then(([data, components]) => ({
-      providedDeps: { glam: '^5.0.1' },
-      providedFiles: {
-        'data.js': {
-          content: data,
-        },
-        'styled-components.js': {
-          content: components,
-        },
-      },
-    }));
+
   render() {
     return (
       <div>
@@ -55,7 +22,7 @@ export default class ExampleWrapper extends Component {
           <Actions>
             <Action
               icon="source"
-              href={sourceUrl + this.props.urlPath}
+              href={`${sourceUrl}/${this.props.urlPath}`}
               tag="a"
               target="_blank"
             >
@@ -63,13 +30,28 @@ export default class ExampleWrapper extends Component {
             </Action>
             {this.props.isEditable ? (
               <CodeSandboxer
-                config={this.configPromise}
-                example={promise(this.props.urlPath)}
-                pkgJSON={fetch(rawPKGJSON).then(a => a.json())}
+                examplePath={this.props.urlPath}
+                pkgJSON={pkg}
+                gitInfo={{
+                  account: 'JedWatson',
+                  repository: 'react-select',
+                  branch: 'v2',
+                  host: 'github',
+                }}
+                importReplacements={[
+                  ['src/*', 'react-select/lib/'],
+                  ['src', 'react-select'],
+                ]}
+                dependencies={{
+                  [pkg.name]: pkg.version,
+                }}
               >
-                <Action icon="new-window" type="submit">
-                  Edit in CodeSandbox
-                </Action>
+                {/* isLoading can now be implemented */}
+                {() => (
+                  <Action icon="new-window" type="submit">
+                    Edit in CodeSandbox
+                  </Action>
+                )}
               </CodeSandboxer>
             ) : null}
           </Actions>
@@ -101,6 +83,24 @@ const ExampleHeading = (props: any) => (
 // Source & Sandbox Actions
 // ==============================
 
+const Svg = ({ size, ...props }: { size: number }) => (
+  <svg
+    focusable="false"
+    height={size}
+    role="image"
+    viewBox="0 0 20 20"
+    width={size}
+    css={{
+      display: 'inline-block',
+      fill: 'currentColor',
+      flexShrink: 0,
+      lineHeight: 1,
+      stroke: 'currentColor',
+      strokeWidth: 0,
+    }}
+    {...props}
+  />
+);
 const SourceIcon = (props: any) => (
   <Svg alt="Source Code Icon" size={16} {...props}>
     <path d="M5.719 14.75c-0.236 0-0.474-0.083-0.664-0.252l-5.060-4.498 5.341-4.748c0.412-0.365 1.044-0.33 1.411 0.083s0.33 1.045-0.083 1.412l-3.659 3.253 3.378 3.002c0.413 0.367 0.45 0.999 0.083 1.412-0.197 0.223-0.472 0.336-0.747 0.336zM14.664 14.748l5.341-4.748-5.060-4.498c-0.413-0.367-1.045-0.33-1.411 0.083s-0.33 1.045 0.083 1.412l3.378 3.003-3.659 3.252c-0.413 0.367-0.45 0.999-0.083 1.412 0.197 0.223 0.472 0.336 0.747 0.336 0.236 0 0.474-0.083 0.664-0.252zM9.986 16.165l2-12c0.091-0.545-0.277-1.060-0.822-1.151-0.547-0.092-1.061 0.277-1.15 0.822l-2 12c-0.091 0.545 0.277 1.060 0.822 1.151 0.056 0.009 0.11 0.013 0.165 0.013 0.48 0 0.904-0.347 0.985-0.835z" />

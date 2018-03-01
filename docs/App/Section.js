@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import type { RouterProps } from '../types';
 import routes from './routes';
@@ -12,7 +12,6 @@ const Section = () => {
       {routeKeys.map(r => (
         <Route key={r} path={r} render={p => <Content {...p} />} />
       ))}
-      <Redirect from="/" to="/home" />
     </Switch>
   );
 };

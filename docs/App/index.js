@@ -4,10 +4,11 @@
 import './index.css';
 import glam from 'glam';
 import React, { Component, Fragment } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 
 import Header from './Header';
 import Footer from './Footer';
+import Tests from '../Tests';
 // import NoMatch from '../NoMatch';
 
 import {
@@ -36,6 +37,10 @@ export default class App extends Component<*> {
     return (
       <BrowserRouter>
         <div>
+          <Switch>
+            <Route exact path="/tests" component={Tests} />
+            <Redirect from="/" to="/home" />
+          </Switch>
           <Header>
             <Route
               render={({ location }) => (
