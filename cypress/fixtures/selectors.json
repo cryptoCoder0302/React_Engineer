@@ -1,8 +1,6 @@
 {
   "clearValues": ".react-select__clear-indicator",
   "disabledCheckbox": "#cypress-single__disabled-checkbox",
-  "firstMultiValueRemove":
-    "#cypress-multi .react-select__multi-value__remove:first",
   "groupColor": "#cypress-single-grouped .react-select__group",
   "menuGrouped": "#react-select-3--listbox",
   "menuMulti": "#react-select-4--listbox",
@@ -11,9 +9,8 @@
   "multiSelectDefaultValues": "#cypress-multi .react-select__multi-value",
   "multiSelectInput": "#react-select-4--input",
   "noOptionsValue": ".react-select__menu-notice--no-options",
-  "placeHolderGrouped": "#cypress-single-grouped .react-select__placeholder",
-  "placeHolderMulti": "#cypress-multi .react-select__placeholder",
-  "placeHolderSingle": "#cypress-single .react-select__placeholder",
+  "firstMultiValueRemove":
+    "#cypress-multi .react-select__multi-value__remove:first",
   "singleGroupedInputValue":
     "#cypress-single-grouped .react-select__single-value",
   "singleInputValue": ".react-select__single-value",
