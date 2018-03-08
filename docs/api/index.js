@@ -1,20 +1,12 @@
-import React, { Fragment } from 'react';
-import { Helmet } from 'react-helmet';
+// @flow
+
+import React from 'react';
 
 import md from '../markdown/renderer';
 import { PropTypes } from './examples';
 
 export default function Api() {
-  return (
-    <Fragment>
-      <Helmet>
-        <title>API - React Select</title>
-        <meta
-          name="description"
-          content="The react-select property API documentation."
-        />
-      </Helmet>
-      {md`
+  return md`
     # API
 
     ## Methods
@@ -60,7 +52,5 @@ export default function Api() {
 
     ${<PropTypes />}
 
-  `}
-    </Fragment>
-  );
+  `;
 }
