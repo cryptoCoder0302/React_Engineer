@@ -26,7 +26,6 @@ export const groupCSS = () => ({
   paddingTop: spacing.baseUnit * 2,
 });
 
-
 const Group = (props: Props) => {
   const {
     children,

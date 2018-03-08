@@ -4,7 +4,7 @@ import React, { Component, type ComponentType } from 'react';
 
 import type { ActionMeta, InputActionMeta, ValueType } from './types';
 
-export type Props = {
+type Props = {
   defaultInputValue: string,
   defaultMenuIsOpen: boolean,
   defaultValue: ValueType,
@@ -18,7 +18,7 @@ type State = {
   value: ValueType,
 };
 
-const manageState = (SelectComponent: ComponentType<*>) =>
+const withState = (WrappedComponent: ComponentType<*>) =>
   class StateManager extends Component<Props, State> {
     static defaultProps = {
       defaultInputValue: '',
@@ -69,7 +69,7 @@ const manageState = (SelectComponent: ComponentType<*>) =>
     };
     render() {
       return (
-        <SelectComponent
+        <WrappedComponent
           {...this.props}
           inputValue={this.getProp('inputValue')}
           menuIsOpen={this.getProp('menuIsOpen')}
@@ -83,4 +83,4 @@ const manageState = (SelectComponent: ComponentType<*>) =>
     }
   };
 
-export default manageState;
+export default withState;

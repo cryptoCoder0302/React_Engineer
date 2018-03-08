@@ -1,9 +1,9 @@
 // @flow
 
 import SelectBase from './Select';
-import manageState from './stateManager';
+import withState from './stateManager';
 
-export default manageState(SelectBase);
+export default withState(SelectBase);
 export { SelectBase };
 export { createFilter } from './filters';
 export { components } from './components/index';
