@@ -54,10 +54,14 @@ export const DownChevron = (props: any) => (
 // Dropdown & Clear Buttons
 // ==============================
 
-type IndicatorProps = PropsWithStyles & {
+export type IndicatorProps = PropsWithStyles & {
+  /** The children to be rendered inside the indicator. */
   children: ElementType,
+  /** Props that will be passed on to the children. */
   innerProps: any,
+  /** The focused state of the select. */
   isFocused: boolean,
+  /** Whether the text is right to left */
   isRtl: boolean,
 };
 
@@ -175,7 +179,10 @@ const loadingAnimation = (
   </style>
 );
 
-type LoadingIconProps = IndicatorProps & { isFocused: boolean, size: number };
+export type LoadingIconProps = IndicatorProps & {
+  /** Set size of the container. */
+  size: number
+};
 export const LoadingIndicator = (props: LoadingIconProps) => {
   const { getStyles, innerProps, isFocused, isRtl, size = 4 } = props;
   const clr = isFocused ? colors.text : colors.neutral20;
