@@ -6,21 +6,13 @@ import { handleInputChange } from './utils';
 import manageState from './stateManager';
 import type { OptionsType, InputActionMeta } from './types';
 
-export type AsyncProps = {
-  /* Either a set of default options to use, or set an isLOading option */
+export type Props = SelectProps & {
   defaultOptions: OptionsType | boolean,
-  /* Function that returns a promise, which is the set of options to be used once the promise resolves. */
   loadOptions: (string, (OptionsType) => void) => Promise<*> | void,
-  /*
-    If cacheOptions are truthy, then the loaded data will be cached. The cache
-    will remain until `cacheOptions` changes value.
-  */
   cacheOptions: any,
-}
+};
 
-export type Props = SelectProps & AsyncProps;
-
-export const defaultProps = {
+const defaultProps = {
   cacheOptions: false,
   defaultOptions: false,
 };

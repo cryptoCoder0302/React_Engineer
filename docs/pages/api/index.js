@@ -1,10 +1,21 @@
 // @flow
-import React from 'react';
+import React, { Fragment } from 'react';
+import { Helmet } from 'react-helmet';
 import md from '../../markdown/renderer';
 import { Props } from '@atlaskit/docs';
+import { CustomComponents } from '../../PropTypes';
 
 export default function Api() {
-  return md`
+  return (
+    <Fragment>
+      <Helmet>
+        <title>API - React Select</title>
+        <meta
+          name="description"
+          content="The react-select property API documentation."
+        />
+      </Helmet>
+      {md`
     # API
 
     ## Methods
@@ -49,25 +60,9 @@ export default function Api() {
     Even when commonProps are not listed in the prop types below, a custom component
     will still have access to them.
 
-    ## Base Props
+    ## Public Props
 
-    These base props are those available to be passed to all select variants.
-
-    ${<Props heading="" props={require('!!extract-react-types-loader!../../PropTypes/Select')} />}
-
-    ## Async props
-
-    These props are included with in both the Async and AsyncCreatable select. For
-    more on using async selects, see the [async select documentation](/async)
-
-    ${<Props heading="" props={require('!!extract-react-types-loader!../../PropTypes/Async')} />}
-
-    ## Creatable props
-
-    These props are included with in both the Creatable and AsyncCreatable select. For
-    more on using creatable selects, see the [creatable select documentation](/creatable)
-
-    ${<Props heading="" props={require('!!extract-react-types-loader!../../PropTypes/Creatable')} />}
+    ${<Props heading="" props={require('!!extract-react-types-loader!../../PropTypes/SelectPropTypes')} />}
 
     ## Replacing Components
 
@@ -106,8 +101,7 @@ export default function Api() {
     ${<Props heading="" props={require('!!extract-react-types-loader!../../PropTypes/components/Group')} />}
 
     ### GroupHeading
-
-    Group Heading can be any component.
+    ${CustomComponents.GroupHeading}
 
     ### IndicatorsContainer
 
@@ -176,5 +170,7 @@ export default function Api() {
     ### ValueContainer
 
     ${<Props heading="" props={require('!!extract-react-types-loader!../../PropTypes/components/ValueContainer')} />}
-  `;
+  `}
+  </Fragment>
+  );
 }
