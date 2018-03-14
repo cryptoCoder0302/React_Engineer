@@ -4,12 +4,7 @@ import React, { Component, type ComponentType, type ElementRef } from 'react';
 import { Transition } from 'react-transition-group';
 
 export type fn = () => void;
-export type BaseTransition = {
-  /** Whether we are in a transition. */
-  in: boolean,
-  /** Function to be called once transition finishes. */
-  onExited: fn
-};
+export type BaseTransition = { in: boolean, onExited: fn };
 
 // ==============================
 // Fade Transition
