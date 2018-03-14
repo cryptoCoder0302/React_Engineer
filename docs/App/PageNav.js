@@ -123,7 +123,6 @@ const Nav = (props: any) => (
       [largeDevice]: {
         display: 'block',
         float: 'left',
-        paddingBottom: contentGutter,
         paddingTop: contentGutter,
         width: navWidth,
         zIndex: 1,

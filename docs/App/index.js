@@ -5,6 +5,7 @@ import './index.css';
 import glam from 'glam';
 import React, { Component, Fragment } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import Header from './Header';
 import Footer from './Footer';
@@ -27,9 +28,9 @@ const sections = [
   { label: 'API', path: '/api' },
   { label: 'Styles', path: '/styles' },
   { label: 'Components', path: '/components' },
-  { label: 'Async', path: '/async' },
-  { label: 'Creatable', path: '/creatable' },
-  { label: 'Advanced', path: '/advanced' },
+  // { label: 'Async', path: '/async' },
+  // { label: 'Creatable', path: '/creatable' },
+  // { label: 'Advanced', path: '/advanced' },
 ];
 
 export default class App extends Component<*> {
@@ -64,6 +65,13 @@ export default class App extends Component<*> {
 
               <ScrollRestoration>
                 <AppContainer>
+                  <Helmet>
+                    <title>React Select</title>
+                    <meta
+                      name="description"
+                      content="A flexible and beautiful Select Input control for ReactJS with multiselect, autocomplete, async and creatable support."
+                    />
+                  </Helmet>
                   <Route
                     render={props => (
                       <Fragment>
