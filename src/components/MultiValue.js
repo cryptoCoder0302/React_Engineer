@@ -18,7 +18,7 @@ export type ValueProps = LabelProps & {
     onMouseDown: any => void,
   },
 };
-export type MultiValueProps = PropsWithStyles & ValueProps;
+type Props = PropsWithStyles & ValueProps;
 
 export const multiValueCSS = () => ({
   backgroundColor: colors.neutral10,
@@ -54,7 +54,7 @@ export const MultiValueContainer = Div;
 export const MultiValueLabel = Div;
 export const MultiValueRemove = Div;
 
-const MultiValue = (props: MultiValueProps) => {
+const MultiValue = (props: Props) => {
   const {
     children,
     components,

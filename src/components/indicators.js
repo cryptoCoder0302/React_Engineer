@@ -54,14 +54,10 @@ export const DownChevron = (props: any) => (
 // Dropdown & Clear Buttons
 // ==============================
 
-export type IndicatorProps = PropsWithStyles & {
-  /** The children to be rendered inside the indicator. */
+type IndicatorProps = PropsWithStyles & {
   children: ElementType,
-  /** Props that will be passed on to the children. */
   innerProps: any,
-  /** The focused state of the select. */
   isFocused: boolean,
-  /** Whether the text is right to left */
   isRtl: boolean,
 };
 
@@ -109,7 +105,6 @@ export const ClearIndicator = (props: IndicatorProps) => {
 // ==============================
 
 type SeparatorState = { isDisabled: boolean };
-
 export const indicatorSeparatorCSS = ({ isDisabled }: SeparatorState) => ({
   alignSelf: 'stretch',
   backgroundColor: isDisabled ? colors.neutral10 : colors.neutral20,
@@ -117,7 +112,6 @@ export const indicatorSeparatorCSS = ({ isDisabled }: SeparatorState) => ({
   marginTop: spacing.baseUnit * 2,
   width: 1,
 });
-
 export const IndicatorSeparator = (props: IndicatorProps) => {
   const { getStyles, innerProps } = props;
   return (
@@ -181,12 +175,7 @@ const loadingAnimation = (
   </style>
 );
 
-export type LoadingIconProps = IndicatorProps & {
-  /** Sets whether focused styling should be used. */
-  isFocused: boolean,
-  /** Set size of the container. */
-  size: number
-};
+type LoadingIconProps = IndicatorProps & { isFocused: boolean, size: number };
 export const LoadingIndicator = (props: LoadingIconProps) => {
   const { getStyles, innerProps, isFocused, isRtl, size = 4 } = props;
   const clr = isFocused ? colors.text : colors.neutral20;

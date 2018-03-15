@@ -1,7 +1,6 @@
 // @flow
 
 import babel from 'rollup-plugin-babel';
-import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify';
 import { minify } from 'uglify-es';
@@ -40,7 +39,7 @@ export default [
       file: path + '.es.js',
       format: 'es',
     },
-    external: [...external, 'raf'],
+    external: external,
     plugins: [babel(babelOptions(false))],
   },
   {
@@ -52,7 +51,7 @@ export default [
       globals: globals,
     },
     external: external,
-    plugins: [babel(babelOptions(false)), resolve(), commonjs()],
+    plugins: [babel(babelOptions(false)), resolve()],
   },
   {
     input: 'src/index.umd.js',
@@ -63,11 +62,6 @@ export default [
       globals: globals,
     },
     external: external,
-    plugins: [
-      babel(babelOptions(true)),
-      resolve(),
-      commonjs(),
-      uglify({}, minify),
-    ],
+    plugins: [babel(babelOptions(true)), resolve(), uglify({}, minify)],
   },
 ];
