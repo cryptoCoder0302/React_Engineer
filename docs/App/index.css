@@ -13,11 +13,6 @@ body {
   padding: 0;
   text-rendering: optimizeLegibility;
 }
-p > a,
-p > a:hover,
-p > a:visited {
-  color: #2684ff;
-}
 code {
   font-family: Roboto Mono, Monaco, monospace;
 }
@@ -67,6 +62,7 @@ h6 {
     transform: translate3d(0, 0, 0);
   }
 }
+
 .animate-dropin {
   animation: dropIn 0.66s;
 }
