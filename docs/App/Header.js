@@ -103,7 +103,11 @@ class Header extends Component<HeaderProps, HeaderState> {
     }
   }
   getStarCount = () => {
-    fetch(apiUrl)
+    // $FlowFixMe: escape global `CLIENT_ID` & `CLIENT_SECRET`
+    const fetchUrl = `${apiUrl}?client_id=${
+      process.env.CLIENT_ID
+    }&client_secret=${process.env.CLIENT_SECRET}`;
+    fetch(fetchUrl)
       .then(res => res.json())
       .then(data => {
         const stars = data.stargazers_count;
