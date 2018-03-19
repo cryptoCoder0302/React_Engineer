@@ -3,6 +3,7 @@ import React from 'react';
 import md from '../../markdown/renderer';
 import ExampleWrapper from '../../ExampleWrapper';
 import {
+  AccessingInternals,
   OnSelectResetsInput,
   BasicGrouped,
   CreateFilter,
@@ -10,7 +11,6 @@ import {
   CustomGetOptionLabel,
   CustomIsOptionDisabled,
   Experimental,
-  MenuPortal,
 } from '../../examples';
 
 export default function Advanced() {
@@ -115,21 +115,17 @@ export default function Advanced() {
       </ExampleWrapper>
     )}
 
-    ## Portaling
-    React-select exposes a menuPortalTarget prop, that lets you portal the select menu to a dom node of your choosing.
-    Additionally we expose the menuPortal styles for layering purposes.
-
+    ## Accessing Internals
     ${(
       <ExampleWrapper
         isEditable={false}
-        label="Example of Portaling"
-        urlPath="docs/examples/MenuPortal.js"
-        raw={require('!!raw-loader!../../examples/MenuPortal.js')}
+        label="Accessing Internals via ref"
+        urlPath="docs/examples/Experimental.js"
+        raw={require('!!raw-loader!../../examples/AccessingInternals.js')}
       >
-        <MenuPortal />
+        <AccessingInternals />
       </ExampleWrapper>
     )}
-
 
     ## Experimental
 

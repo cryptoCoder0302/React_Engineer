@@ -30,10 +30,9 @@ export type OptionProps = PropsWithStyles &
     children: Node,
     /** props passed to the wrapping element for the group. */
     innerProps: InnerProps,
-    /* Text to be displayed representing the option. */
+    /* I do not know what this is. - Ben */
     label: string,
-    /* Type is used by the menu to determine whether this is an option or a group.
-    In the case of option this is always `option`. */
+    /* I do not know what this is. - Ben */
     type: 'option',
   };
 
