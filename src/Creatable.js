@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, type Node, type ComponentType, type ElementRef } from 'react';
+import React, { Component, type Node, type ComponentType } from 'react';
 import Select, { type Props as SelectProps } from './Select';
 import type { OptionType, OptionsType, ValueType, ActionMeta } from './types';
 import { cleanValue } from './utils';
@@ -12,7 +12,6 @@ export type Props = SelectProps & {
   isValidNewOption: (string, ValueType, OptionsType) => boolean,
   getNewOptionData: (string, Node) => OptionType,
   onCreateOption?: string => void,
-  selectRef?: ElementRef<*> => void,
 };
 
 const compareOption = (inputValue, option) => {
@@ -124,7 +123,6 @@ export const makeCreatableSelect = (SelectComponent: ComponentType<*>) =>
       return (
         <SelectComponent
           {...props}
-          ref={props.selectRef}
           options={options}
           onChange={this.onChange}
         />

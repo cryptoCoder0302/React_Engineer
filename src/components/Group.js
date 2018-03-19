@@ -1,37 +1,33 @@
 // @flow
-import React, { type Node, type ComponentType } from 'react';
+import React, { type Node } from 'react';
 
 import { className } from '../utils';
 import { Div } from '../primitives';
 import { spacing } from '../theme';
 import { type PropsWithStyles } from '../types';
 
-type ComponentProps = {
-  /** The children to be rendered. */
+type GroupProps = {
   children: Node,
-  /** Component to wrap the label, recieves headingProps. */
-  Heading: ComponentType<any>,
-  /** Props passed to the heading. */
+  Heading: typeof GroupHeading,
   headingProps: {
     'aria-labelledby': string,
   },
-  /** props passed to the wrapping element for the group. */
   innerProps: {
     'aria-expanded': boolean,
     'aria-label': string,
     role: 'group',
   },
-  /** Label to be displayed in the heading component. */
   label: Node,
 };
-export type GroupProps = PropsWithStyles & ComponentProps;
+type Props = PropsWithStyles & GroupProps;
 
 export const groupCSS = () => ({
   paddingBottom: spacing.baseUnit * 2,
   paddingTop: spacing.baseUnit * 2,
 });
 
-const Group = (props: GroupProps) => {
+
+const Group = (props: Props) => {
   const {
     children,
     getStyles,

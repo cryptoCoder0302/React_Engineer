@@ -6,19 +6,13 @@ import { colors, spacing } from '../theme';
 import { className } from '../utils';
 import { type PropsWithStyles } from '../types';
 
-type State = {
-  /** Whether this is disabled */
-  isDisabled: boolean
-};
+type State = { isDisabled: boolean };
 type ValueProps = {
-  /** The children to be rendered. */
   children: string,
-  /* I do not know what this does - Ben */
   data: any,
-    /** Props passed to the wrapping element for the group. */
   innerProps: any,
 };
-export type SingleValueProps = PropsWithStyles & ValueProps & State;
+type Props = PropsWithStyles & ValueProps & State;
 
 export const css = ({ isDisabled }: State) => ({
   color: isDisabled ? colors.neutral40 : colors.text,
@@ -31,7 +25,7 @@ export const css = ({ isDisabled }: State) => ({
   whiteSpace: 'nowrap',
 });
 
-const SingleValue = (props: SingleValueProps) => {
+const SingleValue = (props: Props) => {
   const { children, getStyles, isDisabled, innerProps } = props;
   return (
     <Div

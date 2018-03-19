@@ -112,7 +112,7 @@ const Heading = props => {
   const Tag = `h${level}`;
   const label = getLabel(children);
   const slug = slugify(label);
-  const linkify = [1, 2].includes(level);
+  const linkify = [2, 3].includes(level);
 
   if (linkify) {
     store.add(nodeKey, { key: nodeKey, label, level, path: `#${slug}` });
@@ -180,7 +180,7 @@ export const CodeBlock = ({ codeinfo, literal, nodeKey, ...props }) => {
     </SyntaxHighlighter>
   );
 };
-CodeBlock.defaultProps = { codeinfo: [], language: 'jsx' };
+CodeBlock.defaultProps = { language: 'jsx' };
 
 const Blockquote = ({ nodeKey, ...props }) => (
   <blockquote

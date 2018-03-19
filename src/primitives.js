@@ -6,10 +6,8 @@ import glam from 'glam';
 
 import type { InnerRef } from './types';
 
-export type Props = {
-  /** css to be passed to the tag element. */
+type Props = {
   css?: {},
-  /** A reference to the inner element. */
   innerRef?: InnerRef,
 };
 
