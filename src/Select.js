@@ -122,6 +122,8 @@ export type Props = {
     when there isn't enough space below the control.
   */
   menuPlacement: MenuPlacement,
+  /* Whether the menu should use a portal, and where it should attach */
+  menuPortalTarget?: HTMLElement,
   /* Name of the HTML Input (optional - without this, no input will be rendered) */
   name?: string,
   /* Text to display when there are no options */
@@ -133,13 +135,13 @@ export type Props = {
   /* Handle focus events on the control */
   onFocus?: FocusEventHandler,
   /* Handle change events on the input */
-  onInputChange?: (string, InputActionMeta) => void,
+  onInputChange: (string, InputActionMeta) => void,
   /* Handle key down events on the select */
   onKeyDown?: KeyboardEventHandler,
   /* Handle the menu opening */
   onMenuOpen: () => void,
   /* Handle the menu closing */
-  onMenuClose?: () => void,
+  onMenuClose: () => void,
   /* Array of options that populate the select menu */
   options: OptionsType,
   /* Number of options to jump in menu when page{up|down} keys are used */
@@ -158,7 +160,7 @@ export type Props = {
   value: ValueType,
 };
 
-const defaultProps = {
+export const defaultProps = {
   backspaceRemovesValue: true,
   blurInputOnSelect: isTouchCapable(),
   captureMenuScroll: !isTouchCapable(),
@@ -335,14 +337,10 @@ export default class Select extends Component<Props, State> {
   }
   onMenuClose() {
     this.onInputChange('', { action: 'menu-close' });
-    if (this.props.onMenuClose) {
-      this.props.onMenuClose();
-    }
+    this.props.onMenuClose();
   }
   onInputChange(newValue: string, actionMeta: InputActionMeta) {
-    if (this.props.onInputChange) {
-      this.props.onInputChange(newValue, actionMeta);
-    }
+    this.props.onInputChange(newValue, actionMeta);
   }
 
   // ==============================
@@ -1135,6 +1133,7 @@ export default class Select extends Component<Props, State> {
       GroupHeading,
       Menu,
       MenuList,
+      MenuPortal,
       LoadingMessage,
       NoOptionsMessage,
       Option,
@@ -1151,6 +1150,7 @@ export default class Select extends Component<Props, State> {
       maxMenuHeight,
       menuIsOpen,
       menuPlacement,
+      menuPortalTarget,
       noOptionsMessage,
       scrollMenuIntoView,
     } = this.props;
@@ -1217,7 +1217,7 @@ export default class Select extends Component<Props, State> {
       );
     }
 
-    return (
+    const menuElement = (
       <Menu
         {...commonProps}
         innerProps={{
@@ -1246,6 +1246,19 @@ export default class Select extends Component<Props, State> {
           </MenuList>
         </ScrollCaptor>
       </Menu>
+    );
+
+    return menuPortalTarget ? (
+      <MenuPortal
+        {...commonProps}
+        appendTo={menuPortalTarget}
+        menuPlacement={menuPlacement}
+        controlElement={this.controlRef}
+      >
+        {menuElement}
+      </MenuPortal>
+    ) : (
+      menuElement
     );
   }
   renderFormField() {
