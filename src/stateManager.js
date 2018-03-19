@@ -1,10 +1,11 @@
 // @flow
 
-import React, { Component, type ComponentType } from 'react';
+import React, { Component, type ComponentType, type ElementRef } from 'react';
 
 import type { ActionMeta, InputActionMeta, ValueType } from './types';
 
 export type Props = {
+  selectRef: ElementRef<*> => void,
   defaultInputValue: string,
   defaultMenuIsOpen: boolean,
   defaultValue: ValueType,
@@ -39,6 +40,12 @@ const manageState = (SelectComponent: ComponentType<*>) =>
           ? this.props.value
           : this.props.defaultValue,
     };
+    focus () {
+      this.select.focus();
+    }
+    blur () {
+      this.select.blur();
+    }
     getProp(key: string) {
       return this.props[key] !== undefined ? this.props[key] : this.state[key];
     }
@@ -71,6 +78,7 @@ const manageState = (SelectComponent: ComponentType<*>) =>
       return (
         <SelectComponent
           {...this.props}
+          ref={ref => { this.select = ref; }}
           inputValue={this.getProp('inputValue')}
           menuIsOpen={this.getProp('menuIsOpen')}
           onChange={this.onChange}
