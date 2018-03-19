@@ -17,10 +17,10 @@ describe('New Select', function() {
       beforeEach(function() {
         cy.reload();
       });
-      it('Should display 3 default values ' + view, function() {
+      it('Should display 2 default values ' + view, function() {
         cy
           .get(selector.singleSelectDefaultValues)
-          .should('have.length', 3)
+          .should('have.length', 2)
           .get(selector.singleSelectFirstValue)
           .should('contain', 'Ocean');
       });
@@ -36,7 +36,7 @@ describe('New Select', function() {
       it('Should expand the menu when click on the arrow ' + view, function() {
         cy
           .get(selector.toggleMenus)
-          .should('have.length', 4)
+          .should('have.length', 3)
           .get(selector.singleSelectSingleInput)
           .should('have.attr', 'aria-expanded', 'false')
           .get(selector.toggleMenuSingle)
@@ -93,9 +93,7 @@ describe('New Select', function() {
           .should('be.visible')
           .and('have.attr', 'aria-expanded', 'true');
       });
-      it(
-        'Should not display the options menu when touched and dragged ' + view,
-        function() {
+      it('Should not display the options menu when touched and dragged ' + view, function() {
           cy
             .get(selector.toggleMenuSingle)
             .click()
@@ -107,13 +105,9 @@ describe('New Select', function() {
             .trigger('mousedown')
             .get(selector.menuSingle)
             .should('not.be.visible');
-        }
-      );
-      it(
-        'Should not display menu when clearing using backspace - assuming autofocus' +
-          view,
-        function() {
-          cy
+      });
+      it('Should not display menu when clearing using backspace - assuming autofocus' + view, function() {
+        cy
             .get(selector.singleSelectGroupedInput)
             .click({ force: true })
             .get(selector.toggleMenuGrouped)
@@ -126,8 +120,7 @@ describe('New Select', function() {
             .should('contain', 'Select...')
             .get(selector.menuGrouped)
             .should('not.be.visible');
-        }
-      );
+      });
     });
   });
 
@@ -163,8 +156,7 @@ describe('New Select', function() {
         }
       );
       it(
-        'Should be able to remove values on keyboard actions ' + view,
-        function() {
+        'Should be able to remove values on keyboard actions ' + view, function() {
           cy
             .get(selector.multiSelectInput)
             .click()
@@ -178,8 +170,7 @@ describe('New Select', function() {
             .type('{backspace}', { force: true })
             .get(selector.placeHolderMulti)
             .should('contain', 'Select...');
-        }
-      );
+        });
       it(
         'Should select different options using - click and enter ' + view,
         function() {

@@ -19,7 +19,6 @@ import { css as optionCSS } from './components/Option';
 import {
   menuCSS,
   menuListCSS,
-  menuPortalCSS,
   noOptionsMessageCSS,
   loadingMessageCSS,
 } from './components/Menu';
@@ -46,7 +45,6 @@ export type Styles = {
   loadingMessageCSS?: Props => {},
   menu?: Props => {},
   menuList?: Props => {},
-  menuPortal?: Props => {},
   multiValue?: Props => {},
   multiValueLabel?: Props => {},
   multiValueRemove?: Props => {},
@@ -73,7 +71,6 @@ export const defaultStyles: Styles = {
   loadingMessage: loadingMessageCSS,
   menu: menuCSS,
   menuList: menuListCSS,
-  menuPortal: menuPortalCSS,
   multiValue: multiValueCSS,
   multiValueLabel: multiValueLabelCSS,
   multiValueRemove: multiValueRemoveCSS,

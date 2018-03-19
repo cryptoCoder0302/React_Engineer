@@ -3,7 +3,6 @@ import React from 'react';
 import md from '../../markdown/renderer';
 import ExampleWrapper from '../../ExampleWrapper';
 import {
-  ControlledMenu,
   OnSelectResetsInput,
   BasicGrouped,
   CreateFilter,
@@ -11,10 +10,9 @@ import {
   CustomGetOptionLabel,
   CustomIsOptionDisabled,
   Experimental,
-  MenuPortal,
 } from '../../examples';
 
-export default function Advanced() {
+export default function Advanced () {
   return md`
     # Advanced
 
@@ -81,7 +79,10 @@ export default function Advanced() {
     )}
 
     ${(
-      <ExampleWrapper label="custom isOptionDisabled function example">
+      <ExampleWrapper
+        label="custom isOptionDisabled function example"
+        raw={require('!!raw-loader!../../examples/CustomIsOptionDisabled.js')}
+        >
         <CustomIsOptionDisabled />
       </ExampleWrapper>
     )}
@@ -113,34 +114,6 @@ export default function Advanced() {
         raw={require('!!raw-loader!../../examples/OnSelectResetsInput.js')}
       >
         <OnSelectResetsInput />
-      </ExampleWrapper>
-    )}
-
-    ## Portaling
-    React-select exposes a menuPortalTarget prop, that lets you portal the select menu to a dom node of your choosing.
-    Additionally we expose the menuPortal styles for layering purposes.
-
-    ${(
-      <ExampleWrapper
-        isEditable={false}
-        label="Example of Portaling"
-        urlPath="docs/examples/MenuPortal.js"
-        raw={require('!!raw-loader!../../examples/MenuPortal.js')}
-      >
-        <MenuPortal />
-      </ExampleWrapper>
-    )}
-
-    ## Controlled Props
-
-    ${(
-      <ExampleWrapper
-        isEditable={false}
-        label="Example of controlled MenuIsOpen"
-        urlPath="docs/examples/ControlledMenu.js"
-        raw={require('!!raw-loader!../../examples/ControlledMenu.js')}
-      >
-        <ControlledMenu />
       </ExampleWrapper>
     )}
 
