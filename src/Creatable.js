@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, type Node, type ComponentType } from 'react';
+import React, { Component, type Node, type ComponentType, type ElementRef } from 'react';
 import Select, { type Props as SelectProps } from './Select';
 import type { OptionType, OptionsType, ValueType, ActionMeta } from './types';
 import { cleanValue } from './utils';
@@ -17,6 +17,8 @@ export type CreatableProps = {
   getNewOptionData: (string, Node) => OptionType,
   /* Function called when the new create option is selected from the menu. */
   onCreateOption?: string => void,
+  /* Function that takes in the ref of the base Select as an argument */
+  selectRef?: ElementRef<*> => void,
 }
 
 export type Props = SelectProps & CreatableProps;
@@ -130,6 +132,7 @@ export const makeCreatableSelect = (SelectComponent: ComponentType<*>) =>
       return (
         <SelectComponent
           {...props}
+          ref={props.selectRef}
           options={options}
           onChange={this.onChange}
         />
