@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, type Node, type ComponentType, type ElementRef } from 'react';
+import React, { Component, type Node, type ComponentType } from 'react';
 import Select, { type Props as SelectProps } from './Select';
 import type { OptionType, OptionsType, ValueType, ActionMeta } from './types';
 import { cleanValue } from './utils';
@@ -61,7 +61,6 @@ type State = {
 export const makeCreatableSelect = (SelectComponent: ComponentType<*>) =>
   class Creatable extends Component<Props, State> {
     static defaultProps = defaultProps;
-    select: ElementRef<*>;
     constructor(props: Props) {
       super(props);
       const options = props.options || [];
@@ -125,19 +124,12 @@ export const makeCreatableSelect = (SelectComponent: ComponentType<*>) =>
       }
       onChange(newValue, actionMeta);
     };
-    focus () {
-      this.select.focus();
-    }
-    blur () {
-      this.select.blur();
-    }
     render() {
       const { ...props } = this.props;
       const { options } = this.state;
       return (
         <SelectComponent
           {...props}
-          ref={ref => { this.select = ref; }}
           options={options}
           onChange={this.onChange}
         />
