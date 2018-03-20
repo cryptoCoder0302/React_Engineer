@@ -182,6 +182,8 @@ const loadingAnimation = (
 );
 
 export type LoadingIconProps = IndicatorProps & {
+  /** Sets whether focused styling should be used. */
+  isFocused: boolean,
   /** Set size of the container. */
   size: number
 };
