@@ -1,35 +1,23 @@
 // @flow
 
-import React, {
-  Component,
-  type Node,
-  type ComponentType,
-  type ElementRef,
-} from 'react';
+import React, { Component, type Node, type ComponentType, type ElementRef } from 'react';
 import Select, { type Props as SelectProps } from './Select';
 import type { OptionType, OptionsType, ValueType, ActionMeta } from './types';
 import { cleanValue } from './utils';
 import manageState from './stateManager';
 
 export type CreatableProps = {
-  /* Allow options to be created while the `isLoading` prop is true. Useful to
-     prevent the "create new ..." option being displayed while async results are
-     still being loaded. */
+  /* Set whether options may be created while laoding is still occurring. */
   allowCreateWhileLoading: boolean,
-  /* Gets the label for the "create new ..." option in the menu. Is given the
-     current input value. */
+  /* Function to return the label to display in the menu as an item that creates the new item. */
   formatCreateLabel: string => Node,
-  /* Determines whether the "create new ..." option should be displayed based on
-     the current input value, select value and options array. */
+  /* Validation method that returns whether a new option will be allowed to be created. */
   isValidNewOption: (string, ValueType, OptionsType) => boolean,
-  /* Returns the data for the new option when it is created. Used to display the
-     value, and is passed to `onChange`. */
+  /* Function that returns the data object used to display and track the new option. */
   getNewOptionData: (string, Node) => OptionType,
-  /* If provided, this will be called with the input value when a new option is
-     created, and `onChange` will **not** be called. Use this when you need more
-     control over what happens when new options are created. */
+  /* Function called when the new create option is selected from the menu. */
   onCreateOption?: string => void,
-};
+}
 
 export type Props = SelectProps & CreatableProps;
 
@@ -137,10 +125,10 @@ export const makeCreatableSelect = (SelectComponent: ComponentType<*>) =>
       }
       onChange(newValue, actionMeta);
     };
-    focus() {
+    focus () {
       this.select.focus();
     }
-    blur() {
+    blur () {
       this.select.blur();
     }
     render() {
@@ -149,9 +137,7 @@ export const makeCreatableSelect = (SelectComponent: ComponentType<*>) =>
       return (
         <SelectComponent
           {...props}
-          ref={ref => {
-            this.select = ref;
-          }}
+          ref={ref => { this.select = ref; }}
           options={options}
           onChange={this.onChange}
         />

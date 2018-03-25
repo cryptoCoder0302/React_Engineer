@@ -42,10 +42,10 @@ const manageState = (SelectComponent: ComponentType<*>) =>
           ? this.props.value
           : this.props.defaultValue,
     };
-    focus() {
+    focus () {
       this.select.focus();
     }
-    blur() {
+    blur () {
       this.select.blur();
     }
     getProp(key: string) {
@@ -80,9 +80,7 @@ const manageState = (SelectComponent: ComponentType<*>) =>
       return (
         <SelectComponent
           {...this.props}
-          ref={ref => {
-            this.select = ref;
-          }}
+          ref={ref => { this.select = ref; }}
           inputValue={this.getProp('inputValue')}
           menuIsOpen={this.getProp('menuIsOpen')}
           onChange={this.onChange}
