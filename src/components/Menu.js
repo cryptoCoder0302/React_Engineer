@@ -1,12 +1,6 @@
 // @flow
-import React, {
-  Component,
-  type Element as ReactElement,
-  type ElementRef,
-  type Node,
-} from 'react';
+import React, { Component, type ElementRef, type Node } from 'react';
 import { createPortal } from 'react-dom';
-import PropTypes from 'prop-types';
 
 import {
   animatedScrollTo,
@@ -14,16 +8,12 @@ import {
   getBoundingClientObj,
   getScrollParent,
   getScrollTop,
+  normalizedHeight,
   scrollTo,
 } from '../utils';
 import { Div } from '../primitives';
 import { borderRadius, colors, spacing } from '../theme';
-import type {
-  InnerRef,
-  MenuPlacement,
-  MenuPosition,
-  PropsWithStyles,
-} from '../types';
+import type { InnerRef, MenuPlacement, PropsWithStyles } from '../types';
 
 // ==============================
 // Menu
@@ -39,7 +29,6 @@ type PlacementArgs = {
   minHeight: number,
   placement: 'bottom' | 'top' | 'auto',
   shouldScroll: boolean,
-  isFixedPosition: boolean,
 };
 
 export function getMenuPlacement({
@@ -48,16 +37,14 @@ export function getMenuPlacement({
   minHeight,
   placement,
   shouldScroll,
-  isFixedPosition,
 }: PlacementArgs): MenuState {
   const scrollParent = getScrollParent(menuEl);
-  const defaultState = { placement: 'bottom', maxHeight };
+  const optimisticState = { placement: 'bottom', maxHeight };
 
-  // something went wrong, return default state
-  if (!menuEl || !menuEl.offsetParent) return defaultState;
+  // something went wrong, return optimistic state
+  if (!menuEl || !menuEl.offsetParent) return optimisticState;
 
-  // we can't trust `scrollParent.scrollHeight` --> it may increase when
-  // the menu is rendered
+  // can't trust `scrollParent.scrollHeight` --> it increases when the menu is rendered
   const { height: scrollHeight } = scrollParent.getBoundingClientRect();
   const {
     bottom: menuBottom,
@@ -67,7 +54,7 @@ export function getMenuPlacement({
 
   // $FlowFixMe function returns above if there's no offsetParent
   const { top: containerTop } = menuEl.offsetParent.getBoundingClientRect();
-  const viewHeight = window.innerHeight;
+  const viewHeight = normalizedHeight(scrollParent);
   const scrollTop = getScrollTop(scrollParent);
 
   const viewSpaceAbove = containerTop - spacing.menuGutter;
@@ -88,7 +75,7 @@ export function getMenuPlacement({
       }
 
       // 2: the menu will fit, if scrolled
-      if (scrollSpaceBelow >= menuHeight && !isFixedPosition) {
+      if (scrollSpaceBelow >= menuHeight) {
         if (shouldScroll) {
           animatedScrollTo(scrollParent, scrollDown, scrollDuration);
         }
@@ -97,19 +84,14 @@ export function getMenuPlacement({
       }
 
       // 3: the menu will fit, if constrained
-      if (
-        (!isFixedPosition && scrollSpaceBelow >= minHeight) ||
-        (isFixedPosition && viewSpaceBelow >= minHeight)
-      ) {
+      if (scrollSpaceBelow >= minHeight) {
         if (shouldScroll) {
           animatedScrollTo(scrollParent, scrollDown, scrollDuration);
         }
 
         // we want to provide as much of the menu as possible to the user,
         // so give them whatever is available below rather than the minHeight.
-        const constrainedHeight = isFixedPosition
-          ? viewSpaceBelow - spacing.menuGutter
-          : scrollSpaceBelow - spacing.menuGutter;
+        const constrainedHeight = scrollSpaceBelow - spacing.menuGutter;
 
         return {
           placement: 'bottom',
@@ -121,19 +103,7 @@ export function getMenuPlacement({
 
       // AUTO: flip the menu, render above
       if (placement === 'auto') {
-        // may need to be constrained after flipping
-        let constrainedHeight = maxHeight;
-
-        if (
-          (!isFixedPosition && scrollSpaceAbove >= minHeight) ||
-          (isFixedPosition && viewSpaceAbove >= minHeight)
-        ) {
-          constrainedHeight = isFixedPosition
-            ? viewSpaceAbove - spacing.menuGutter - spacing.controlHeight
-            : scrollSpaceAbove - spacing.menuGutter - spacing.controlHeight;
-        }
-
-        return { placement: 'top', maxHeight: constrainedHeight };
+        return { placement: 'top', maxHeight };
       }
 
       // BOTTOM: allow browser to increase scrollable area and immediately set scroll
@@ -182,7 +152,7 @@ export function getMenuPlacement({
   }
 
   // fulfil contract with flow: implicit return value of undefined
-  return defaultState;
+  return optimisticState;
 }
 
 // Menu Component
@@ -190,21 +160,17 @@ export function getMenuPlacement({
 
 export type MenuProps = PropsWithStyles & {
   /** The children to be rendered. */
-  children: ReactElement<*>,
-  /** Callback to update the portal after possible flip. */
-  getPortalPlacement: MenuState => void,
+  children: Node,
   /** Props to be passed to the menu wrapper. */
   innerProps: Object,
   /** Set the maximum height of the menu. */
   maxMenuHeight: number,
   /** Set whether the menu should be at the top, at the bottom. The auto options sets it to bottom. */
   menuPlacement: MenuPlacement,
-  /* The CSS position value of the menu, when "fixed" extra layout management is required */
-  menuPosition: MenuPosition,
   /** Set the minimum height of the menu. */
   minMenuHeight: number,
   /** Set whether the page should scroll to show the menu. */
-  menuShouldScrollIntoView: boolean,
+  scrollMenuIntoView: boolean,
 };
 
 function alignToControl(placement) {
@@ -233,35 +199,23 @@ export class Menu extends Component<MenuProps, MenuState> {
     maxHeight: this.props.maxMenuHeight,
     placement: null,
   };
-  static contextTypes = {
-    getPortalPlacement: PropTypes.func,
-  };
   getPlacement = (ref: ElementRef<*>) => {
     const {
       minMenuHeight,
       maxMenuHeight,
       menuPlacement,
-      menuPosition,
-      menuShouldScrollIntoView,
+      scrollMenuIntoView,
     } = this.props;
-    const { getPortalPlacement } = this.context;
 
     if (!ref) return;
-
-    // DO NOT scroll if position is fixed
-    const isFixedPosition = menuPosition === 'fixed';
-    const shouldScroll = menuShouldScrollIntoView && !isFixedPosition;
 
     const state = getMenuPlacement({
       maxHeight: maxMenuHeight,
       menuEl: ref,
       minHeight: minMenuHeight,
       placement: menuPlacement,
-      shouldScroll,
-      isFixedPosition,
+      shouldScroll: scrollMenuIntoView,
     });
-
-    if (getPortalPlacement) getPortalPlacement(state);
 
     this.setState(state);
   };
@@ -395,84 +349,47 @@ export type MenuPortalProps = PropsWithStyles & {
   children: Node, // ideally Menu<MenuProps>
   controlElement: HTMLElement,
   menuPlacement: MenuPlacement,
-  menuPosition: MenuPosition,
 };
-type MenuPortalState = {
-  placement: 'bottom' | 'top' | null,
-};
+
 type RectType = {
   left: number,
   right: number,
   bottom: number,
   height: number,
   width: number,
-};
-type PortalStyleArgs = {
-  placement: MenuPlacement,
-  position: MenuPosition,
-  rect: RectType,
-  offset: number,
-  viewHeight: number,
-};
+}
 
-export const menuPortalCSS = ({
-  placement,
-  position,
-  rect,
-  offset,
-  viewHeight,
-}: PortalStyleArgs) => ({
+export const menuPortalCSS = ({ placement, rect, offset, viewHeight }: { placement: string, rect: RectType, offset: number, viewHeight: number }) => ({
   bottom: placement === 'top' ? viewHeight - offset : null,
   left: rect.left,
-  position: position,
+  position: 'absolute',
   top: placement === 'bottom' ? offset : null,
   width: rect.width,
-  zIndex: 1,
 });
 
-export class MenuPortal extends Component<MenuPortalProps, MenuPortalState> {
-  state = { placement: null };
-  static childContextTypes = {
-    getPortalPlacement: PropTypes.func,
-  };
-  getChildContext() {
-    return {
-      getPortalPlacement: this.getPortalPlacement,
-    };
-  }
+export const MenuPortal = ({
+  appendTo,
+  children,
+  controlElement,
+  menuPlacement,
+  getStyles,
+}: MenuPortalProps) => {
+  const viewHeight = window && window.innerHeight;
 
-  // callback for occassions where the menu must "flip"
-  getPortalPlacement = ({ placement }: MenuState) => {
-    this.setState({ placement });
-  };
-  render() {
-    const {
-      appendTo,
-      children,
-      controlElement,
-      menuPlacement,
-      menuPosition: position,
-      getStyles,
-    } = this.props;
-    const viewHeight = window && window.innerHeight;
-    const isFixed = position === 'fixed';
+  // bail early if required elements aren't present
+  if (!appendTo || !controlElement || !viewHeight) return null;
 
-    // bail early if required elements aren't present
-    if ((!appendTo && !isFixed) || !controlElement || !viewHeight) {
-      return null;
-    }
+  const placement = coercePlacement(menuPlacement);
+  const rect = getBoundingClientObj(controlElement);
+  const offset = rect[placement] + window.pageYOffset;
 
-    const placement = this.state.placement || coercePlacement(menuPlacement);
-    const rect = getBoundingClientObj(controlElement);
-    const scrollDistance = isFixed ? 0 : window.pageYOffset;
-    const offset = rect[placement] + scrollDistance;
-    const state = { placement, position, rect, offset, viewHeight };
-
-    // same wrapper element with fixed or portalled
-    const menuWrapper = (
-      <Div css={getStyles('menuPortal', state)}>{children}</Div>
-    );
-
-    return appendTo ? createPortal(menuWrapper, appendTo) : menuWrapper;
-  }
-}
+  return createPortal(
+    <Div
+      css={getStyles('menuPortal', { placement, rect, offset, viewHeight })}
+    >
+      {children}
+    </Div>,
+    // $FlowFixMe this is accounted for above
+    appendTo
+  );
+};
