@@ -1,9 +1,9 @@
 // @flow
 
-import React, { Component, type ElementRef, type Node } from 'react';
+import React, { Component, Fragment, type ElementRef, type Node } from 'react';
 
 import { createFilter } from './filters';
-import { DummyInput, ScrollCaptor } from './internal/index';
+import { DummyInput, ScrollBlock, ScrollCaptor } from './internal/index';
 
 import {
   cleanValue,
@@ -37,6 +37,7 @@ import type {
   InputActionMeta,
   KeyboardEventHandler,
   MenuPlacement,
+  MenuPosition,
   OptionsType,
   OptionType,
   ValueType,
@@ -132,8 +133,14 @@ export type Props = {
   /* Default placement of the menu in relation to the control. 'auto' will flip
      when there isn't enough space below the control. */
   menuPlacement: MenuPlacement,
+  /* The CSS position value of the menu, when "fixed" extra layout management is required */
+  menuPosition: MenuPosition,
   /* Whether the menu should use a portal, and where it should attach */
   menuPortalTarget?: HTMLElement,
+  /* Whether to block scroll events when the menu is open */
+  menuShouldBlockScroll: boolean,
+  /* Whether the menu should be scrolled into view when it opens */
+  menuShouldScrollIntoView: boolean,
   /* Name of the HTML Input (optional - without this, no input will be rendered) */
   name?: string,
   /* Text to display when there are no options */
@@ -164,8 +171,6 @@ export type Props = {
   placeholder: string,
   /* Status to relay to screen readers */
   screenReaderStatus: ({ count: number }) => string,
-  /* Whether the menu should be scrolled into view when it opens */
-  scrollMenuIntoView: boolean,
   /* Style modifier methods */
   styles: StylesConfig,
   /* Select the currently focused option when the user presses tab */
@@ -198,11 +203,13 @@ export const defaultProps = {
   minMenuHeight: 140,
   menuIsOpen: false,
   menuPlacement: 'bottom',
+  menuPosition: 'absolute',
+  menuShouldBlockScroll: false,
+  menuShouldScrollIntoView: !isMobileDevice(),
   noOptionsMessage: () => 'No options',
   options: [],
   pageSize: 5,
   placeholder: 'Select...',
-  scrollMenuIntoView: !isMobileDevice(),
   screenReaderStatus: ({ count }: { count: number }) =>
     `${count} result${count !== 1 ? 's' : ''} available.`,
   styles: {},
@@ -1173,11 +1180,13 @@ export default class Select extends Component<Props, State> {
       maxMenuHeight,
       menuIsOpen,
       menuPlacement,
+      menuPosition,
       menuPortalTarget,
+      menuShouldBlockScroll,
+      menuShouldScrollIntoView,
       noOptionsMessage,
       onMenuScrollToTop,
       onMenuScrollToBottom,
-      scrollMenuIntoView,
     } = this.props;
 
     if (!menuIsOpen) return null;
@@ -1243,46 +1252,54 @@ export default class Select extends Component<Props, State> {
     }
 
     const menuElement = (
-      <Menu
-        {...commonProps}
-        innerProps={{
-          onMouseDown: this.onMenuMouseDown,
-          onMouseMove: this.onMenuMouseMove,
-        }}
-        isLoading={isLoading}
-        minMenuHeight={minMenuHeight}
-        maxMenuHeight={maxMenuHeight}
-        menuPlacement={menuPlacement}
-        scrollMenuIntoView={scrollMenuIntoView}
-      >
-        <ScrollCaptor
-          isEnabled={captureMenuScroll}
-          onTopArrive={onMenuScrollToTop}
-          onBottomArrive={onMenuScrollToBottom}
+      <Fragment>
+        {menuShouldBlockScroll ? <ScrollBlock /> : null}
+        <Menu
+          {...commonProps}
+          innerProps={{
+            onMouseDown: this.onMenuMouseDown,
+            onMouseMove: this.onMenuMouseMove,
+          }}
+          isLoading={isLoading}
+          minMenuHeight={minMenuHeight}
+          maxMenuHeight={maxMenuHeight}
+          menuPlacement={menuPlacement}
+          menuPosition={menuPosition}
+          menuShouldScrollIntoView={menuShouldScrollIntoView}
         >
-          <MenuList
-            {...commonProps}
-            innerProps={{
-              'aria-multiselectable': isMulti,
-              id: this.getElementId('listbox'),
-              innerRef: this.onMenuRef,
-              role: 'listbox',
-            }}
-            isLoading={isLoading}
-            maxHeight={maxMenuHeight}
+          <ScrollCaptor
+            isEnabled={captureMenuScroll}
+            onTopArrive={onMenuScrollToTop}
+            onBottomArrive={onMenuScrollToBottom}
           >
-            {menuUI}
-          </MenuList>
-        </ScrollCaptor>
-      </Menu>
+            <MenuList
+              {...commonProps}
+              innerProps={{
+                'aria-multiselectable': isMulti,
+                id: this.getElementId('listbox'),
+                innerRef: this.onMenuRef,
+                role: 'listbox',
+              }}
+              isLoading={isLoading}
+              maxHeight={maxMenuHeight}
+            >
+              {menuUI}
+            </MenuList>
+          </ScrollCaptor>
+        </Menu>
+      </Fragment>
     );
 
-    return menuPortalTarget ? (
+    // positioning behaviour is almost identical for portalled and fixed,
+    // so we use the same component. the actual portalling logic is forked
+    // within the component based on `menuPosition`
+    return menuPortalTarget || menuPosition === 'fixed' ? (
       <MenuPortal
         {...commonProps}
         appendTo={menuPortalTarget}
-        menuPlacement={menuPlacement}
         controlElement={this.controlRef}
+        menuPlacement={menuPlacement}
+        menuPosition={menuPosition}
       >
         {menuElement}
       </MenuPortal>
