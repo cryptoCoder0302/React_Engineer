@@ -163,10 +163,6 @@ export type Props = {
   onMenuScrollToTop: (SyntheticEvent<HTMLElement>) => void,
   /* Fired when the user scrolls to the bottom of the menu */
   onMenuScrollToBottom: (SyntheticEvent<HTMLElement>) => void,
-  /* Allows control of whether the menu is opened when the Select is focused */
-  openMenuOnFocus: boolean,
-  /* Allows control of whether the menu is opened when the Select is clicked */
-  openMenuOnClick: boolean,
   /* Array of options that populate the select menu */
   options: OptionsType,
   /* Number of options to jump in menu when page{up|down} keys are used */
@@ -211,8 +207,6 @@ export const defaultProps = {
   menuShouldBlockScroll: false,
   menuShouldScrollIntoView: !isMobileDevice(),
   noOptionsMessage: () => 'No options',
-  openMenuOnFocus: false,
-  openMenuOnClick: true,
   options: [],
   pageSize: 5,
   placeholder: 'Select...',
@@ -607,11 +601,8 @@ export default class Select extends Component<Props, State> {
     this.blockOptionHover = false;
   };
   onControlMouseDown = (event: MouseOrTouchEvent) => {
-    const { openMenuOnClick } = this.props;
     if (!this.state.isFocused) {
-      if (openMenuOnClick) {
-        this.openAfterFocus = true;
-      }
+      this.openAfterFocus = true;
       this.focusInput();
     } else if (!this.props.menuIsOpen) {
       this.openMenu('first');
@@ -722,7 +713,7 @@ export default class Select extends Component<Props, State> {
     this.setState({
       isFocused: true,
     });
-    if (this.openAfterFocus || this.props.openMenuOnFocus) {
+    if (this.openAfterFocus) {
       this.openMenu('first');
     }
     this.openAfterFocus = false;
@@ -758,9 +749,8 @@ export default class Select extends Component<Props, State> {
       menuIsOpen,
       onKeyDown,
       tabSelectsValue,
-      openMenuOnFocus,
     } = this.props;
-    const { focusedOption, selectValue } = this.state;
+    const { focusedOption } = this.state;
 
     if (isDisabled) return;
 
@@ -784,10 +774,7 @@ export default class Select extends Component<Props, State> {
           event.shiftKey ||
           !menuIsOpen ||
           !tabSelectsValue ||
-          !focusedOption ||
-          // don't capture the event if the menu opens on focus and the focused
-          // option is already selected; it breaks the flow of navigation
-          (openMenuOnFocus && this.isOptionSelected(focusedOption, selectValue))
+          !focusedOption
         ) {
           return;
         }
