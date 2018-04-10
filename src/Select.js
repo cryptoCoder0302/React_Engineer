@@ -242,7 +242,6 @@ export default class Select extends Component<Props, State> {
   focusedOptionRef: ?HTMLElement;
   hasGroups: boolean = false;
   input: ?ElRef;
-  inputHeight: ?number = 20;
   inputIsHiddenAfterUpdate: ?boolean;
   instancePrefix: string = '';
   menuRef: ?ElRef;
@@ -333,11 +332,6 @@ export default class Select extends Component<Props, State> {
 
   onInputRef = (ref: ElRef) => {
     this.input = ref;
-
-    // cache the input height to use when the select is disabled
-    if (ref) {
-      this.inputHeight = ref.clientHeight;
-    }
   };
   onControlRef = (ref: ElementRef<*>) => {
     this.controlRef = ref;
@@ -381,7 +375,7 @@ export default class Select extends Component<Props, State> {
   focus = this.focusInput;
   blur = this.blurInput;
 
-  openMenu(focusOption: 'first' | 'last' = 'first') {
+  openMenu(focusOption: 'first' | 'last') {
     const { menuOptions, selectValue } = this.state;
     const { isMulti } = this.props;
 
@@ -632,7 +626,7 @@ export default class Select extends Component<Props, State> {
       this.inputIsHiddenAfterUpdate = !isMulti;
       this.onMenuClose();
     } else {
-      this.openMenu();
+      this.openMenu('first');
     }
     event.preventDefault();
     event.stopPropagation();
@@ -808,7 +802,7 @@ export default class Select extends Component<Props, State> {
           return;
         }
         if (!menuIsOpen) {
-          this.openMenu();
+          this.openMenu('first');
           break;
         }
         if (!focusedOption) return;
@@ -997,7 +991,6 @@ export default class Select extends Component<Props, State> {
         getStyles={this.getStyles}
         id={id}
         innerRef={this.onInputRef}
-        inputHeight={this.inputHeight}
         isDisabled={isDisabled}
         isHidden={inputIsHidden}
         onBlur={this.onInputBlur}
