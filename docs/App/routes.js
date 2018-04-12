@@ -5,7 +5,6 @@ import Components from '../pages/components';
 import Async from '../pages/async';
 import Creatable from '../pages/creatable';
 import Advanced from '../pages/advanced';
-import UpgradeGuide from '../pages/upgradeGuide';
 
 export default {
   '/home': Home,
@@ -15,5 +14,4 @@ export default {
   '/async': Async,
   '/creatable': Creatable,
   '/advanced': Advanced,
-  '/upgrade-guide': UpgradeGuide
 };
