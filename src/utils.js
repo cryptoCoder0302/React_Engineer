@@ -1,7 +1,6 @@
 // @flow
 
 import raf from 'raf';
-import { type ElementRef } from 'react';
 import type { InputActionMeta, OptionsType, ValueType } from './types';
 
 // ==============================
@@ -111,7 +110,7 @@ export function scrollTo(el: Element, top: number): void {
 // Get Scroll Parent
 // ------------------------------
 
-export function getScrollParent(element: ElementRef<*>): Element {
+export function getScrollParent(element: Element): Element {
   let style = getComputedStyle(element);
   const excludeStaticParent = style.position === 'absolute';
   const overflowRx = /(auto|scroll)/;
