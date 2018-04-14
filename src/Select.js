@@ -6,7 +6,6 @@ import { createFilter } from './filters';
 import { DummyInput, ScrollBlock, ScrollCaptor } from './internal/index';
 
 import {
-  classNames,
   cleanValue,
   isTouchCapable,
   isMobileDevice,
@@ -69,8 +68,6 @@ export type Props = {
   blurInputOnSelect: boolean,
   /* When the user reaches the top/bottom of the menu, prevent scroll on the scroll-parent  */
   captureMenuScroll: boolean,
-  /* className attribute applied to the outer component, and used as a base for inner component classNames */
-  className?: string,
   /* Close the select menu when the user selects an option */
   closeMenuOnSelect: boolean,
   /*
@@ -99,7 +96,7 @@ export type Props = {
   getOptionValue: typeof getOptionValue,
   /* Hide the selected option from the menu */
   hideSelectedOptions: boolean,
-  /* The value of the search input */
+  /* The id to set on the SelectContainer component. */
   id?: string,
   /* The value of the search input */
   inputValue: string,
@@ -180,8 +177,6 @@ export type Props = {
   screenReaderStatus: ({ count: number }) => string,
   /* Style modifier methods */
   styles: StylesConfig,
-  /* Sets the tabIndex attribute on the input */
-  tabIndex: string,
   /* Select the currently focused option when the user presses tab */
   tabSelectsValue: boolean,
   /* The value of the select; reflected by the selected option */
@@ -224,7 +219,6 @@ export const defaultProps = {
   screenReaderStatus: ({ count }: { count: number }) =>
     `${count} result${count !== 1 ? 's' : ''} available.`,
   styles: {},
-  tabIndex: '0',
   tabSelectsValue: true,
 };
 
@@ -489,13 +483,11 @@ export default class Select extends Component<Props, State> {
 
   getCommonProps() {
     const { clearValue, getStyles, setValue, selectOption, props } = this;
-    const { className, isMulti, isRtl, options } = props;
+    const { isMulti, isRtl, options } = props;
     const { selectValue } = this.state;
     const hasValue = this.hasValue();
     const getValue = () => selectValue;
-    const cx = className ? classNames.bind(null, className) : noop;
     return {
-      cx,
       clearValue,
       getStyles,
       getValue,
@@ -969,7 +961,6 @@ export default class Select extends Component<Props, State> {
       inputId,
       inputValue,
       menuIsOpen,
-      tabIndex,
     } = this.props;
     const { Input } = this.components;
     const { inputIsHidden } = this.state;
@@ -980,13 +971,12 @@ export default class Select extends Component<Props, State> {
       // use a dummy input to maintain focus/blur functionality
       return (
         <DummyInput
-          id={id}
-          innerRef={this.onInputRef}
+          readOnly
           onBlur={this.onInputBlur}
           onChange={noop}
           onFocus={this.onInputFocus}
-          readOnly
-          tabIndex={tabIndex}
+          id={id}
+          innerRef={this.onInputRef}
           value=""
         />
       );
@@ -1006,14 +996,11 @@ export default class Select extends Component<Props, State> {
       role: 'combobox',
     };
 
-    const { cx } = this.commonProps;
-
     return (
       <Input
         autoCapitalize="none"
         autoComplete="off"
         autoCorrect="off"
-        cx={cx}
         getStyles={this.getStyles}
         id={id}
         innerRef={this.onInputRef}
@@ -1023,7 +1010,7 @@ export default class Select extends Component<Props, State> {
         onChange={this.handleInputChange}
         onFocus={this.onInputFocus}
         spellCheck="false"
-        tabIndex={tabIndex}
+        tabIndex="0"
         type="text"
         value={inputValue}
         {...ariaAttributes}

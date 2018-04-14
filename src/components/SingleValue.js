@@ -3,21 +3,22 @@ import React from 'react';
 
 import { Div } from '../primitives';
 import { colors, spacing } from '../theme';
-import type { CommonProps } from '../types';
+import { className } from '../utils';
+import { type PropsWithStyles } from '../types';
 
 type State = {
   /** Whether this is disabled */
-  isDisabled: boolean,
+  isDisabled: boolean
 };
 type ValueProps = {
   /** The children to be rendered. */
   children: string,
   /* The data of the selected option rendered in the Single Value componentn */
   data: any,
-  /** Props passed to the wrapping element for the group. */
+    /** Props passed to the wrapping element for the group. */
   innerProps: any,
 };
-export type SingleValueProps = CommonProps & ValueProps & State;
+export type SingleValueProps = PropsWithStyles & ValueProps & State;
 
 export const css = ({ isDisabled }: State) => ({
   color: isDisabled ? colors.neutral40 : colors.text,
@@ -31,10 +32,10 @@ export const css = ({ isDisabled }: State) => ({
 });
 
 const SingleValue = (props: SingleValueProps) => {
-  const { children, cx, getStyles, isDisabled, innerProps } = props;
+  const { children, getStyles, isDisabled, innerProps } = props;
   return (
     <Div
-      className={cx('single-value', { isDisabled })}
+      className={className('single-value', { isDisabled })}
       css={getStyles('singleValue', props)}
       {...innerProps}
     >

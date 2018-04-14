@@ -1,9 +1,10 @@
 // @flow
 import React, { Component, type Node, type ElementRef } from 'react';
 
+import { className } from '../utils';
 import { Div } from '../primitives';
 import { spacing } from '../theme';
-import type { CommonProps, KeyboardEventHandler } from '../types';
+import { type PropsWithStyles, type KeyboardEventHandler } from '../types';
 
 // ==============================
 // Root Container
@@ -13,10 +14,10 @@ type ContainerState = {
   /** Whether the select is disabled. */
   isDisabled: boolean,
   /** Whether the text in the select is indented from right to left. */
-  isRtl: boolean,
+  isRtl: boolean
 };
 
-export type ContainerProps = CommonProps &
+export type ContainerProps = PropsWithStyles &
   ContainerState & {
     /** The children to be rendered. */
     children: Node,
@@ -29,11 +30,11 @@ export const containerCSS = ({ isDisabled, isRtl }: ContainerState) => ({
   position: 'relative',
 });
 export const SelectContainer = (props: ContainerProps) => {
-  const { children, cx, getStyles, innerProps, isDisabled, isRtl } = props;
+  const { children, getStyles, innerProps, isDisabled, isRtl } = props;
   return (
     <Div
       css={getStyles('container', props)}
-      className={cx('container', { isDisabled, isRtl })}
+      className={className('container', { isDisabled, isRtl })}
       {...innerProps}
     >
       {children}
@@ -45,7 +46,7 @@ export const SelectContainer = (props: ContainerProps) => {
 // Value Container
 // ==============================
 
-export type ValueContainerProps = CommonProps & {
+export type ValueContainerProps = PropsWithStyles & {
   /** Set when the value container should hold multiple values. This is important for styling. */
   isMulti: boolean,
   /** Whether the value container currently holds a value. */
@@ -87,12 +88,12 @@ export class ValueContainer extends Component<ValueContainerProps> {
     this.node = ref;
   };
   render() {
-    const { children, cx, isMulti, getStyles, hasValue } = this.props;
+    const { children, isMulti, getStyles, hasValue } = this.props;
 
     return (
       <Div
         innerRef={isMulti ? this.getScrollContainer : undefined}
-        className={cx('value-container', { isMulti, hasValue })}
+        className={className('value-container', { isMulti, hasValue })}
         css={getStyles('valueContainer', this.props)}
       >
         {children}
@@ -107,14 +108,13 @@ export class ValueContainer extends Component<ValueContainerProps> {
 
 type IndicatorsState = {
   /** Whether the text should be rendered right to left. */
-  isRtl: boolean,
+  isRtl: boolean
 };
 
-export type IndicatorContainerProps = CommonProps &
-  IndicatorsState & {
-    /** The children to be rendered. */
-    children: Node,
-  };
+export type IndicatorContainerProps = PropsWithStyles & IndicatorsState & {
+  /** The children to be rendered. */
+  children: Node
+};
 
 export const indicatorsContainerCSS = () => ({
   alignItems: 'center',
@@ -123,11 +123,11 @@ export const indicatorsContainerCSS = () => ({
   flexShrink: 0,
 });
 export const IndicatorsContainer = (props: IndicatorContainerProps) => {
-  const { children, cx, getStyles } = props;
+  const { children, getStyles } = props;
 
   return (
     <Div
-      className={cx('indicators')}
+      className={className('indicators')}
       css={getStyles('indicatorsContainer', props)}
     >
       {children}

@@ -86,13 +86,11 @@ exports[`defaults - snapshot 1`] = `
         placeholder="Select..."
         screenReaderStatus={[Function]}
         styles={Object {}}
-        tabIndex="0"
         tabSelectsValue={true}
         value={null}
       >
         <SelectContainer
           clearValue={[Function]}
-          cx={[Function]}
           getStyles={[Function]}
           getValue={[Function]}
           hasValue={false}
@@ -158,7 +156,6 @@ exports[`defaults - snapshot 1`] = `
               "placeholder": "Select...",
               "screenReaderStatus": [Function],
               "styles": Object {},
-              "tabIndex": "0",
               "tabSelectsValue": true,
               "value": null,
             }
@@ -166,6 +163,7 @@ exports[`defaults - snapshot 1`] = `
           setValue={[Function]}
         >
           <Component
+            className="react-select__container"
             css={
               Object {
                 "boxSizing": "border-box",
@@ -188,7 +186,7 @@ exports[`defaults - snapshot 1`] = `
               render={[Function]}
             >
               <div
-                className="css-zckpcq"
+                className="react-select__container css-zckpcq"
                 onKeyDown={[Function]}
               >
                 <A11yText
@@ -223,7 +221,6 @@ exports[`defaults - snapshot 1`] = `
                 </A11yText>
                 <Control
                   clearValue={[Function]}
-                  cx={[Function]}
                   getStyles={[Function]}
                   getValue={[Function]}
                   hasValue={false}
@@ -290,7 +287,6 @@ exports[`defaults - snapshot 1`] = `
                       "placeholder": "Select...",
                       "screenReaderStatus": [Function],
                       "styles": Object {},
-                      "tabIndex": "0",
                       "tabSelectsValue": true,
                       "value": null,
                     }
@@ -298,6 +294,7 @@ exports[`defaults - snapshot 1`] = `
                   setValue={[Function]}
                 >
                   <Component
+                    className="react-select__control"
                     css={
                       Object {
                         "&:hover": Object {
@@ -352,13 +349,12 @@ exports[`defaults - snapshot 1`] = `
                       render={[Function]}
                     >
                       <div
-                        className="css-1qdiza0"
+                        className="react-select__control css-1qdiza0"
                         onMouseDown={[Function]}
                         onTouchEnd={[Function]}
                       >
                         <ValueContainer
                           clearValue={[Function]}
-                          cx={[Function]}
                           getStyles={[Function]}
                           getValue={[Function]}
                           hasValue={false}
@@ -418,7 +414,6 @@ exports[`defaults - snapshot 1`] = `
                               "placeholder": "Select...",
                               "screenReaderStatus": [Function],
                               "styles": Object {},
-                              "tabIndex": "0",
                               "tabSelectsValue": true,
                               "value": null,
                             }
@@ -426,6 +421,7 @@ exports[`defaults - snapshot 1`] = `
                           setValue={[Function]}
                         >
                           <Component
+                            className="react-select__value-container"
                             css={
                               Object {
                                 "WebkitOverflowScrolling": "touch",
@@ -457,11 +453,10 @@ exports[`defaults - snapshot 1`] = `
                               render={[Function]}
                             >
                               <div
-                                className="css-lnfsxu"
+                                className="react-select__value-container css-lnfsxu"
                               >
                                 <Placeholder
                                   clearValue={[Function]}
-                                  cx={[Function]}
                                   getStyles={[Function]}
                                   getValue={[Function]}
                                   hasValue={false}
@@ -521,7 +516,6 @@ exports[`defaults - snapshot 1`] = `
                                       "placeholder": "Select...",
                                       "screenReaderStatus": [Function],
                                       "styles": Object {},
-                                      "tabIndex": "0",
                                       "tabSelectsValue": true,
                                       "value": null,
                                     }
@@ -529,6 +523,7 @@ exports[`defaults - snapshot 1`] = `
                                   setValue={[Function]}
                                 >
                                   <Component
+                                    className="react-select__placeholder"
                                     css={
                                       Object {
                                         "boxSizing": "border-box",
@@ -552,7 +547,7 @@ exports[`defaults - snapshot 1`] = `
                                       render={[Function]}
                                     >
                                       <div
-                                        className="css-16ucli7"
+                                        className="react-select__placeholder css-16ucli7"
                                       >
                                         Select...
                                       </div>
@@ -567,7 +562,6 @@ exports[`defaults - snapshot 1`] = `
                                   autoCapitalize="none"
                                   autoComplete="off"
                                   autoCorrect="off"
-                                  cx={[Function]}
                                   getStyles={[Function]}
                                   id="react-select-2-input"
                                   innerRef={[Function]}
@@ -616,6 +610,7 @@ exports[`defaults - snapshot 1`] = `
                                           autoCapitalize="none"
                                           autoComplete="off"
                                           autoCorrect="off"
+                                          className="react-select__input"
                                           disabled={false}
                                           id="react-select-2-input"
                                           injectStyles={true}
@@ -641,6 +636,7 @@ exports[`defaults - snapshot 1`] = `
                                           value=""
                                         >
                                           <div
+                                            className="react-select__input"
                                             style={
                                               Object {
                                                 "display": "inline-block",
@@ -703,7 +699,6 @@ exports[`defaults - snapshot 1`] = `
                         </ValueContainer>
                         <IndicatorsContainer
                           clearValue={[Function]}
-                          cx={[Function]}
                           getStyles={[Function]}
                           getValue={[Function]}
                           hasValue={false}
@@ -762,7 +757,6 @@ exports[`defaults - snapshot 1`] = `
                               "placeholder": "Select...",
                               "screenReaderStatus": [Function],
                               "styles": Object {},
-                              "tabIndex": "0",
                               "tabSelectsValue": true,
                               "value": null,
                             }
@@ -770,6 +764,7 @@ exports[`defaults - snapshot 1`] = `
                           setValue={[Function]}
                         >
                           <Component
+                            className="react-select__indicators"
                             css={
                               Object {
                                 "alignItems": "center",
@@ -793,11 +788,10 @@ exports[`defaults - snapshot 1`] = `
                               render={[Function]}
                             >
                               <div
-                                className="css-1lfa1d8"
+                                className="react-select__indicators css-1lfa1d8"
                               >
                                 <IndicatorSeparator
                                   clearValue={[Function]}
-                                  cx={[Function]}
                                   getStyles={[Function]}
                                   getValue={[Function]}
                                   hasValue={false}
@@ -862,7 +856,6 @@ exports[`defaults - snapshot 1`] = `
                                       "placeholder": "Select...",
                                       "screenReaderStatus": [Function],
                                       "styles": Object {},
-                                      "tabIndex": "0",
                                       "tabSelectsValue": true,
                                       "value": null,
                                     }
@@ -883,11 +876,11 @@ exports[`defaults - snapshot 1`] = `
                                     render={[Function]}
                                   >
                                     <Component
-                                      className="css-1cnd6ox"
+                                      className="react-select__indicator-separator css-1cnd6ox"
                                       role="presentation"
                                     >
                                       <span
-                                        className="css-1cnd6ox"
+                                        className="react-select__indicator-separator css-1cnd6ox"
                                         role="presentation"
                                       />
                                     </Component>
@@ -895,7 +888,6 @@ exports[`defaults - snapshot 1`] = `
                                 </IndicatorSeparator>
                                 <DropdownIndicator
                                   clearValue={[Function]}
-                                  cx={[Function]}
                                   getStyles={[Function]}
                                   getValue={[Function]}
                                   hasValue={false}
@@ -962,7 +954,6 @@ exports[`defaults - snapshot 1`] = `
                                       "placeholder": "Select...",
                                       "screenReaderStatus": [Function],
                                       "styles": Object {},
-                                      "tabIndex": "0",
                                       "tabSelectsValue": true,
                                       "value": null,
                                     }
@@ -985,19 +976,20 @@ exports[`defaults - snapshot 1`] = `
                                     render={[Function]}
                                   >
                                     <Component
-                                      className="css-1c0gw5t"
+                                      className="react-select__indicator react-select__dropdown-indicator css-1c0gw5t"
                                       onMouseDown={[Function]}
                                       onTouchEnd={[Function]}
                                       role="button"
                                     >
                                       <div
-                                        className="css-1c0gw5t"
+                                        className="react-select__indicator react-select__dropdown-indicator css-1c0gw5t"
                                         onMouseDown={[Function]}
                                         onTouchEnd={[Function]}
                                         role="button"
                                       >
                                         <DownChevron>
                                           <Svg
+                                            className="react-select__icon react-select__down-icon"
                                             focusable="false"
                                             role="presentation"
                                             size={20}
@@ -1015,7 +1007,7 @@ exports[`defaults - snapshot 1`] = `
                                               render={[Function]}
                                             >
                                               <svg
-                                                className="css-qyb9b"
+                                                className="react-select__icon react-select__down-icon css-qyb9b"
                                                 focusable="false"
                                                 height={20}
                                                 role="presentation"
