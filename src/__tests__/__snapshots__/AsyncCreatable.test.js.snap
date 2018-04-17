@@ -536,8 +536,6 @@ exports[`defaults - snapshot 1`] = `
                                         "marginLeft": 2,
                                         "marginRight": 2,
                                         "position": "absolute",
-                                        "top": "50%",
-                                        "transform": "translateY(-50%)",
                                       }
                                     }
                                   >
@@ -549,14 +547,12 @@ exports[`defaults - snapshot 1`] = `
                                           "marginLeft": 2,
                                           "marginRight": 2,
                                           "position": "absolute",
-                                          "top": "50%",
-                                          "transform": "translateY(-50%)",
                                         }
                                       }
                                       render={[Function]}
                                     >
                                       <div
-                                        className="css-1u7x4zb"
+                                        className="css-16ucli7"
                                       >
                                         Select...
                                       </div>

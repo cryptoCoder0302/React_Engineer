@@ -2,7 +2,6 @@
 // @jsx glam
 
 import glam from 'glam';
-import fetch from 'unfetch';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
@@ -246,6 +245,7 @@ const Content = ({ onChange, stars }) => (
             placeholder: css => ({
               ...css,
               color: 'black',
+              position: 'static', // FF layout fix; this select never receives a value
             }),
           }}
         />
