@@ -1,62 +1,65 @@
-// @flow
-
+const webpack = require('webpack');
 const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-// const webpack = require('webpack');
-require('dotenv').config();
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-  context: path.resolve(__dirname, 'docs'),
+  context: path.resolve(__dirname, 'examples/src'),
   entry: {
-    index: './index.js',
+    app: './app.js',
   },
   output: {
-    path: path.resolve(__dirname, 'docs/dist'),
+    path: path.resolve(__dirname, 'examples/dist'),
     filename: '[name].js',
     publicPath: '/',
   },
   devServer: {
+    contentBase: path.resolve(__dirname, 'examples/src'),
     port: 8000,
-    historyApiFallback: true,
   },
-  // devtool: 'source-map',
-  devtool: 'cheap-module-eval-source-map',
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: [/node_modules/],
-        use: [
-          {
-            loader: 'babel-loader',
-          },
-        ],
+        use: [{
+          loader: 'babel-loader',
+          options: { presets: ['env'] },
+        }],
       },
       {
-        test: /\.css$/,
-        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+        test: /\.less$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'less-loader'],
+        })
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: 'html-loader',
+          }
+        ]
       },
     ],
   },
   resolve: {
     alias: {
       'react-select': path.resolve(__dirname, 'src/index'),
-    },
+    }
   },
   plugins: [
-    // new webpack.DefinePlugin({
-    //   // $FlowFixMe: This definitely exists here.
-    //   'process.env.CLIENT_ID': `'${process.env.CLIENT_ID}'`,
-    //   // $FlowFixMe: This definitely exists here.
-    //   'process.env.CLIENT_SECRET': `'${process.env.CLIENT_SECRET}'`,
-    // }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'common',
+      filename: 'common.js',
+      minChunk: 2,
+    }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       inject: false,
-      template: path.resolve(__dirname, 'docs/index.html'),
+      template: path.resolve(__dirname, 'examples/src/index.html')
     }),
-    new CopyWebpackPlugin(['_redirects', 'favicon.ico', 'index.css']),
-  ],
+    new ExtractTextPlugin('example.css'),
+  ]
 };
