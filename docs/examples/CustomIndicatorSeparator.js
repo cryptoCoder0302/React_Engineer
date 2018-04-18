@@ -6,7 +6,7 @@ import { colourOptions } from '../data';
 
 const indicatorSeparatorStyle = {
   alignSelf: 'stretch',
-  backgroundColor: colourOptions[2].color,
+  backgroundColor: '#2684FF',
   marginBottom: 8,
   marginTop: 8,
   width: 1,

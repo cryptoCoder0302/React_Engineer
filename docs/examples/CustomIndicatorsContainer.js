@@ -6,7 +6,7 @@ import { colourOptions } from '../data';
 
 const IndicatorsContainer = (props) => {
   return (
-    <div style={{ background: colourOptions[2].color }}>
+    <div style={{ background: '#2684FF' }}>
       <components.IndicatorsContainer {...props}/>
     </div>
   );
