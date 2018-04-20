@@ -1,9 +1,3 @@
-# Build
-lib
-dist
-docs/dist
-.env
-
 # Logs
 logs
 *.log
@@ -18,12 +12,6 @@ lib-cov
 coverage
 .nyc_output
 
-# Cypress
-cypress/videos
-cypress/screenshots
-cypress/support
-cypress/plugins
-
 # Dependency directory
 node_modules
 bower_components
@@ -31,13 +19,14 @@ bower_components
 # Publish directory
 .publish
 
-# Editor artefacts
+# Editor artifacts
 .idea
 
 # Other
 .DS_Store
 .env
-package-lock.json
+yarn.lock
 
-# Notes
+# v2 ignores
 .NOTES.md
+.TODO.md
