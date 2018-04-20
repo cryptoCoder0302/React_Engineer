@@ -400,6 +400,7 @@ exports[`defaults - snapshot 1`] = `
                               "maxHeight": 100,
                               "overflowY": "auto",
                               "padding": "2px 8px",
+                              "position": "relative",
                             }
                           }
                         >
@@ -415,12 +416,13 @@ exports[`defaults - snapshot 1`] = `
                                 "maxHeight": 100,
                                 "overflowY": "auto",
                                 "padding": "2px 8px",
+                                "position": "relative",
                               }
                             }
                             render={[Function]}
                           >
                             <div
-                              className="css-lnfsxu"
+                              className="css-14wb226"
                             >
                               <Placeholder
                                 clearValue={[Function]}
@@ -495,6 +497,8 @@ exports[`defaults - snapshot 1`] = `
                                       "marginLeft": 2,
                                       "marginRight": 2,
                                       "position": "absolute",
+                                      "top": "50%",
+                                      "transform": "translateY(-50%)",
                                     }
                                   }
                                 >
@@ -506,12 +510,14 @@ exports[`defaults - snapshot 1`] = `
                                         "marginLeft": 2,
                                         "marginRight": 2,
                                         "position": "absolute",
+                                        "top": "50%",
+                                        "transform": "translateY(-50%)",
                                       }
                                     }
                                     render={[Function]}
                                   >
                                     <div
-                                      className="css-16ucli7"
+                                      className="css-1u7x4zb"
                                     >
                                       Select...
                                     </div>
