@@ -1,5 +1,7 @@
 // @flow
+// @jsx glam
 
+import glam from 'glam';
 import React from 'react';
 
 type Props = { count: number, repo: string };
