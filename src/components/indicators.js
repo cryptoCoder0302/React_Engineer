@@ -1,8 +1,9 @@
 // @flow
+// @jsx glam
 import React, { type ElementType } from 'react';
-import { injectGlobal } from 'emotion';
+import glam from 'glam';
 
-import { A11yText } from '../primitives';
+import { Div, Span, A11yText } from '../primitives';
 import { colors, spacing } from '../theme';
 import { type CommonProps } from '../types';
 
@@ -54,7 +55,7 @@ export type IndicatorProps = CommonProps & {
 
 const baseCSS = ({ isFocused }: IndicatorProps) => ({
   color: isFocused ? colors.neutral60 : colors.neutral20,
-  display: 'flex',
+  display: 'flex ',
   padding: spacing.baseUnit * 2,
   transition: 'color 150ms',
 
@@ -67,13 +68,13 @@ export const dropdownIndicatorCSS = baseCSS;
 export const DropdownIndicator = (props: IndicatorProps) => {
   const { children = <DownChevron />, cx, getStyles, innerProps } = props;
   return (
-    <div
+    <Div
       {...innerProps}
       css={getStyles('dropdownIndicator', props)}
       className={cx(['indicator', 'dropdown-indicator'])}
     >
       {children}
-    </div>
+    </Div>
   );
 };
 
@@ -81,13 +82,13 @@ export const clearIndicatorCSS = baseCSS;
 export const ClearIndicator = (props: IndicatorProps) => {
   const { children = <CrossIcon />, cx, getStyles, innerProps } = props;
   return (
-    <div
+    <Div
       {...innerProps}
       css={getStyles('clearIndicator', props)}
       className={cx(['indicator', 'clear-indicator'])}
     >
       {children}
-    </div>
+    </Div>
   );
 };
 
@@ -108,7 +109,7 @@ export const indicatorSeparatorCSS = ({ isDisabled }: SeparatorState) => ({
 export const IndicatorSeparator = (props: IndicatorProps) => {
   const { cx, getStyles, innerProps } = props;
   return (
-    <span
+    <Span
       {...innerProps}
       css={getStyles('indicatorSeparator', props)}
       className={cx('indicator-separator')}
@@ -122,28 +123,24 @@ export const IndicatorSeparator = (props: IndicatorProps) => {
 
 const keyframesName = 'react-select-loading-indicator';
 
-export const loadingIndicatorCSS = ({
-  isFocused,
-  size,
-}: {
-  isFocused: boolean,
-  size: number,
-}) => ({
-  color: isFocused ? colors.neutral60 : colors.neutral20,
-  display: 'flex',
-  padding: spacing.baseUnit * 2,
-  transition: 'color 150ms',
-  alignSelf: 'center',
-  fontSize: size,
-  lineHeight: 1,
-  marginRight: size,
-  textAlign: 'center',
-  verticalAlign: 'middle',
-});
+export const loadingIndicatorCSS = baseCSS;
 
+const LoadingContainer = ({ size, ...props }: { size: number }) => (
+  <Div
+    css={{
+      alignSelf: 'center',
+      fontSize: size,
+      lineHeight: 1,
+      marginRight: size,
+      textAlign: 'center',
+      verticalAlign: 'middle',
+    }}
+    {...props}
+  />
+);
 type DotProps = { color: string, delay: number, offset: boolean };
 const LoadingDot = ({ color, delay, offset }: DotProps) => (
-  <span
+  <Span
     css={{
       animationDuration: '1s',
       animationDelay: `${delay}ms`,
@@ -161,31 +158,37 @@ const LoadingDot = ({ color, delay, offset }: DotProps) => (
   />
 );
 
-// eslint-disable-next-line no-unused-expressions
-injectGlobal`@keyframes ${keyframesName} {
-  0%, 80%, 100% { opacity: 0; }
-  40% { opacity: 1; }
-};`;
+// TODO @jossmac Source `keyframes` solution for glam
+// - at the very least, ensure this is only rendered once to the DOM
+const loadingAnimation = (
+  <style type="text/css">
+    {`@keyframes ${keyframesName} {
+        0%, 80%, 100% { opacity: 0; }
+        40% { opacity: 1; }
+    };`}
+  </style>
+);
 
 export type LoadingIconProps = IndicatorProps & {
   /** Set size of the container. */
   size: number,
 };
 export const LoadingIndicator = (props: LoadingIconProps) => {
-  const { cx, getStyles, innerProps, isFocused, isRtl } = props;
-  const color = isFocused ? colors.text : colors.neutral20;
+  const { cx, getStyles, innerProps, isFocused, isRtl, size = 4 } = props;
+  const clr = isFocused ? colors.text : colors.neutral20;
 
   return (
-    <div
+    <LoadingContainer
       {...innerProps}
       css={getStyles('loadingIndicator', props)}
       className={cx(['indicator', 'loading-indicator'])}
+      size={size}
     >
-      <LoadingDot color={color} delay={0} offset={isRtl} />
-      <LoadingDot color={color} delay={160} offset />
-      <LoadingDot color={color} delay={320} offset={!isRtl} />
+      {loadingAnimation}
+      <LoadingDot color={clr} offset={isRtl} />
+      <LoadingDot color={clr} delay={160} offset />
+      <LoadingDot color={clr} delay={320} offset={!isRtl} />
       <A11yText>Loading</A11yText>
-    </div>
+    </LoadingContainer>
   );
 };
-LoadingIndicator.defaultProps = { size: 4 };
