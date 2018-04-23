@@ -15,6 +15,7 @@ import type {
 // ==============================
 
 export const noop = () => {};
+export const emptyString = () => '';
 
 // ==============================
 // Class Name Prefixer
@@ -256,7 +257,7 @@ export function isTouchCapable() {
 // ==============================
 
 export function isMobileDevice() {
-  return typeof navigator !== 'undefined' && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
   );
 }
