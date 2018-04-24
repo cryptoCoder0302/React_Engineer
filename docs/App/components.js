@@ -1,5 +1,7 @@
 // @flow
+// @jsx glam
 
+import glam from 'glam';
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
@@ -69,7 +71,7 @@ export const PrimaryNav = (props: any) => (
     <div
       css={{
         boxSizing: 'border-box',
-        display: 'flex',
+        display: 'flex ',
         maxWidth: 800,
         marginLeft: 'auto',
         marginRight: 'auto',

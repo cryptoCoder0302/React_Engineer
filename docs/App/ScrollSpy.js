@@ -1,5 +1,7 @@
 // @flow
+// @jsx glam
 
+import glam from 'glam';
 import React, {
   Component,
   type ElementRef,
@@ -9,8 +11,9 @@ import rafSchedule from 'raf-schd';
 import NodeResolver from 'react-node-resolver';
 
 type Props = {
-  children: ReactElement<*>,
+  children: ReactElement<*>, // Component | Element
   onChange: (Array<any>) => void,
+  query: '[data-hash]',
 };
 type State = {
   elements: Array<HTMLElement>,
