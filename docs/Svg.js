@@ -1,3 +1,6 @@
+// @jsx glam
+
+import glam from 'glam';
 import React from 'react';
 
 const Svg = ({ size, ...props }: { size: number }) => (
