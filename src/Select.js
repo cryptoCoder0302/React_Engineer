@@ -238,7 +238,6 @@ type State = {
   inputIsHidden: boolean,
   isFocused: boolean,
   focusedOption: OptionType | null,
-  focusedValue: OptionType | null,
   menuOptions: MenuOptions,
   selectValue: OptionsType,
 };
@@ -264,7 +263,6 @@ export default class Select extends Component<Props, State> {
   userIsDragging: ?boolean;
   state = {
     focusedOption: null,
-    focusedValue: null,
     inputIsHidden: false,
     isFocused: false,
     menuOptions: { render: [], focusable: [] },
@@ -302,9 +300,8 @@ export default class Select extends Component<Props, State> {
     ) {
       const selectValue = cleanValue(nextProps.value);
       const menuOptions = this.buildMenuOptions(nextProps, selectValue);
-      const focusedValue = this.getNextFocusedValue(selectValue);
       const focusedOption = this.getNextFocusedOption(menuOptions.focusable);
-      this.setState({ menuOptions, selectValue, focusedOption, focusedValue });
+      this.setState({ menuOptions, selectValue, focusedOption });
     }
     // some updates should toggle the state of the input visibility
     if (this.inputIsHiddenAfterUpdate != null) {
@@ -405,71 +402,13 @@ export default class Select extends Component<Props, State> {
     this.inputIsHiddenAfterUpdate = false;
     this.onMenuOpen();
     this.setState({
-      focusedValue: null,
       focusedOption: menuOptions.focusable[openAtIndex],
     });
   }
-  focusValue(direction: 'previous' | 'next') {
-    const { isMulti } = this.props;
-    const { selectValue, focusedValue } = this.state;
-    // If not isMulti return
-    if (!isMulti) return;
-
-    this.setState({
-      focusedOption: null,
-    });
-    // If there are no currently selected values return;
-    const focusedIndex = focusedValue ? selectValue.indexOf(focusedValue) : -1;
-    let nextFocus = -1;
-    if (!selectValue.length) return;
-    switch(direction) {
-      case 'previous':
-      // ## Direction is previous
-      //  If the currently focused value is the first value in the array return;
-      //  Otherwise, focus the previous value in the selected values array.
-      if (focusedIndex === 0) {
-        nextFocus = 0;
-        break;
-      }
-
-      if (focusedIndex === -1) {
-        nextFocus = selectValue.length - 1;
-        break;
-      }
-
-      nextFocus = focusedIndex - 1;
-      break;
-
-      case 'next':
-      // ## Direction is next
-      //  If there is only one value return;
-      //  If the currently focused value is the last value in the array return;
-      //  Otherwise focus the next value in the array.
-      if (focusedIndex === -1) break;
-      if (focusedIndex === selectValue.length - 1) {
-        /// focus the inpu again
-        break;
-      }
-      nextFocus = focusedIndex + 1;
-      default:
-        break;
-    }
-
-    this.setState({
-      inputIsHidden: nextFocus === -1 ? false : true,
-      focusedValue: selectValue[nextFocus],
-    });
-  };
-
   focusOption(direction: FocusDirection = 'first') {
     const { pageSize } = this.props;
     const { focusedOption, menuOptions } = this.state;
     const options = menuOptions.focusable;
-
-    this.setState({
-      focusedValue: null,
-    });
-
     if (!options.length) return;
     let nextFocus = 0; // handles 'first'
     const focusedIndex = focusedOption ? options.indexOf(focusedOption) : -1;
@@ -566,23 +505,6 @@ export default class Select extends Component<Props, State> {
       selectProps: props,
     };
   }
-
-  getNextFocusedValue(selectValue: OptionsType) {
-    const { focusedValue: lastFocusedValue, selectValue: lastSelectValue } = this.state;
-    const lastFocusedIndex = lastSelectValue.indexOf(lastFocusedValue);
-    if (lastFocusedValue) {
-      // If there is currently a focusedValue, and the focusedValue exists in the selectedValues Array
-      if (lastFocusedIndex === -1) {
-        // return it
-        return lastFocusedValue;
-      } else if (lastFocusedIndex <= (selectValue.length - 1)) {
-        // Otherwise, if the currently focusedValue was not the last value in the array return the element currently in its place.
-        return selectValue[lastFocusedIndex];
-      }
-    }
-    return null;
-  }
-
   getNextFocusedOption(options: OptionsType) {
     const { focusedOption: lastFocusedOption } = this.state;
     return lastFocusedOption && options.indexOf(lastFocusedOption) > -1
@@ -817,7 +739,6 @@ export default class Select extends Component<Props, State> {
     this.onInputChange('', { action: 'input-blur' });
     this.onMenuClose();
     this.setState({
-      focusedValue: null,
       isFocused: false,
     });
   };
@@ -834,7 +755,6 @@ export default class Select extends Component<Props, State> {
 
   onKeyDown = (event: SyntheticKeyboardEvent<HTMLElement>) => {
     const {
-      isMulti,
       backspaceRemovesValue,
       escapeClearsValue,
       inputValue,
@@ -845,7 +765,7 @@ export default class Select extends Component<Props, State> {
       tabSelectsValue,
       openMenuOnFocus,
     } = this.props;
-    const { focusedOption, focusedValue, selectValue } = this.state;
+    const { focusedOption, selectValue } = this.state;
 
     if (isDisabled) return;
 
@@ -858,24 +778,12 @@ export default class Select extends Component<Props, State> {
 
     // Block option hover events when the user has just pressed a key
     this.blockOptionHover = true;
+
     switch (event.key) {
-      case 'ArrowLeft':
-        if (!isMulti || inputValue) return;
-        this.focusValue('previous');
-        break;
-      case 'ArrowRight':
-        if (!isMulti || inputValue) return;
-        this.focusValue('next');
-        break;
       case 'Backspace':
         if (inputValue || !backspaceRemovesValue) return;
-        if (focusedValue) {
-          this.removeValue(focusedValue);
-          break;
-        } else {
-          this.popValue();
-          break;
-        }
+        this.popValue();
+        break;
       case 'Tab':
         if (
           event.shiftKey ||
@@ -1126,7 +1034,7 @@ export default class Select extends Component<Props, State> {
     } = this.components;
     const { commonProps } = this;
     const { isDisabled, isMulti, inputValue, placeholder } = this.props;
-    const { selectValue, focusedValue } = this.state;
+    const { selectValue } = this.state;
 
     if (!this.hasValue()) {
       return inputValue ? null : (
@@ -1136,9 +1044,7 @@ export default class Select extends Component<Props, State> {
       );
     }
     if (isMulti) {
-      return selectValue.map(opt => {
-        let isFocused = opt === focusedValue;
-        return (
+      return selectValue.map(opt => (
         <MultiValue
           {...commonProps}
           components={{
@@ -1146,7 +1052,6 @@ export default class Select extends Component<Props, State> {
             Label: MultiValueLabel,
             Remove: MultiValueRemove,
           }}
-          isFocused={isFocused}
           isDisabled={isDisabled}
           key={this.getOptionValue(opt)}
           removeProps={{
@@ -1160,17 +1065,12 @@ export default class Select extends Component<Props, State> {
         >
           {this.formatOptionLabel(opt, 'value')}
         </MultiValue>
-      );
-    });
+      ));
     }
     if (inputValue) return null;
     const singleValue = selectValue[0];
     return (
-      <SingleValue
-        {...commonProps}
-        data={singleValue}
-        isDisabled={isDisabled}
-      >
+      <SingleValue {...commonProps} data={singleValue} isDisabled={isDisabled}>
         {this.formatOptionLabel(singleValue, 'value')}
       </SingleValue>
     );
