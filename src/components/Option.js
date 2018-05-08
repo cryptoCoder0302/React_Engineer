@@ -59,11 +59,11 @@ export const css = ({ isDisabled, isFocused, isSelected }: State) => ({
 });
 
 const Option = (props: OptionProps) => {
-  const { children, cx, getStyles, isDisabled, isFocused, isSelected, innerProps } = props;
+  const { children, cx, getStyles, isFocused, isSelected, innerProps } = props;
 
   return (
     <Div
-      className={cx('option', { isDisabled, isFocused, isSelected })}
+      className={cx('option', { isFocused, isSelected })}
       css={getStyles('option', props)}
       {...innerProps}
     >
