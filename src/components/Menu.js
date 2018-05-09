@@ -327,9 +327,8 @@ export type MenuListProps = {
 export type MenuListComponentProps = CommonProps &
   MenuListProps &
   MenuListState;
-export const menuListCSS = ({ maxHeight }: MenuListComponentProps) => ({
+export const menuListCSS = () => ({
   flexGrow: 1,
-  flexBasis: (maxHeight - spacing.baseUnit*2),
   overflowY: 'auto',
   paddingBottom: spacing.baseUnit,
   paddingTop: spacing.baseUnit,
