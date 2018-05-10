@@ -344,10 +344,10 @@ exports[`defaults - snapshot 1`] = `
                       setValue={[Function]}
                     >
                       <Component
-                        className="css-1vrc45u "
+                        className="css-nbc25y "
                       >
                         <div
-                          className="css-1vrc45u "
+                          className="css-nbc25y "
                         >
                           <Placeholder
                             clearValue={[Function]}

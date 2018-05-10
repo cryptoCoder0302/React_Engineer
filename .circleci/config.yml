@@ -2,9 +2,7 @@ version: 2
 
 docker_defaults: &docker_defaults
     docker:
-        - image: cypress/base:8
-          environment:
-            TERM: xterm
+        - image: circleci/node:8.11.1-browsers
     working_directory: ~/project/repo
 
 attach_workspace: &attach_workspace
