@@ -116,7 +116,7 @@ export function scrollTo(el: Element, top: number): void {
     window.scrollTo(0, top);
     return;
   }
-
+  
   el.scrollTop = top;
 }
 
@@ -258,11 +258,7 @@ export function isTouchCapable() {
 // ==============================
 
 export function isMobileDevice() {
-  try {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    );
-  } catch (e) {
-    return false;
-  }
+  return typeof navigator !== 'undefined' && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
 }
