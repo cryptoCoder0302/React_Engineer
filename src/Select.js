@@ -8,6 +8,7 @@ import { DummyInput, ScrollBlock, ScrollCaptor } from './internal/index';
 import {
   classNames,
   cleanValue,
+  emptyString,
   isTouchCapable,
   isMobileDevice,
   noop,
@@ -542,7 +543,7 @@ export default class Select extends Component<Props, State> {
     const { selectValue } = this.state;
     const hasValue = this.hasValue();
     const getValue = () => selectValue;
-    const cx = classNames.bind(null, className);
+    const cx = className ? classNames.bind(null, className) : emptyString;
     return {
       cx,
       clearValue,
@@ -1299,7 +1300,7 @@ export default class Select extends Component<Props, State> {
       // for performance, the menu options in state aren't changed when the
       // focused option changes so we calculate additional props based on that
       const isFocused = focusedOption === props.data;
-      props.innerProps.ref = isFocused
+      props.innerProps.innerRef = isFocused
         ? this.onFocusedOptionRef
         : undefined;
 
@@ -1380,7 +1381,7 @@ export default class Select extends Component<Props, State> {
               innerProps={{
                 'aria-multiselectable': isMulti,
                 id: this.getElementId('listbox'),
-                ref: this.onMenuRef,
+                innerRef: this.onMenuRef,
                 role: 'listbox',
               }}
               isLoading={isLoading}
@@ -1469,7 +1470,7 @@ export default class Select extends Component<Props, State> {
         <Control
           {...commonProps}
           innerProps={{
-            ref: this.onControlRef,
+            innerRef: this.onControlRef,
             onMouseDown: this.onControlMouseDown,
             onTouchEnd: this.onControlTouchEnd,
           }}

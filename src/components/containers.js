@@ -1,6 +1,7 @@
 // @flow
 import React, { Component, type Node } from 'react';
-import { css as emotionCss } from 'emotion';
+
+import { Div } from '../primitives';
 import { spacing } from '../theme';
 import type { CommonProps, KeyboardEventHandler } from '../types';
 
@@ -28,21 +29,15 @@ export const containerCSS = ({ isDisabled, isRtl }: ContainerState) => ({
   position: 'relative',
 });
 export const SelectContainer = (props: ContainerProps) => {
-  const { children, className, cx, getStyles, innerProps, isDisabled, isRtl } = props;
+  const { children, cx, getStyles, innerProps, isDisabled, isRtl } = props;
   return (
-    <div
-      className={cx(
-        emotionCss(getStyles('container', props)),
-        {
-          '--is-disabled': isDisabled,
-          '--is-rtl': isRtl
-        },
-        className
-      )}
+    <Div
+      css={getStyles('container', props)}
+      className={cx('', { isDisabled, isRtl })}
       {...innerProps}
     >
       {children}
-    </div>
+    </Div>
   );
 };
 
@@ -69,20 +64,15 @@ export const valueContainerCSS = () => ({
 });
 export class ValueContainer extends Component<ValueContainerProps> {
   render() {
-    const { children, className, cx, isMulti, getStyles, hasValue } = this.props;
+    const { children, cx, isMulti, getStyles, hasValue } = this.props;
 
     return (
-      <div
-        className={cx(
-          emotionCss(getStyles('valueContainer', this.props)),
-          {
-            'value-container': true,
-            'value-container--is-multi': isMulti,
-            'value-container--has-value': hasValue,
-          }, className)}
+      <Div
+        className={cx('value-container', { isMulti, hasValue })}
+        css={getStyles('valueContainer', this.props)}
       >
         {children}
-      </div>
+      </Div>
     );
   }
 }
@@ -109,19 +99,14 @@ export const indicatorsContainerCSS = () => ({
   flexShrink: 0,
 });
 export const IndicatorsContainer = (props: IndicatorContainerProps) => {
-  const { children, className, cx, getStyles } = props;
+  const { children, cx, getStyles } = props;
 
   return (
-    <div
-      className={cx(
-        emotionCss(getStyles('indicatorsContainer', props)),
-        {
-          'indicators': true,
-        },
-        className
-      )}
+    <Div
+      className={cx('indicators')}
+      css={getStyles('indicatorsContainer', props)}
     >
       {children}
-    </div>
+    </Div>
   );
 };
