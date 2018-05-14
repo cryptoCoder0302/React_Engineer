@@ -40,8 +40,7 @@ export type ClassNamesState = { [string]: boolean } | void;
 
 export type CommonProps = {
   clearValue: () => void,
-  className?: string,
-  cx: (?string | null, ClassNamesState | void, string | void) => string | void,
+  cx: (string | Array<string>, ClassNamesState) => string | void,
   /**
     Get the styles of a particular part of the select. Pass in the name of the
     property as the first argument, and the current props as the second argument.
