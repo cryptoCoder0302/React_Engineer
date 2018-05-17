@@ -15,8 +15,6 @@ import {
   DropdownIndicator,
   LoadingIndicator,
   IndicatorSeparator,
-  DownChevron,
-  CrossIcon,
 } from './indicators';
 
 import Control, { type ControlProps } from './Control';
@@ -48,8 +46,6 @@ export type SelectComponents = {
   ClearIndicator: IndicatorComponentType,
   Control: ComponentType<ControlProps>,
   DropdownIndicator: IndicatorComponentType,
-  DownChevron: ComponentType<any>,
-  CrossIcon: ComponentType<any>,
   Group: ComponentType<GroupProps>,
   GroupHeading: ComponentType<any>,
   IndicatorsContainer: ComponentType<IndicatorContainerProps>,
@@ -78,8 +74,6 @@ export const components: SelectComponents = {
   ClearIndicator: ClearIndicator,
   Control: Control,
   DropdownIndicator: DropdownIndicator,
-  DownChevron: DownChevron,
-  CrossIcon: CrossIcon,
   Group: Group,
   GroupHeading: GroupHeading,
   IndicatorsContainer: IndicatorsContainer,

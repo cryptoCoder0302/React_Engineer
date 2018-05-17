@@ -168,7 +168,7 @@ export default function Api() {
       />
     )}
 
-    ### IndicatorSeparator
+    ### IndicatorsSeparator
 
     ${(
       <Props

@@ -1,6 +1,5 @@
 // @flow
 import React, { Component, type Node } from 'react';
-import { css as emotionCss } from 'emotion';
 
 import { borderRadius, colors, spacing } from '../theme';
 import { CrossIcon } from './indicators';
@@ -12,7 +11,6 @@ export type ValueProps = LabelProps & {
   children: Node,
   components: any,
   innerProps: any,
-  isFocused: boolean,
   isDisabled: boolean,
   removeProps: {
     onClick: any => void,
@@ -24,11 +22,11 @@ export type MultiValueProps = CommonProps & ValueProps;
 export const multiValueCSS = () => ({
   backgroundColor: colors.neutral10,
   borderRadius: borderRadius / 2,
-  display: 'flex',
+  display: 'flex ',
   margin: spacing.baseUnit / 2,
   minWidth: 0, // resolves flex/text-overflow bug
 });
-export const multiValueLabelCSS = ({ cropWithEllipsis }: MultiValueProps) => ({
+export const multiValueLabelCSS = ({ cropWithEllipsis }: LabelProps) => ({
   color: colors.text,
   fontSize: '85%',
   overflow: 'hidden',
@@ -37,13 +35,14 @@ export const multiValueLabelCSS = ({ cropWithEllipsis }: MultiValueProps) => ({
   textOverflow: cropWithEllipsis ? 'ellipsis' : null,
   whiteSpace: 'nowrap',
 });
-export const multiValueRemoveCSS = ({ isFocused }: MultiValueProps) => ({
+export const multiValueRemoveCSS = () => ({
   alignItems: 'center',
   borderRadius: borderRadius / 2,
-  backgroundColor: isFocused && colors.dangerLight,
-  display: 'flex',
+  color: colors.textLight,
+  display: 'flex ',
   paddingLeft: spacing.baseUnit,
   paddingRight: spacing.baseUnit,
+
   ':hover': {
     backgroundColor: colors.dangerLight,
     color: colors.danger,
@@ -70,52 +69,39 @@ export class MultiValueRemove extends Component<MultiValueRemoveProps> {
   }
 }
 
-class MultiValue extends Component<MultiValueProps> {
-  static defaultProps = {
-    cropWithEllipsis: true,
-  }
-  render () {
-    const {
-      children,
-      className,
-      components,
-      cx,
-      getStyles,
-      innerProps,
-      isDisabled,
-      removeProps,
-    } = this.props;
-    const cn = {
-      container: cx(
-        emotionCss(getStyles('multiValue', this.props)),
-        {
-          'multi-value': true,
-          'multi-value--is-disabled': isDisabled
-        }, className),
-      label: cx(
-        emotionCss(getStyles('multiValueLabel', this.props)),
-        {
-          'multi-value__label': true,
-        }, className),
-      remove: cx(
-        emotionCss(getStyles('multiValueRemove', this.props),), {
-          'multi-value__remove': true,
-        }, className),
-    };
-    const { Container, Label, Remove } = components;
+const MultiValue = (props: MultiValueProps) => {
+  const {
+    children,
+    components,
+    cx,
+    getStyles,
+    innerProps,
+    isDisabled,
+    removeProps,
+  } = props;
+  const cn = {
+    container: cx('multi-value', { isDisabled }),
+    label: cx('multi-value__label'),
+    remove: cx('multi-value__remove'),
+  };
+  const css = {
+    container: getStyles('multiValue', props),
+    label: getStyles('multiValueLabel', props),
+    remove: getStyles('multiValueRemove', props),
+  };
+  const { Container, Label, Remove } = components;
 
-    return (
-      <Container
-        className={cn.container}
-        {...innerProps}
-        >
-        <Label className={cn.label}>
-          {children}
-        </Label>
-        <Remove className={cn.remove} {...removeProps} />
-      </Container>
-    );
-  }
-}
+  return (
+    <Container className={cn.container} css={css.container} {...innerProps}>
+      <Label className={cn.label} css={css.label}>
+        {children}
+      </Label>
+      <Remove className={cn.remove} css={css.remove} {...removeProps} />
+    </Container>
+  );
+};
+MultiValue.defaultProps = {
+  cropWithEllipsis: true,
+};
 
 export default MultiValue;
