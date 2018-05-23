@@ -29,8 +29,6 @@ export type CreatableProps = {
      created, and `onChange` will **not** be called. Use this when you need more
      control over what happens when new options are created. */
   onCreateOption?: string => void,
-  /* Sets the position of the createOption element in your options list. Defaults to 'last' */
-  createOptionPosition: 'first' | 'last',
 };
 
 export type Props = SelectProps & CreatableProps;
@@ -64,7 +62,6 @@ const builtins = {
 
 export const defaultProps = {
   allowCreateWhileLoading: false,
-  createOptionPosition: 'last',
   ...builtins,
 };
 
@@ -88,7 +85,6 @@ export const makeCreatableSelect = (SelectComponent: ComponentType<*>) =>
     componentWillReceiveProps(nextProps: Props) {
       const {
         allowCreateWhileLoading,
-        createOptionPosition,
         formatCreateLabel,
         getNewOptionData,
         inputValue,
@@ -107,7 +103,7 @@ export const makeCreatableSelect = (SelectComponent: ComponentType<*>) =>
         newOption: newOption,
         options:
           (allowCreateWhileLoading || !isLoading) && newOption
-            ? (createOptionPosition === 'first' ? [newOption, ...options] : [...options, newOption])
+            ? [...options, newOption]
             : options,
       });
     }

@@ -19,7 +19,6 @@ exports[`defaults - snapshot 1`] = `
     <Creatable
       allowCreateWhileLoading={false}
       cacheOptions={false}
-      createOptionPosition="last"
       defaultInputValue=""
       defaultMenuIsOpen={false}
       defaultOptions={false}
@@ -47,7 +46,6 @@ exports[`defaults - snapshot 1`] = `
         closeMenuOnSelect={true}
         components={Object {}}
         controlShouldRenderValue={true}
-        createOptionPosition="last"
         defaultInputValue=""
         defaultMenuIsOpen={false}
         defaultOptions={false}
@@ -120,7 +118,6 @@ exports[`defaults - snapshot 1`] = `
               "closeMenuOnSelect": true,
               "components": Object {},
               "controlShouldRenderValue": true,
-              "createOptionPosition": "last",
               "defaultInputValue": "",
               "defaultMenuIsOpen": false,
               "defaultOptions": false,
@@ -215,7 +212,6 @@ exports[`defaults - snapshot 1`] = `
                   "closeMenuOnSelect": true,
                   "components": Object {},
                   "controlShouldRenderValue": true,
-                  "createOptionPosition": "last",
                   "defaultInputValue": "",
                   "defaultMenuIsOpen": false,
                   "defaultOptions": false,
@@ -289,7 +285,6 @@ exports[`defaults - snapshot 1`] = `
                       "closeMenuOnSelect": true,
                       "components": Object {},
                       "controlShouldRenderValue": true,
-                      "createOptionPosition": "last",
                       "defaultInputValue": "",
                       "defaultMenuIsOpen": false,
                       "defaultOptions": false,
@@ -362,7 +357,6 @@ exports[`defaults - snapshot 1`] = `
                           "closeMenuOnSelect": true,
                           "components": Object {},
                           "controlShouldRenderValue": true,
-                          "createOptionPosition": "last",
                           "defaultInputValue": "",
                           "defaultMenuIsOpen": false,
                           "defaultOptions": false,
@@ -556,7 +550,6 @@ exports[`defaults - snapshot 1`] = `
                       "closeMenuOnSelect": true,
                       "components": Object {},
                       "controlShouldRenderValue": true,
-                      "createOptionPosition": "last",
                       "defaultInputValue": "",
                       "defaultMenuIsOpen": false,
                       "defaultOptions": false,
@@ -634,7 +627,6 @@ exports[`defaults - snapshot 1`] = `
                           "closeMenuOnSelect": true,
                           "components": Object {},
                           "controlShouldRenderValue": true,
-                          "createOptionPosition": "last",
                           "defaultInputValue": "",
                           "defaultMenuIsOpen": false,
                           "defaultOptions": false,
@@ -716,7 +708,6 @@ exports[`defaults - snapshot 1`] = `
                           "closeMenuOnSelect": true,
                           "components": Object {},
                           "controlShouldRenderValue": true,
-                          "createOptionPosition": "last",
                           "defaultInputValue": "",
                           "defaultMenuIsOpen": false,
                           "defaultOptions": false,
