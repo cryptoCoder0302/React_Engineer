@@ -127,7 +127,7 @@ with your options:
   formatOptionLabel={(option: {}, context: {} ) => Node}
   getOptionLabel={(option: {}) => string}
   getOptionValue={(option: {}) => string}
-  isOptionDisabled={(option: {}, value: [{}]) => boolean}
+  isOptionDisabled={(option: {}) => boolean}
   isOptionSelected?={(option: {}, value: [{}]) => boolean}
 />
 ~~~
