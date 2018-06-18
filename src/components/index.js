@@ -45,17 +45,17 @@ import SingleValue, { type SingleValueProps } from './SingleValue';
 type IndicatorComponentType = ComponentType<IndicatorProps>;
 
 export type SelectComponents = {
-  ClearIndicator: IndicatorComponentType | null,
+  ClearIndicator: IndicatorComponentType,
   Control: ComponentType<ControlProps>,
-  DropdownIndicator: IndicatorComponentType | null,
+  DropdownIndicator: IndicatorComponentType,
   DownChevron: ComponentType<any>,
   CrossIcon: ComponentType<any>,
   Group: ComponentType<GroupProps>,
   GroupHeading: ComponentType<any>,
   IndicatorsContainer: ComponentType<IndicatorContainerProps>,
-  IndicatorSeparator: IndicatorComponentType | null,
+  IndicatorSeparator: IndicatorComponentType,
   Input: ComponentType<InputProps>,
-  LoadingIndicator: ComponentType<LoadingIconProps> | null,
+  LoadingIndicator: ComponentType<LoadingIconProps>,
   Menu: ComponentType<MenuProps>,
   MenuList: ComponentType<MenuListComponentProps>,
   MenuPortal: ComponentType<MenuPortalProps>,
