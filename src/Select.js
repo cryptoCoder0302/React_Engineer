@@ -23,6 +23,7 @@ import {
 
 import {
   defaultComponents,
+  type PlaceholderOrValue,
   type SelectComponents,
   type SelectComponentsConfig,
 } from './components/index';
@@ -486,7 +487,7 @@ export default class Select extends Component<Props, State> {
       focusedValue: null,
     });
   }
-  setValue = (newValue: ValueType, action: ActionTypes = 'set-value', option?: OptionType) => {
+  setValue = (newValue: ValueType, action: ActionTypes = 'set-value') => {
     const { closeMenuOnSelect, isMulti, onChange } = this.props;
     this.onInputChange('', { action: 'set-value' });
     if (closeMenuOnSelect) {
@@ -495,7 +496,7 @@ export default class Select extends Component<Props, State> {
     }
     // when the select value should change, we should reset focusedValue
     this.clearFocusValueOnUpdate = true;
-    onChange(newValue, { action, option });
+    onChange(newValue, { action });
   };
   selectOption = (newValue: OptionType) => {
     const { blurInputOnSelect, isMulti } = this.props;
@@ -506,11 +507,10 @@ export default class Select extends Component<Props, State> {
         const candidate = this.getOptionValue(newValue);
         this.setValue(
           selectValue.filter(i => this.getOptionValue(i) !== candidate),
-          'deselect-option',
-          newValue
+          'deselect-option'
         );
       } else {
-        this.setValue([...selectValue, newValue], 'select-option', newValue);
+        this.setValue([...selectValue, newValue], 'select-option');
       }
     } else {
       this.setValue(newValue, 'select-option');
@@ -1142,7 +1142,7 @@ export default class Select extends Component<Props, State> {
       />
     );
   }
-  renderPlaceholderOrValue() {
+  renderPlaceholderOrValue(): ?PlaceholderOrValue {
     const {
       MultiValue,
       MultiValueContainer,
