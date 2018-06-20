@@ -3,14 +3,14 @@
 import React from 'react';
 
 import Select from '../../src';
-import { makeAnimated } from '../../src/animated';
+import * as Animated from '../../src/animated';
 import { colourOptions } from '../data';
 
 export default function AnimatedMulti() {
   return (
     <Select
       closeMenuOnSelect={false}
-      components={makeAnimated()}
+      components={Animated}
       defaultValue={[colourOptions[4], colourOptions[5]]}
       isMulti
       options={colourOptions}

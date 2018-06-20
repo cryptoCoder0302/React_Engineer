@@ -1,12 +1,12 @@
 // @flow
 
-import React, { type ComponentType } from 'react';
+import React from 'react';
 import { TransitionGroup } from 'react-transition-group';
-import { type ValueContainerProps } from '../components/containers';
+import { components } from '../components';
 
 // make ValueContainer a transition group
-const AnimatedValueContainer = (WrappedComponent: ComponentType<ValueContainerProps>) => (props: any) => (
-  <TransitionGroup component={WrappedComponent} {...props} />
+const AnimatedValueContainer = (props: any) => (
+  <TransitionGroup component={components.ValueContainer} {...props} />
 );
 
 export default AnimatedValueContainer;
