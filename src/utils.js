@@ -30,13 +30,7 @@ export const emptyString = () => '';
    @returns 'react-select__comp react-select__comp--some'
 */
 function applyPrefixToName(prefix, name) {
-  if (!name) {
-    return prefix;
-  } else if (name.indexOf('-') === 0) {
-    return prefix + name;
-  } else {
-    return prefix + '__' + name;
-  }
+  return name ? `${prefix}__${name}` : prefix;
 }
 
 export function classNames(
