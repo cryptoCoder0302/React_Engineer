@@ -1,6 +1,6 @@
 // @flow
 import React, { type ElementType } from 'react';
-import { injectGlobal, css } from 'emotion';
+import { injectGlobal, css as emotionCss } from 'emotion';
 
 import { A11yText } from '../primitives';
 import { colors, spacing } from '../theme';
@@ -15,7 +15,7 @@ const Svg = ({ size, ...props }: { size: number }) => (
     height={size}
     width={size}
     viewBox="0 0 20 20"
-    className={css({
+    className={emotionCss({
       display: 'inline-block',
       fill: 'currentColor',
       lineHeight: 1,
@@ -70,7 +70,7 @@ export const DropdownIndicator = (props: IndicatorProps) => {
     <div
       {...innerProps}
       className={cx(
-        css(getStyles('dropdownIndicator', props)),
+        emotionCss(getStyles('dropdownIndicator', props)),
         {
           'indicator': true,
           'dropdown-indicator': true,
@@ -90,7 +90,7 @@ export const ClearIndicator = (props: IndicatorProps) => {
     <div
       {...innerProps}
       className={cx(
-        css(getStyles('clearIndicator', props)),
+        emotionCss(getStyles('clearIndicator', props)),
         {
           'indicator': true,
           'clear-indicator': true,
@@ -122,7 +122,7 @@ export const IndicatorSeparator = (props: IndicatorProps) => {
     <span
       {...innerProps}
       className={cx(
-        css(getStyles('indicatorSeparator', props)),
+        emotionCss(getStyles('indicatorSeparator', props)),
         { 'indicator-separator': true },
         className
       )}
@@ -193,7 +193,7 @@ export const LoadingIndicator = (props: LoadingIconProps) => {
     <div
       {...innerProps}
       className={cx(
-        css(getStyles('loadingIndicator', props)),
+        emotionCss(getStyles('loadingIndicator', props)),
         {
           'indicator': true,
           'loading-indicator': true,

@@ -129,7 +129,7 @@ export type Props = {
   /* Whether to enable search functionality */
   isSearchable: boolean,
   /* Async: Text to display when loading options */
-  loadingMessage: ({ inputValue: string }) => (string | null),
+  loadingMessage: ({ inputValue: string }) => string,
   /* Minimum height of the menu before flipping */
   minMenuHeight: number,
   /* Maximum height of the menu before scrolling */
@@ -150,7 +150,7 @@ export type Props = {
   /* Name of the HTML Input (optional - without this, no input will be rendered) */
   name?: string,
   /* Text to display when there are no options */
-  noOptionsMessage: ({ inputValue: string }) => (string | null),
+  noOptionsMessage: ({ inputValue: string }) => string,
   /* Handle blur events on the control */
   onBlur?: FocusEventHandler,
   /* Handle change events on the select */
@@ -166,9 +166,9 @@ export type Props = {
   /* Handle the menu closing */
   onMenuClose: () => void,
   /* Fired when the user scrolls to the top of the menu */
-  onMenuScrollToTop?: (SyntheticEvent<HTMLElement>) => void,
+  onMenuScrollToTop: (SyntheticEvent<HTMLElement>) => void,
   /* Fired when the user scrolls to the bottom of the menu */
-  onMenuScrollToBottom?: (SyntheticEvent<HTMLElement>) => void,
+  onMenuScrollToBottom: (SyntheticEvent<HTMLElement>) => void,
   /* Allows control of whether the menu is opened when the Select is focused */
   openMenuOnFocus: boolean,
   /* Allows control of whether the menu is opened when the Select is clicked */
@@ -203,6 +203,7 @@ export const defaultProps = {
   formatGroupLabel: formatGroupLabel,
   getOptionLabel: getOptionLabel,
   getOptionValue: getOptionValue,
+  hideSelectedOptions: true,
   isDisabled: false,
   isLoading: false,
   isMulti: false,
@@ -486,7 +487,7 @@ export default class Select extends Component<Props, State> {
       focusedValue: null,
     });
   }
-  setValue = (newValue: ValueType, action: ActionTypes = 'set-value', option?: OptionType) => {
+  setValue = (newValue: ValueType, action: ActionTypes = 'set-value') => {
     const { closeMenuOnSelect, isMulti, onChange } = this.props;
     this.onInputChange('', { action: 'set-value' });
     if (closeMenuOnSelect) {
@@ -495,7 +496,7 @@ export default class Select extends Component<Props, State> {
     }
     // when the select value should change, we should reset focusedValue
     this.clearFocusValueOnUpdate = true;
-    onChange(newValue, { action, option });
+    onChange(newValue, { action });
   };
   selectOption = (newValue: OptionType) => {
     const { blurInputOnSelect, isMulti } = this.props;
@@ -506,11 +507,10 @@ export default class Select extends Component<Props, State> {
         const candidate = this.getOptionValue(newValue);
         this.setValue(
           selectValue.filter(i => this.getOptionValue(i) !== candidate),
-          'deselect-option',
-          newValue
+          'deselect-option'
         );
       } else {
-        this.setValue([...selectValue, newValue], 'select-option', newValue);
+        this.setValue([...selectValue, newValue], 'select-option');
       }
     } else {
       this.setValue(newValue, 'select-option');
@@ -854,11 +854,6 @@ export default class Select extends Component<Props, State> {
     }
     this.setState({ focusedOption });
   };
-  shouldHideSelectedOptions = () => {
-    const { hideSelectedOptions, isMulti } = this.props;
-    if (hideSelectedOptions === undefined) return isMulti;
-    return hideSelectedOptions;
-  };
 
   // ==============================
   // Keyboard Handlers
@@ -991,7 +986,7 @@ export default class Select extends Component<Props, State> {
   // ==============================
 
   buildMenuOptions(props: Props, selectValue: OptionsType): MenuOptions {
-    const { inputValue = '', options } = props;
+    const { hideSelectedOptions, isMulti, inputValue = '', options } = props;
 
     const toOption = (option, id) => {
       const isDisabled = this.isOptionDisabled(option);
@@ -1000,7 +995,7 @@ export default class Select extends Component<Props, State> {
       const value = this.getOptionValue(option);
 
       if (
-        (this.shouldHideSelectedOptions() && isSelected) ||
+        (isMulti && hideSelectedOptions && isSelected) ||
         !this.filterOption({ label, value, data: option }, inputValue)
       ) {
         return;
@@ -1175,7 +1170,7 @@ export default class Select extends Component<Props, State> {
     }
 
     if (isMulti) {
-      const selectValues: Array<any> = selectValue.map(opt => {
+      return selectValue.map(opt => {
         let isFocused = opt === focusedValue;
         return (
           <MultiValue
@@ -1201,7 +1196,6 @@ export default class Select extends Component<Props, State> {
           </MultiValue>
         );
       });
-      return selectValues;
     }
 
     if (inputValue) {
@@ -1387,19 +1381,15 @@ export default class Select extends Component<Props, State> {
         }
       });
     } else if (isLoading) {
-      const message = loadingMessage({ inputValue });
-      if (message === null) return null;
       menuUI = (
         <LoadingMessage {...commonProps}>
-          {message}
+          {loadingMessage({ inputValue })}
         </LoadingMessage>
       );
     } else {
-      const message = noOptionsMessage({ inputValue });
-      if (message === null) return null;
       menuUI = (
         <NoOptionsMessage {...commonProps}>
-          {message}
+          {noOptionsMessage({ inputValue })}
         </NoOptionsMessage>
       );
     }
