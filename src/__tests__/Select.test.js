@@ -1370,10 +1370,10 @@ cases(
     ).toBe('1');
   },
   {
-    'single select > should update aria-activedescendant as per focused option': {
+    'single select > should update aria-activedescendant as per focused uption': {
       skip: true,
     },
-    'multi select > should update aria-activedescendant as per focused option': {
+    'multi select > should update aria-activedescendant as per focused uption': {
       skip: true,
       props: {
         ...BASIC_PROPS,
