@@ -1,6 +1,6 @@
 // @flow
 import React, { Component, type Node } from 'react';
-import { css } from 'emotion';
+import { css as emotionCss } from 'emotion';
 
 import { borderRadius, colors, spacing } from '../theme';
 import { CrossIcon } from './indicators';
@@ -15,7 +15,6 @@ export type ValueProps = LabelProps & {
   isFocused: boolean,
   isDisabled: boolean,
   removeProps: {
-    onTouchEnd: any => void,
     onClick: any => void,
     onMouseDown: any => void,
   },
@@ -57,7 +56,6 @@ export type MultiValueRemoveProps = CommonProps & {
   children: Node,
   innerProps: any,
   removeProps: {
-    onTouchEnd: any => void,
     onClick: any => void,
     onMouseDown: any => void,
   },
@@ -89,18 +87,18 @@ class MultiValue extends Component<MultiValueProps> {
     } = this.props;
     const cn = {
       container: cx(
-        css(getStyles('multiValue', this.props)),
+        emotionCss(getStyles('multiValue', this.props)),
         {
           'multi-value': true,
           'multi-value--is-disabled': isDisabled
         }, className),
       label: cx(
-        css(getStyles('multiValueLabel', this.props)),
+        emotionCss(getStyles('multiValueLabel', this.props)),
         {
           'multi-value__label': true,
         }, className),
       remove: cx(
-        css(getStyles('multiValueRemove', this.props),), {
+        emotionCss(getStyles('multiValueRemove', this.props),), {
           'multi-value__remove': true,
         }, className),
     };
