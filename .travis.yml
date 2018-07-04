@@ -1,12 +1,8 @@
 sudo: false
 language: node_js
 node_js:
-  - "v8"
-
-before_script:
-  - yarn start & sleep 7
-  - yarn add xvfb
-
+  - "v4"
 script:
-  - yarn lint
-  - yarn test
+  - npm run lint
+  - npm run test
+  - npm run coveralls
