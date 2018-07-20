@@ -5,7 +5,6 @@ import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import uglify from 'rollup-plugin-uglify';
 import { minify } from 'uglify-es';
-import pkg from './package.json';
 
 const name = 'Select';
 const path = 'dist/react-select';
@@ -37,7 +36,7 @@ export default [
   {
     input: 'src/index.js',
     output: {
-      file: pkg.module,
+      file: path + '.es.js',
       format: 'es',
     },
     external: [...external, 'raf'],
@@ -46,23 +45,23 @@ export default [
   {
     input: 'src/index.umd.js',
     output: {
-      name,
+      name: name,
       file: path + '.js',
       format: 'umd',
-      globals,
+      globals: globals,
     },
-    external,
+    external: external,
     plugins: [babel(babelOptions()), resolve(), commonjs()],
   },
   {
     input: 'src/index.umd.js',
     output: {
-      name,
+      name: name,
       file: path + '.min.js',
       format: 'umd',
-      globals,
+      globals: globals,
     },
-    external,
+    external: external,
     plugins: [babel(babelOptions()), resolve(), commonjs(), uglify({}, minify)],
   },
 ];

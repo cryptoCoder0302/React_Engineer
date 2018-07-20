@@ -86,7 +86,7 @@ export function handleInputChange(
 // Scroll Helpers
 // ==============================
 
-export function isDocumentElement(el: Element) {
+function isDocumentElement(el: Element) {
   return [document.documentElement, document.body, window].indexOf(el) > -1;
 }
 

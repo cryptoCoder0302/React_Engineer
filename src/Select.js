@@ -2,6 +2,9 @@
 
 import React, { Component, type ElementRef, type Node } from 'react';
 
+import memoizeOne from 'memoize-one';
+import isEqual from 'react-fast-compare';
+
 import { createFilter } from './filters';
 import { DummyInput, ScrollBlock, ScrollCaptor } from './internal/index';
 import {
@@ -21,7 +24,6 @@ import {
   isMobileDevice,
   noop,
   scrollIntoView,
-  isDocumentElement,
 } from './utils';
 
 import {
@@ -85,19 +87,6 @@ export type Props = {
   classNamePrefix?: string | null,
   /* Close the select menu when the user selects an option */
   closeMenuOnSelect: boolean,
-  /*
-     If `true`, close the select menu when the user scrolls the document/body.
-
-     If a function, takes a standard javascript `ScrollEvent` you return a boolean:
-
-     `true` => The menu closes
-
-     `false` => The menu stays open
-
-     This is useful when you have a scrollable modal and want to portal the menu out,
-     but want to avoid graphical issues.
-   */
-  closeMenuOnScroll: boolean | EventListener,
   /*
     This complex object includes all the compositional components that are used
     in `react-select`. If you wish to overwrite a component, pass in an object
@@ -218,7 +207,6 @@ export const defaultProps = {
   blurInputOnSelect: isTouchCapable(),
   captureMenuScroll: !isTouchCapable(),
   closeMenuOnSelect: true,
-  closeMenuOnScroll: false,
   components: {},
   controlShouldRenderValue: true,
   escapeClearsValue: false,
@@ -328,7 +316,8 @@ export default class Select extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     const { value } = props;
-    this.components = defaultComponents(props);
+    this.cacheComponents = memoizeOne(this.cacheComponents, isEqual).bind(this);
+    this.cacheComponents(props.components);
     this.instancePrefix =
       'react-select-' + (this.props.instanceId || ++instanceId);
 
@@ -341,21 +330,14 @@ export default class Select extends Component<Props, State> {
   componentDidMount() {
     this.startListeningToTouch();
 
-    if (this.props.closeMenuOnScroll && document && document.addEventListener) {
-      // Listen to all scroll events, and filter them out inside of 'onScroll'
-      document.addEventListener('scroll', this.onScroll, true);
-    }
-
     if (this.props.autoFocus) {
       this.focusInput();
     }
   }
   componentWillReceiveProps(nextProps: Props) {
-    const { components, options, value, inputValue } = this.props;
+    const { options, value, inputValue } = this.props;
     // re-cache custom components
-    if (nextProps.components !== components) {
-      this.components = defaultComponents(nextProps);
-    }
+    this.cacheComponents(nextProps.components);
     // rebuild the menu options
     if (
       nextProps.value !== value ||
@@ -401,9 +383,10 @@ export default class Select extends Component<Props, State> {
   }
   componentWillUnmount() {
     this.stopListeningToTouch();
-    document.removeEventListener('scroll', this.onScroll, true);
   }
-
+  cacheComponents = (components: SelectComponents) => {
+    this.components = defaultComponents({ components });
+  }
   // ==============================
   // Consumer Handlers
   // ==============================
@@ -829,17 +812,6 @@ export default class Select extends Component<Props, State> {
     event.stopPropagation();
     this.openAfterFocus = false;
     setTimeout(() => this.focusInput());
-  };
-  onScroll = (event: Event) => {
-    if (typeof this.props.closeMenuOnScroll === 'boolean') {
-      if (event.target instanceof HTMLElement && isDocumentElement(event.target)) {
-        this.props.onMenuClose();
-      }
-    } else if (typeof this.props.closeMenuOnScroll === 'function') {
-      if (this.props.closeMenuOnScroll(event)) {
-        this.props.onMenuClose();
-      }
-    }
   };
 
   // ==============================
