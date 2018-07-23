@@ -1513,7 +1513,7 @@ export default class Select extends Component<Props, State> {
       // for performance, the menu options in state aren't changed when the
       // focused option changes so we calculate additional props based on that
       const isFocused = focusedOption === props.data;
-      props.innerRef = isFocused
+      props.innerProps.innerRef = isFocused
         ? this.getFocusedOptionRef
         : undefined;
 
@@ -1582,7 +1582,9 @@ export default class Select extends Component<Props, State> {
             <ScrollBlock isEnabled={menuShouldBlockScroll}>
               <MenuList
                 {...commonProps}
-                innerRef={this.getMenuListRef}
+                innerProps={{
+                  innerRef: this.getMenuListRef,
+                }}
                 isLoading={isLoading}
                 maxHeight={maxMenuHeight}
               >
@@ -1680,8 +1682,8 @@ export default class Select extends Component<Props, State> {
         {this.renderLiveRegion()}
         <Control
           {...commonProps}
-          innerRef={this.getControlRef}
           innerProps={{
+            innerRef: this.getControlRef,
             onMouseDown: this.onControlMouseDown,
             onTouchEnd: this.onControlTouchEnd,
           }}
