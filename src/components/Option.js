@@ -15,6 +15,7 @@ type State = {
 };
 type InnerProps = {
   id: string,
+  innerRef: InnerRef,
   key: string,
   onClick: MouseEventHandler,
   onMouseOver: MouseEventHandler,
@@ -25,8 +26,6 @@ export type OptionProps = PropsWithStyles &
   State & {
     /** The children to be rendered. */
     children: Node,
-    /** Inner ref to DOM Node */
-    innerRef: InnerRef,
     /** props passed to the wrapping element for the group. */
     innerProps: InnerProps,
     /* Text to be displayed representing the option. */
@@ -58,7 +57,8 @@ export const optionCSS = ({ isDisabled, isFocused, isSelected }: State) => ({
 });
 
 const Option = (props: OptionProps) => {
-  const { children, className, cx, getStyles, isDisabled, isFocused, isSelected, innerRef, innerProps } = props;
+  const { children, className, cx, getStyles, isDisabled, isFocused, isSelected, innerProps } = props;
+  const { innerRef, ...rest } = innerProps;
   return (
     <div
       ref={innerRef}
@@ -72,7 +72,7 @@ const Option = (props: OptionProps) => {
         },
         className
       )}
-      {...innerProps}
+      {...rest}
     >
       {children}
     </div>
