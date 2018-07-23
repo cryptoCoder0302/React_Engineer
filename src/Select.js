@@ -29,6 +29,7 @@ import {
   isMobileDevice,
   noop,
   scrollIntoView,
+  isDocumentElement,
 } from './utils';
 
 import {
@@ -90,6 +91,19 @@ export type Props = {
   classNamePrefix?: string | null,
   /* Close the select menu when the user selects an option */
   closeMenuOnSelect: boolean,
+  /*
+     If `true`, close the select menu when the user scrolls the document/body.
+
+     If a function, takes a standard javascript `ScrollEvent` you return a boolean:
+
+     `true` => The menu closes
+
+     `false` => The menu stays open
+
+     This is useful when you have a scrollable modal and want to portal the menu out,
+     but want to avoid graphical issues.
+   */
+  closeMenuOnScroll: boolean | EventListener,
   /*
     This complex object includes all the compositional components that are used
     in `react-select`. If you wish to overwrite a component, pass in an object
@@ -210,6 +224,7 @@ export const defaultProps = {
   blurInputOnSelect: isTouchCapable(),
   captureMenuScroll: !isTouchCapable(),
   closeMenuOnSelect: true,
+  closeMenuOnScroll: false,
   components: {},
   controlShouldRenderValue: true,
   escapeClearsValue: false,
@@ -336,6 +351,11 @@ export default class Select extends Component<Props, State> {
     this.startListeningComposition();
     this.startListeningToTouch();
 
+    if (this.props.closeMenuOnScroll && document && document.addEventListener) {
+      // Listen to all scroll events, and filter them out inside of 'onScroll'
+      document.addEventListener('scroll', this.onScroll, true);
+    }
+
     if (this.props.autoFocus) {
       this.focusInput();
     }
@@ -390,6 +410,7 @@ export default class Select extends Component<Props, State> {
   componentWillUnmount() {
     this.stopListeningComposition();
     this.stopListeningToTouch();
+    document.removeEventListener('scroll', this.onScroll, true);
   }
   cacheComponents = (components: SelectComponents) => {
     this.components = defaultComponents({ components });
@@ -634,19 +655,11 @@ export default class Select extends Component<Props, State> {
 
   getCommonProps() {
     const { clearValue, getStyles, setValue, selectOption, props } = this;
-    const { className, classNamePrefix, isMulti, isRtl, options } = props;
+    const { classNamePrefix, isMulti, isRtl, options } = props;
     const { selectValue } = this.state;
     const hasValue = this.hasValue();
     const getValue = () => selectValue;
     let cxPrefix = classNamePrefix;
-    if (className && classNamePrefix === undefined) {
-      console.warn(`
-        Warning: the behaviour of 'className' has changed between 2.0.0-beta.2 and 2.0.0-beta.3.
-        You can now use className to specify the class name of the outer container, and classNamePrefix to enable our provided BEM class names for internal elements.
-        The className prop will have no effect on internal elements when 2.0.0 is released.
-      `);
-      cxPrefix = className;
-    }
 
     const cx = classNames.bind(null, cxPrefix);
     return {
@@ -859,6 +872,17 @@ export default class Select extends Component<Props, State> {
     event.stopPropagation();
     this.openAfterFocus = false;
     setTimeout(() => this.focusInput());
+  };
+  onScroll = (event: Event) => {
+    if (typeof this.props.closeMenuOnScroll === 'boolean') {
+      if (event.target instanceof HTMLElement && isDocumentElement(event.target)) {
+        this.props.onMenuClose();
+      }
+    } else if (typeof this.props.closeMenuOnScroll === 'function') {
+      if (this.props.closeMenuOnScroll(event)) {
+        this.props.onMenuClose();
+      }
+    }
   };
 
   // ==============================
