@@ -130,7 +130,7 @@ export type Props = {
   /* Is the select in a state of loading (async) */
   isLoading: boolean,
   /* Override the built-in logic to detect whether an option is disabled */
-  isOptionDisabled: typeof isOptionDisabled | false,
+  isOptionDisabled: (OptionType, OptionsType) => boolean | false,
   /* Override the built-in logic to detect whether an option is selected */
   isOptionSelected?: (OptionType, OptionsType) => boolean,
   /* Support multiple selected options */
@@ -606,11 +606,19 @@ export default class Select extends Component<Props, State> {
 
   getCommonProps() {
     const { clearValue, getStyles, setValue, selectOption, props } = this;
-    const { classNamePrefix, isMulti, isRtl, options } = props;
+    const { className, classNamePrefix, isMulti, isRtl, options } = props;
     const { selectValue } = this.state;
     const hasValue = this.hasValue();
     const getValue = () => selectValue;
     let cxPrefix = classNamePrefix;
+    if (className && classNamePrefix === undefined) {
+      console.warn(`
+        Warning: the behaviour of 'className' has changed between 2.0.0-beta.2 and 2.0.0-beta.3.
+        You can now use className to specify the class name of the outer container, and classNamePrefix to enable our provided BEM class names for internal elements.
+        The className prop will have no effect on internal elements when 2.0.0 is released.
+      `);
+      cxPrefix = className;
+    }
 
     const cx = classNames.bind(null, cxPrefix);
     return {
@@ -715,9 +723,9 @@ export default class Select extends Component<Props, State> {
 
     return isClearable;
   }
-  isOptionDisabled(option: OptionType): boolean {
+  isOptionDisabled(option: OptionType, selectValue: OptionsType): boolean {
     return typeof this.props.isOptionDisabled === 'function'
-      ? this.props.isOptionDisabled(option)
+      ? this.props.isOptionDisabled(option, selectValue)
       : false;
   }
   isOptionSelected(option: OptionType, selectValue: OptionsType): boolean {
@@ -1091,7 +1099,7 @@ export default class Select extends Component<Props, State> {
     const { inputValue = '', options } = props;
 
     const toOption = (option, id) => {
-      const isDisabled = this.isOptionDisabled(option);
+      const isDisabled = this.isOptionDisabled(option, selectValue);
       const isSelected = this.isOptionSelected(option, selectValue);
       const label = this.getOptionLabel(option);
       const value = this.getOptionValue(option);
