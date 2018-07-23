@@ -4,13 +4,13 @@ import { css } from 'emotion';
 
 import { borderRadius, colors, spacing } from '../theme';
 import { CrossIcon } from './indicators';
+import { Div } from '../primitives';
 import type { CommonProps } from '../types';
 
-export type MultiValueProps = CommonProps &{
+type LabelProps = { cropWithEllipsis: boolean };
+export type ValueProps = LabelProps & {
   children: Node,
   components: any,
-  cropWithEllipsis: boolean,
-  data: any,
   innerProps: any,
   isFocused: boolean,
   isDisabled: boolean,
@@ -20,6 +20,7 @@ export type MultiValueProps = CommonProps &{
     onMouseDown: any => void,
   },
 };
+export type MultiValueProps = CommonProps & ValueProps;
 
 export const multiValueCSS = () => ({
   backgroundColor: colors.neutral10,
@@ -29,7 +30,6 @@ export const multiValueCSS = () => ({
   minWidth: 0, // resolves flex/text-overflow bug
 });
 export const multiValueLabelCSS = ({ cropWithEllipsis }: MultiValueProps) => ({
-  borderRadius: borderRadius / 2,
   color: colors.text,
   fontSize: '85%',
   overflow: 'hidden',
@@ -51,110 +51,70 @@ export const multiValueRemoveCSS = ({ isFocused }: MultiValueProps) => ({
   },
 });
 
-export type MultiValueGenericProps = {
-  children: Node,
-  data: any,
-  innerProps: { className?: String },
-  selectProps: any,
-};
-export const MultiValueGeneric = ({
-  children,
-  innerProps,
-}: MultiValueGenericProps) => <div {...innerProps}>{children}</div>;
-
-export const MultiValueContainer = MultiValueGeneric;
-export const MultiValueLabel = MultiValueGeneric;
+export const MultiValueContainer = Div;
+export const MultiValueLabel = Div;
 export type MultiValueRemoveProps = CommonProps & {
   children: Node,
-  innerProps: {
-    className: String,
+  innerProps: any,
+  removeProps: {
     onTouchEnd: any => void,
     onClick: any => void,
     onMouseDown: any => void,
   },
-  selectProps: any,
 };
 export class MultiValueRemove extends Component<MultiValueRemoveProps> {
   static defaultProps = {
     children: <CrossIcon size={14} />,
   };
   render() {
-    const { children, innerProps } = this.props;
-    return <div {...innerProps}>{children}</div>;
+    const { children, ...props } = this.props;
+    return <Div {...props}>{children}</Div>;
   }
 }
 
 class MultiValue extends Component<MultiValueProps> {
   static defaultProps = {
     cropWithEllipsis: true,
-  };
-  render() {
+  }
+  render () {
     const {
       children,
       className,
       components,
       cx,
-      data,
       getStyles,
       innerProps,
       isDisabled,
       removeProps,
-      selectProps,
     } = this.props;
-
-    const { Container, Label, Remove } = components;
-
-    const containerInnerProps = {
-      className: cx(
+    const cn = {
+      container: cx(
         css(getStyles('multiValue', this.props)),
         {
           'multi-value': true,
-          'multi-value--is-disabled': isDisabled,
-        },
-        className
-      ),
-      ...innerProps,
-    };
-
-    const labelInnerProps = {
-      className: cx(
+          'multi-value--is-disabled': isDisabled
+        }, className),
+      label: cx(
         css(getStyles('multiValueLabel', this.props)),
         {
           'multi-value__label': true,
-        },
-        className
-      ),
-    };
-
-    const removeInnerProps = {
-      className: cx(
-        css(getStyles('multiValueRemove', this.props)),
-        {
+        }, className),
+      remove: cx(
+        css(getStyles('multiValueRemove', this.props),), {
           'multi-value__remove': true,
-        },
-        className
-      ),
-      ...removeProps,
+        }, className),
     };
+    const { Container, Label, Remove } = components;
 
     return (
       <Container
-        data={data}
-        innerProps={containerInnerProps}
-        selectProps={selectProps}
-      >
-        <Label
-          data={data}
-          innerProps={labelInnerProps}
-          selectProps={selectProps}
+        className={cn.container}
+        {...innerProps}
         >
+        <Label className={cn.label}>
           {children}
         </Label>
-        <Remove
-          data={data}
-          innerProps={removeInnerProps}
-          selectProps={selectProps}
-        />
+        <Remove className={cn.remove} {...removeProps} />
       </Container>
     );
   }

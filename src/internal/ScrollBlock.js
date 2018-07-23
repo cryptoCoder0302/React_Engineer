@@ -3,6 +3,7 @@
 import React, { PureComponent, type Element } from 'react';
 import NodeResolver from './NodeResolver';
 import ScrollLock from './ScrollLock/index';
+import { Div } from '../primitives';
 
 type Props = {
   children: Element<*>,
@@ -56,7 +57,7 @@ export default class ScrollBlock extends PureComponent<Props, State> {
      */
     return (
       <div>
-        <div
+        <Div
           onClick={this.blurSelectInput}
           css={{ position: 'fixed', left: 0, bottom: 0, right: 0, top: 0 }}
         />

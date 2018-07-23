@@ -1,6 +1,4 @@
 import { Component } from 'react';
-import { type MultiValueGenericProps } from '../../../src/components/MultiValue';
+import { type Props } from '../../../src/primitives';
 
-export default class MultiValueRemove extends Component<
-  MultiValueGenericProps
-> {}
+export default class MultiValueRemove extends Component<Props> {}

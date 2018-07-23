@@ -5,6 +5,7 @@ import moment from 'moment';
 import chrono from 'chrono-node';
 
 import Select from '../../src';
+import { Div, Span } from '../../src/primitives';
 import { components as SelectComponents } from '../../src';
 
 const createOptionForDate = d => {
@@ -106,7 +107,7 @@ const daysContainerStyles = {
 const Group = props => {
   const { Heading, getStyles, children, label, innerProps, headingProps, cx } = props;
   return (
-    <div aria-label={label} css={getStyles('group', props)} {...innerProps}>
+    <Div aria-label={label} css={getStyles('group', props)} {...innerProps}>
       <Heading
         getStyles={getStyles}
         cx={cx}
@@ -114,15 +115,15 @@ const Group = props => {
       >
         {label}
       </Heading>
-      <div css={daysHeaderStyles}>
+      <Div css={daysHeaderStyles}>
         {days.map((day, i) => (
-          <span key={`${i}-${day}`} css={daysHeaderItemStyles}>
+          <Span key={`${i}-${day}`} css={daysHeaderItemStyles}>
             {day}
-          </span>
+          </Span>
         ))}
-      </div>
-      <div css={daysContainerStyles}>{children}</div>
-    </div>
+      </Div>
+      <Div css={daysContainerStyles}>{children}</Div>
+    </Div>
   );
 };
 
@@ -147,9 +148,9 @@ const Option = props => {
       }
     }
     return (
-      <span {...innerProps} css={styles} ref={innerRef}>
+      <Span {...innerProps} css={styles} ref={innerRef}>
         {data.date.format('D')}
-      </span>
+      </Span>
     );
   } else return <SelectComponents.Option {...props} />;
 };
