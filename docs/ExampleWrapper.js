@@ -206,9 +206,10 @@ const Actions = ({ show, ...props }) => (
       alignItems: 'center',
       display: 'flex',
       justifyContent: 'space-between',
-      opacity: show ? 1 : 0.2,
-      transition: 'opacity 140ms',
-      transitionDelay: '140ms',
+      opacity: show ? 1 : 0,
+      transition: 'opacity 260ms, visibility 260ms',
+      transitionDelay: '260ms',
+      visibility: show ? 'visible' : 'hidden',
     }}
     {...props}
   />
