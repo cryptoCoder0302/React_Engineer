@@ -53,7 +53,7 @@ export default function Styles() {
 
     ## Base and State
 
-    Spreading the base styles into your returned object lets you extend it
+    Spreading the base styles into your returned object let's you extend it
     however you like while maintaining existing styles. Alternatively, you
     can omit the base and completely take control of the component's styles.
 
@@ -68,7 +68,7 @@ export default function Styles() {
       control: () => ({
         // none of react-selects styles are passed to <View />
         width: 200,
-      }),
+      })
       singleValue: (base, state) => {
         const opacity = state.isDisabled ? 0.5 : 1;
         const transition = 'opacity 300ms';
