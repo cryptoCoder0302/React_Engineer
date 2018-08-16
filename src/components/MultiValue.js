@@ -30,7 +30,7 @@ export const multiValueCSS = () => ({
 });
 export const multiValueLabelCSS = ({ cropWithEllipsis }: MultiValueProps) => ({
   borderRadius: borderRadius / 2,
-  color: colors.neutral80,
+  color: colors.text,
   fontSize: '85%',
   overflow: 'hidden',
   padding: 3,
@@ -54,7 +54,7 @@ export const multiValueRemoveCSS = ({ isFocused }: MultiValueProps) => ({
 export type MultiValueGenericProps = {
   children: Node,
   data: any,
-  innerProps: { className?: string },
+  innerProps: { className?: String },
   selectProps: any,
 };
 export const MultiValueGeneric = ({
@@ -66,9 +66,8 @@ export const MultiValueContainer = MultiValueGeneric;
 export const MultiValueLabel = MultiValueGeneric;
 export type MultiValueRemoveProps = CommonProps & {
   children: Node,
-  data: any,
   innerProps: {
-    className: string,
+    className: String,
     onTouchEnd: any => void,
     onClick: any => void,
     onMouseDown: any => void,

@@ -22,7 +22,7 @@ export const inputCSS = ({ isDisabled }: InputProps) => ({
   paddingBottom: spacing.baseUnit / 2,
   paddingTop: spacing.baseUnit / 2,
   visibility: isDisabled ? 'hidden' : 'visible',
-  color: colors.neutral80,
+  color: colors.text,
 });
 const inputStyle = isHidden => ({
   background: 0,

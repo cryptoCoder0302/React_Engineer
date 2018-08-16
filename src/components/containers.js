@@ -66,7 +66,6 @@ export const valueContainerCSS = () => ({
   padding: `${spacing.baseUnit / 2}px ${spacing.baseUnit * 2}px`,
   WebkitOverflowScrolling: 'touch',
   position: 'relative',
-  overflow: 'hidden',
 });
 export class ValueContainer extends Component<ValueContainerProps> {
   render() {
