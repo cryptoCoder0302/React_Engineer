@@ -23,7 +23,7 @@ Improvements include:
 
 If you're interested in the background, watch Jed's [talk on React Select](https://youtu.be/Eb2wy-HNGMo) at ReactNYC in March 2018.
 
-See our [upgrade guide](https:/react-select.com/upgrade-guide) for a breakdown on how to upgrade from v1 to v2.
+See our [upgrade guide](https://react-select.com/upgrade-guide) for a breakdown on how to upgrade from v1 to v2.
 
 The old docs and examples will continue to be available at [v1.react-select.com](https://v1.react-select.com).
 
@@ -84,7 +84,7 @@ Common props you may want to specify include:
 * `placeholder` - change the text displayed when no option is selected
 * `value` - control the current value
 
-See the [props documentation](https://www.react-select.com/props) for complete documentation on the props react-selec supports.
+See the [props documentation](https://www.react-select.com/props) for complete documentation on the props react-select supports.
 
 ## Controllable Props
 
@@ -121,6 +121,8 @@ Check the docs for more information on:
 # Thanks
 
 Thank you to everyone who has contributed to this project. It's been a wild ride.
+
+If you like React Select, you should [follow me on twitter](https://twitter.com/jedwatson)
 
 Shout out to [Joss Mackison](https://github.com/jossmac), [Charles Lee](https://github.com/gwyneplaine), [Ben Conolly](https://github.com/Noviny), [Dave Brotherstone](https://github.com/bruderstein), [Brian Vaughn](https://github.com/bvaughn), and the Atlassian Design System team ❤️
 
