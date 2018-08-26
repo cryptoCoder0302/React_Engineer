@@ -26,7 +26,7 @@ const changes = [
   {
     value: '/components',
     icon: '📦',
-    label: 'Replaceable component architecture',
+    label: 'Replacable component architecture',
   },
   {
     value: '/advanced',
