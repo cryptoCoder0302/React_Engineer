@@ -88,27 +88,23 @@ export type Props = {
   blurInputOnSelect: boolean,
   /* When the user reaches the top/bottom of the menu, prevent scroll on the scroll-parent  */
   captureMenuScroll: boolean,
-  /* Sets a className attribute on the outer component */
+  /* className attribute applied to the outer component */
   className?: string,
-  /*
-    If provided, all inner components will be given a prefixed className attribute.
-
-    This is useful when styling via CSS classes instead of the Styles API approach.
-  */
+  /* classNamePrefix attribute used as a base for inner component classNames */
   classNamePrefix?: string | null,
   /* Close the select menu when the user selects an option */
   closeMenuOnSelect: boolean,
   /*
-    If `true`, close the select menu when the user scrolls the document/body.
+     If `true`, close the select menu when the user scrolls the document/body.
 
-    If a function, takes a standard javascript `ScrollEvent` you return a boolean:
+     If a function, takes a standard javascript `ScrollEvent` you return a boolean:
 
-    `true` => The menu closes
+     `true` => The menu closes
 
-    `false` => The menu stays open
+     `false` => The menu stays open
 
-    This is useful when you have a scrollable modal and want to portal the menu out,
-    but want to avoid graphical issues.
+     This is useful when you have a scrollable modal and want to portal the menu out,
+     but want to avoid graphical issues.
    */
   closeMenuOnScroll: boolean | EventListener,
   /*
@@ -1043,6 +1039,10 @@ export default class Select extends Component<Props, State> {
     this.openAfterFocus = false;
   };
   onInputBlur = (event: SyntheticFocusEvent<HTMLInputElement>) => {
+    if(this.menuListRef && this.menuListRef.contains(document.activeElement)) {
+      this.inputRef.focus();
+      return;
+    }
     if (this.props.onBlur) {
       this.props.onBlur(event);
     }
@@ -1613,23 +1613,19 @@ export default class Select extends Component<Props, State> {
       if (message === null) return null;
       menuUI = <NoOptionsMessage {...commonProps}>{message}</NoOptionsMessage>;
     }
-    const menuPlacementProps = {
-      minMenuHeight,
-      maxMenuHeight,
-      menuPlacement,
-      menuPosition,
-      menuShouldScrollIntoView,
-    };
 
     const menuElement = (
       <MenuPlacer
         {...commonProps}
-        {...menuPlacementProps}
+        minMenuHeight={minMenuHeight}
+        maxMenuHeight={maxMenuHeight}
+        menuPlacement={menuPlacement}
+        menuPosition={menuPosition}
+        menuShouldScrollIntoView={menuShouldScrollIntoView}
       >
         {({ ref, placerProps: { placement, maxHeight } }) => (
           <Menu
             {...commonProps}
-            {...menuPlacementProps}
             innerRef={ref}
             innerProps={{
               onMouseDown: this.onMenuMouseDown,

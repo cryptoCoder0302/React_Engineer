@@ -75,7 +75,6 @@ Common props you may want to specify include:
 
 * `autoFocus` - focus the control when it mounts
 * `className` - apply a className to the control
-* `classNamePrefix` - apply classNames to inner elements with the given prefix
 * `isDisabled` - disable the control
 * `isMulti` - allow the user to select multiple values
 * `isSearchable` - allow the user to search for matching options
