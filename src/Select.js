@@ -868,10 +868,7 @@ export default class Select extends Component<Props, State> {
     } else if (!this.props.menuIsOpen) {
       this.openMenu('first');
     } else {
-      // $FlowFixMe HTMLElement type does not have tagName property
-      if (event.target.tagName !== 'INPUT') {
-        this.onMenuClose();
-      }
+      this.onMenuClose();
     }
     // $FlowFixMe HTMLElement type does not have tagName property
     if (event.target.tagName !== 'INPUT') {
@@ -1616,23 +1613,19 @@ export default class Select extends Component<Props, State> {
       if (message === null) return null;
       menuUI = <NoOptionsMessage {...commonProps}>{message}</NoOptionsMessage>;
     }
-    const menuPlacementProps = {
-      minMenuHeight,
-      maxMenuHeight,
-      menuPlacement,
-      menuPosition,
-      menuShouldScrollIntoView,
-    };
 
     const menuElement = (
       <MenuPlacer
         {...commonProps}
-        {...menuPlacementProps}
+        minMenuHeight={minMenuHeight}
+        maxMenuHeight={maxMenuHeight}
+        menuPlacement={menuPlacement}
+        menuPosition={menuPosition}
+        menuShouldScrollIntoView={menuShouldScrollIntoView}
       >
         {({ ref, placerProps: { placement, maxHeight } }) => (
           <Menu
             {...commonProps}
-            {...menuPlacementProps}
             innerRef={ref}
             innerProps={{
               onMouseDown: this.onMenuMouseDown,
