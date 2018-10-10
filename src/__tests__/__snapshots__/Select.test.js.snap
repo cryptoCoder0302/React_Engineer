@@ -649,9 +649,7 @@ exports[`snapshot - defaults 1`] = `
             },
           }
         }
-      >
-        <DownChevron />
-      </DropdownIndicator>
+      />
     </IndicatorsContainer>
   </Control>
 </SelectContainer>
