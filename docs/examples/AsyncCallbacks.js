@@ -7,7 +7,7 @@ type State = {
   inputValue: string,
 };
 
-const filterColors = (inputValue: string) => 
+const filterColors = (inputValue: string) =>
   colourOptions.filter(i =>
     i.label.toLowerCase().includes(inputValue.toLowerCase())
   );
