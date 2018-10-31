@@ -47,7 +47,7 @@ export const makeAsyncSelect = (SelectComponent: ComponentType<*>) =>
         defaultOptions: Array.isArray(props.defaultOptions)
           ? props.defaultOptions
           : undefined,
-        inputValue: props.inputValue,
+        inputValue: '',
         isLoading: props.defaultOptions === true ? true : false,
         loadedOptions: [],
         passEmptyOptions: false,
@@ -56,9 +56,8 @@ export const makeAsyncSelect = (SelectComponent: ComponentType<*>) =>
     componentDidMount() {
       this.mounted = true;
       const { defaultOptions } = this.props;
-      const { inputValue } = this.state;
       if (defaultOptions === true) {
-        this.loadOptions(inputValue, options => {
+        this.loadOptions('', options => {
           if (!this.mounted) return;
           const isLoading = !!this.lastRequest;
           this.setState({ defaultOptions: options || [], isLoading });
