@@ -23,12 +23,13 @@ export default function Styles() {
 
     ~~~jsx
     /**
-     * @param {Object} provided -- the component's default styles
+     * @param {Object} base -- the component's default style
      * @param {Object} state -- the component's current state e.g. \`isFocused\`
      * @returns {Object}
      */
-    function styleFn(provided, state) {
-      return { ...provided, color: state.isFocused ? 'blue' : 'red' };
+    function styleFn(base, state) {
+      // optionally spread base styles
+      return { ...base, color: state.isFocused ? 'blue' : 'red' };
     }
     ~~~
 
@@ -44,51 +45,35 @@ export default function Styles() {
 
     ###### Style Keys
 
-    - \`clearIndicator\`
-    - \`container\`
-    - \`control\`
-    - \`dropdownIndicator\`
-    - \`group\`
-    - \`groupHeading\`
-    - \`indicatorsContainer\`
-    - \`indicatorSeparator\`
-    - \`input\`
-    - \`loadingIndicator\`
-    - \`loadingMessage\`
-    - \`menu\`
-    - \`menuList\`
-    - \`multiValue\`
-    - \`multiValueLabel\`
-    - \`multiValueRemove\`
-    - \`noOptionsMessage\`
-    - \`option\`
-    - \`placeholder\`
-    - \`singleValue\`
-    - \`valueContainer\`
+    \`clearIndicator\` \`container\` \`control\` \`dropdownIndicator\` \`group\`
+    \`groupHeading\` \`indicatorsContainer\` \`indicatorSeparator\` \`input\`
+    \`loadingIndicator\` \`loadingMessage\` \`menu\` \`menuList\` \`multiValue\`
+    \`multiValueLabel\` \`multiValueRemove\` \`noOptionsMessage\` \`option\`
+    \`placeholder\` \`singleValue\` \`valueContainer\`
 
-    ## Provided Styles and State
+    ## Base and State
 
-    Spreading the provided styles into your returned object lets you extend it
+    Spreading the base styles into your returned object lets you extend it
     however you like while maintaining existing styles. Alternatively, you
-    can omit the provided styles and completely take control of the component's styles.
+    can omit the base and completely take control of the component's styles.
 
     ~~~jsx
     const customStyles = {
-      option: (provided, state) => ({
-        ...provided,
+      option: (base, state) => ({
+        ...base,
         borderBottom: '1px dotted pink',
-        color: state.isSelected ? 'red' : 'blue',
+        color: state.isFullscreen ? 'red' : 'blue',
         padding: 20,
       }),
       control: () => ({
-        // none of react-select's styles are passed to <Control />
+        // none of react-selects styles are passed to <View />
         width: 200,
       }),
-      singleValue: (provided, state) => {
+      singleValue: (base, state) => {
         const opacity = state.isDisabled ? 0.5 : 1;
         const transition = 'opacity 300ms';
 
-        return { ...provided, opacity, transition };
+        return { ...base, opacity, transition };
       }
     }
 
