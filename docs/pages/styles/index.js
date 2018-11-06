@@ -3,8 +3,6 @@ import Helmet from 'react-helmet';
 import md from '../../markdown/renderer';
 import ExampleWrapper from '../../ExampleWrapper';
 import { StyledSingle, StyledMulti, Theme } from '../../examples';
-import { ColorSample } from '../../styled-components';
-import { defaultTheme } from '../../../src/theme';
 
 export default function Styles() {
   return (
@@ -59,6 +57,7 @@ export default function Styles() {
     - \`loadingMessage\`
     - \`menu\`
     - \`menuList\`
+    - \`menuPortal\`
     - \`multiValue\`
     - \`multiValueLabel\`
     - \`multiValueRemove\`
@@ -164,20 +163,6 @@ export default function Styles() {
       >
         <Theme />
       </ExampleWrapper>
-    )}
-
-    ###### Theme colors
-
-    ${(
-      <div css={{ marginTop: '1em' }}>
-        {Object.keys(defaultTheme.colors).map(key => (
-          <ColorSample
-            key={key}
-            name={key}
-            color={defaultTheme.colors[key]}
-          />
-        ))}
-      </div>
     )}
 
     `}
