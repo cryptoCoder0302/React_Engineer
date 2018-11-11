@@ -57,7 +57,6 @@ export default function Styles() {
     - \`loadingMessage\`
     - \`menu\`
     - \`menuList\`
-    - \`menuPortal\`
     - \`multiValue\`
     - \`multiValueLabel\`
     - \`multiValueRemove\`
