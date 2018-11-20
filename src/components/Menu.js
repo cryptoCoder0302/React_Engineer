@@ -131,13 +131,14 @@ export function getMenuPlacement({
       if (placement === 'auto' || isFixedPosition) {
         // may need to be constrained after flipping
         let constrainedHeight = maxHeight;
-        const spaceAbove = isFixedPosition ? viewSpaceAbove : scrollSpaceAbove;
 
-        if (spaceAbove >= minHeight) {
-          constrainedHeight = Math.min(
-            spaceAbove - marginBottom - spacing.controlHeight,
-            maxHeight
-          );
+        if (
+          (!isFixedPosition && scrollSpaceAbove >= minHeight) ||
+          (isFixedPosition && viewSpaceAbove >= minHeight)
+        ) {
+          constrainedHeight = isFixedPosition
+            ? viewSpaceAbove - marginBottom - spacing.controlHeight
+            : scrollSpaceAbove - marginBottom - spacing.controlHeight;
         }
 
         return { placement: 'top', maxHeight: constrainedHeight };
