@@ -884,7 +884,10 @@ export default class Select extends Component<Props, State> {
     } else if (!this.props.menuIsOpen) {
       this.openMenu('first');
     } else {
-      this.onMenuClose();
+      // $FlowFixMe HTMLElement type does not have tagName property
+      if (event.target.tagName !== 'INPUT') {
+        this.onMenuClose();
+      }
     }
     // $FlowFixMe HTMLElement type does not have tagName property
     if (event.target.tagName !== 'INPUT') {
@@ -1132,7 +1135,11 @@ export default class Select extends Component<Props, State> {
           this.removeValue(focusedValue);
         } else {
           if (!backspaceRemovesValue) return;
-          this.popValue();
+          if (isMulti) {
+            this.popValue();
+          } else {
+            this.clearValue();
+          }
         }
         break;
       case 'Tab':
@@ -1354,6 +1361,7 @@ export default class Select extends Component<Props, State> {
           onChange={noop}
           onFocus={this.onInputFocus}
           readOnly
+          disabled={isDisabled}
           tabIndex={tabIndex}
           value=""
         />
