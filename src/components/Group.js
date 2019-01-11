@@ -1,6 +1,6 @@
 // @flow
 import React, { type Node, type ComponentType } from 'react';
-import { css } from 'emotion';
+
 import type { CommonProps } from '../types';
 
 type ComponentProps = {
@@ -30,12 +30,13 @@ const Group = (props: GroupProps) => {
     headingProps,
     label,
     theme,
+    emotion,
     selectProps,
   } = props;
   return (
     <div
       className={cx(
-        css(getStyles('group', props)),
+        emotion.css(getStyles('group', props)),
         { 'group': true },
         className,
       )}
@@ -43,6 +44,7 @@ const Group = (props: GroupProps) => {
       <Heading
         {...headingProps}
         selectProps={selectProps}
+        emotion={emotion}
         theme={theme}
         getStyles={getStyles}
         cx={cx}
@@ -67,11 +69,11 @@ export const groupHeadingCSS = ({ theme: { spacing } }: GroupProps) => ({
 });
 
 export const GroupHeading = (props: any) => {
-  const { className, cx, getStyles, theme, selectProps, ...cleanProps } = props;
+  const { className, cx, getStyles, theme, emotion, selectProps, ...cleanProps } = props;
   return (
     <div
       className={cx(
-        css(getStyles('groupHeading', { theme, ...cleanProps })),
+        emotion.css(getStyles('groupHeading', { theme, ...cleanProps })),
         { 'group-heading': true },
         className
       )}
