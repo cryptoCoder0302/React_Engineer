@@ -8,9 +8,12 @@ type State = {
 };
 
 const filterColors = (inputValue: string) => {
-  return colourOptions.filter(i =>
-      i.label.toLowerCase().includes(inputValue.toLowerCase())
-  );
+  if (inputValue) {
+    return colourOptions.filter(i =>
+        i.label.toLowerCase().includes(inputValue.toLowerCase())
+      );
+  }
+  return colourOptions;
 };
 
 const promiseOptions = inputValue =>
