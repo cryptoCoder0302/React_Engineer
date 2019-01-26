@@ -1,39 +1,18 @@
 // @flow
 
-import React, {
-  Component,
-  type ElementRef,
-  type AbstractComponent,
-  type Config,
-} from 'react';
+import React, { Component, type ComponentType, type ElementRef } from 'react';
 
 import type { ActionMeta, InputActionMeta, ValueType } from './types';
 
-export type DefaultProps = {|
+export type Props = {
   defaultInputValue: string,
   defaultMenuIsOpen: boolean,
   defaultValue: ValueType,
-|};
-export type Props = {
-  ...DefaultProps,
   inputValue?: string,
   menuIsOpen?: boolean,
   value?: ValueType,
-  onChange?: (ValueType, ActionMeta) => void,
 };
 
-type StateProps<P> = $Diff<
-  P,
-  {
-    inputValue: any,
-    value: any,
-    menuIsOpen: any,
-    onChange: any,
-    onInputChange: any,
-    onMenuClose: any,
-    onMenuOpen: any,
-  }
->;
 
 type State = {
   inputValue: string,
@@ -47,11 +26,9 @@ export const defaultProps = {
   defaultValue: null,
 };
 
-const manageState = <C: {}>(
-  SelectComponent: AbstractComponent<C>
-): AbstractComponent<StateProps<C> & Config<Props, DefaultProps>> =>
-  class StateManager extends Component<StateProps<C> & Props, State> {
-    static defaultProps: DefaultProps = defaultProps;
+const manageState = (SelectComponent: ComponentType<*>) =>
+  class StateManager extends Component<Props, State> {
+    static defaultProps = defaultProps
 
     select: ElementRef<*>;
 
@@ -75,11 +52,9 @@ const manageState = <C: {}>(
     blur() {
       this.select.blur();
     }
-    // FIXME: untyped flow code, return any
     getProp(key: string) {
       return this.props[key] !== undefined ? this.props[key] : this.state[key];
     }
-    // FIXME: untyped flow code, return any
     callProp(name: string, ...args: any) {
       if (typeof this.props[name] === 'function') {
         return this.props[name](...args);
@@ -106,15 +81,9 @@ const manageState = <C: {}>(
       this.setState({ menuIsOpen: false });
     };
     render() {
-      const {
-        defaultInputValue,
-        defaultMenuIsOpen,
-        defaultValue,
-        ...props
-      } = this.props;
       return (
         <SelectComponent
-          {...props}
+          {...this.props}
           ref={ref => {
             this.select = ref;
           }}

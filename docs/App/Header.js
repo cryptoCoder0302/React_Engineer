@@ -1,7 +1,7 @@
 // @flow
 
 import fetch from 'unfetch';
-import React, { Component, type Node } from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import Select from '../../src';
@@ -50,7 +50,7 @@ function getLabel({ icon, label }) {
 }
 
 const headerSelectStyles = {
-  control: ({ isFocused, ...base }) => ({
+  control: (base, { isFocused }) => ({
     ...base,
     backgroundClip: 'padding-box',
     borderColor: 'rgba(0,0,0,0.1)',
@@ -104,7 +104,7 @@ const Container = props => (
   />
 );
 
-type HeaderProps = RouterProps & { children: Node };
+type HeaderProps = RouterProps & { children: any };
 type HeaderState = { contentHeight: 'auto' | number, stars: number };
 
 const apiUrl = 'https://api.github.com/repos/jedwatson/react-select';
@@ -251,14 +251,10 @@ const Content = ({ onChange, stars }) => (
     >
       <div className="animate-dropin">
         <Select
-          formatOptionLabel={getLabel}
+          getOptionLabel={getLabel}
           isSearchable={false}
           options={changes}
-          onChange={option => {
-            if (option && !Array.isArray(option)) {
-              onChange(option);
-            }
-          }}
+          onChange={onChange}
           value={null}
           placeholder="🎉 What's new in V2"
           styles={headerSelectStyles}

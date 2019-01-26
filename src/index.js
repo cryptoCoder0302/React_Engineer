@@ -1,10 +1,9 @@
 // @flow
-import { type ElementConfig } from 'react';
 
 import SelectBase from './Select';
 import manageState from './stateManager';
 
-export default manageState<ElementConfig<typeof SelectBase>>(SelectBase);
+export default manageState(SelectBase);
 
 export { SelectBase };
 export { default as Async } from './Async';

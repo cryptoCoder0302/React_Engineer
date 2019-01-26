@@ -1,11 +1,6 @@
 // @flow
 
-import React, {
-  Component,
-  type ElementConfig,
-  type AbstractComponent,
-  type ElementRef,
-} from 'react';
+import React, { Component, type ComponentType, type ElementRef } from 'react';
 import Select, { type Props as SelectProps } from './Select';
 import { handleInputChange } from './utils';
 import manageState from './stateManager';
@@ -21,8 +16,6 @@ export type AsyncProps = {
   /* If cacheOptions is truthy, then the loaded data will be cached. The cache
      will remain until `cacheOptions` changes value. */
   cacheOptions: any,
-  onInputChange: (string, InputActionMeta) => void,
-  inputValue: string,
 };
 
 export type Props = SelectProps & AsyncProps;
@@ -30,7 +23,6 @@ export type Props = SelectProps & AsyncProps;
 export const defaultProps = {
   cacheOptions: false,
   defaultOptions: false,
-  filterOption: null,
 };
 
 type State = {
@@ -42,23 +34,20 @@ type State = {
   passEmptyOptions: boolean,
 };
 
-export const makeAsyncSelect = <C: {}>(
-  SelectComponent: AbstractComponent<C>
-): AbstractComponent<C & AsyncProps> =>
-  class Async extends Component<C & AsyncProps, State> {
+export const makeAsyncSelect = (SelectComponent: ComponentType<*>) =>
+  class Async extends Component<Props, State> {
     static defaultProps = defaultProps;
     select: ElementRef<*>;
     lastRequest: {};
     mounted: boolean = false;
     optionsCache: { [string]: OptionsType } = {};
-    constructor(props: C & AsyncProps) {
+    constructor(props: Props) {
       super();
       this.state = {
         defaultOptions: Array.isArray(props.defaultOptions)
           ? props.defaultOptions
           : undefined,
-        inputValue:
-          typeof props.inputValue !== 'undefined' ? props.inputValue : '',
+        inputValue: typeof props.inputValue !== 'undefined' ? props.inputValue : '',
         isLoading: props.defaultOptions === true ? true : false,
         loadedOptions: [],
         passEmptyOptions: false,
@@ -76,7 +65,7 @@ export const makeAsyncSelect = <C: {}>(
         });
       }
     }
-    componentWillReceiveProps(nextProps: C & AsyncProps) {
+    componentWillReceiveProps(nextProps: Props) {
       // if the cacheOptions prop changes, clear the cache
       if (nextProps.cacheOptions !== this.props.cacheOptions) {
         this.optionsCache = {};
@@ -88,6 +77,7 @@ export const makeAsyncSelect = <C: {}>(
             : undefined,
         });
       }
+
     }
     componentWillUnmount() {
       this.mounted = false;
@@ -169,12 +159,12 @@ export const makeAsyncSelect = <C: {}>(
       } = this.state;
       const options = passEmptyOptions
         ? []
-        : inputValue && loadedInputValue
-        ? loadedOptions
-        : defaultOptions || [];
+        : inputValue && loadedInputValue ? loadedOptions : defaultOptions || [];
       return (
+        // $FlowFixMe
         <SelectComponent
           {...props}
+          filterOption={this.props.filterOption || null}
           ref={ref => {
             this.select = ref;
           }}
@@ -186,6 +176,4 @@ export const makeAsyncSelect = <C: {}>(
     }
   };
 
-const SelectState = manageState<ElementConfig<typeof Select>>(Select);
-
-export default makeAsyncSelect<ElementConfig<typeof SelectState>>(SelectState);
+export default makeAsyncSelect(manageState(Select));
