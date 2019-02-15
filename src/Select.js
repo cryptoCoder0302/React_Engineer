@@ -480,7 +480,7 @@ export default class Select extends Component<Props, State> {
   blur = this.blurInput;
 
   openMenu(focusOption: 'first' | 'last') {
-    const { menuOptions, selectValue } = this.state;
+    const { menuOptions, selectValue, isFocused } = this.state;
     const { isMulti } = this.props;
     let openAtIndex =
       focusOption === 'first' ? 0 : menuOptions.focusable.length - 1;
@@ -492,7 +492,8 @@ export default class Select extends Component<Props, State> {
       }
     }
 
-    this.scrollToFocusedOptionOnUpdate = true;
+    // only scroll if the menu isn't already open
+    this.scrollToFocusedOptionOnUpdate = !(isFocused && this.menuListRef);
     this.inputIsHiddenAfterUpdate = false;
 
     this.onMenuOpen();
@@ -1181,11 +1182,9 @@ export default class Select extends Component<Props, State> {
           if (!focusedOption) return;
           if (isComposing) return;
           this.selectOption(focusedOption);
-        } else {
-          this.focusOption('first');
-          return;
+          break;
         }
-        break;
+        return;
       case 'Escape':
         if (menuIsOpen) {
           this.inputIsHiddenAfterUpdate = false;
