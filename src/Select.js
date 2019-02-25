@@ -588,7 +588,6 @@ export default class Select extends Component<Props, State> {
       focusedOption: options[nextFocus],
       focusedValue: null,
     });
-    this.announceAriaLiveContext({ event: 'menu', context: { isDisabled: isOptionDisabled(options[nextFocus]) } });
   }
   onChange = (newValue: ValueType, actionMeta: ActionMeta) => {
     const { onChange, name } = this.props;
@@ -611,9 +610,9 @@ export default class Select extends Component<Props, State> {
   };
   selectOption = (newValue: OptionType) => {
     const { blurInputOnSelect, isMulti } = this.props;
-    const { selectValue } = this.state;
 
     if (isMulti) {
+      const { selectValue } = this.state;
       if (this.isOptionSelected(newValue, selectValue)) {
         const candidate = this.getOptionValue(newValue);
         this.setValue(
@@ -626,34 +625,18 @@ export default class Select extends Component<Props, State> {
           context: { value: this.getOptionLabel(newValue) },
         });
       } else {
-        if (!this.isOptionDisabled(newValue, selectValue)) {
-          this.setValue([...selectValue, newValue], 'select-option', newValue);
-          this.announceAriaLiveSelection({
-            event: 'select-option',
-            context: { value: this.getOptionLabel(newValue) },
-          });
-        } else {
-          // announce that option is disabled
-          this.announceAriaLiveSelection({
-            event: 'select-option',
-            context: { value: this.getOptionLabel(newValue), isDisabled: true },
-          });
-        }
-      }
-    } else {
-      if (!this.isOptionDisabled(newValue, selectValue)) {
-        this.setValue(newValue, 'select-option');
+        this.setValue([...selectValue, newValue], 'select-option', newValue);
         this.announceAriaLiveSelection({
           event: 'select-option',
           context: { value: this.getOptionLabel(newValue) },
         });
-      } else {
-        // announce that option is disabled
-        this.announceAriaLiveSelection({
-          event: 'select-option',
-          context: { value: this.getOptionLabel(newValue), isDisabled: true },
-        });
       }
+    } else {
+      this.setValue(newValue, 'select-option');
+      this.announceAriaLiveSelection({
+        event: 'select-option',
+        context: { value: this.getOptionLabel(newValue) },
+      });
     }
 
     if (blurInputOnSelect) {
@@ -1196,6 +1179,11 @@ export default class Select extends Component<Props, State> {
         this.selectOption(focusedOption);
         break;
       case 'Enter':
+        if (event.keyCode === 229) {
+          // ignore the keydown event from an Input Method Editor(IME)
+          // ref. https://www.w3.org/TR/uievents/#determine-keydown-keyup-keyCode
+          break;
+        }
         if (menuIsOpen) {
           if (!focusedOption) return;
           if (isComposing) return;
@@ -1311,7 +1299,7 @@ export default class Select extends Component<Props, State> {
           const children = items
             .map((child, i) => {
               const option = toOption(child, `${itemIndex}-${i}`);
-              if (option) acc.focusable.push(child);
+              if (option && !option.isDisabled) acc.focusable.push(child);
               return option;
             })
             .filter(Boolean);
@@ -1328,7 +1316,7 @@ export default class Select extends Component<Props, State> {
           const option = toOption(item, `${itemIndex}`);
           if (option) {
             acc.render.push(option);
-            acc.focusable.push(item);
+            if (!option.isDisabled) acc.focusable.push(item);
           }
         }
         return acc;
