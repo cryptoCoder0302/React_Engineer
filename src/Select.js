@@ -894,11 +894,13 @@ export default class Select extends Component<Props, State> {
         this.openMenu('first');
       }
     } else {
-      if (event.currentTarget.tagName !== 'INPUT') {
+      //$FlowFixMe
+      if (event.target.tagName !== 'INPUT') {
         this.onMenuClose();
       }
     }
-    if (event.currentTarget.tagName !== 'INPUT') {
+    //$FlowFixMe
+    if (event.target.tagName !== 'INPUT') {
       event.preventDefault();
     }
   };
@@ -1179,11 +1181,6 @@ export default class Select extends Component<Props, State> {
         this.selectOption(focusedOption);
         break;
       case 'Enter':
-        if (event.keyCode === 229) {
-          // ignore the keydown event from an Input Method Editor(IME)
-          // ref. https://www.w3.org/TR/uievents/#determine-keydown-keyup-keyCode
-          break;
-        }
         if (menuIsOpen) {
           if (!focusedOption) return;
           if (isComposing) return;
