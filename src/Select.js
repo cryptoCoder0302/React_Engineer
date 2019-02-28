@@ -894,13 +894,11 @@ export default class Select extends Component<Props, State> {
         this.openMenu('first');
       }
     } else {
-      //$FlowFixMe
-      if (event.target.tagName !== 'INPUT') {
+      if (event.currentTarget.tagName !== 'INPUT') {
         this.onMenuClose();
       }
     }
-    //$FlowFixMe
-    if (event.target.tagName !== 'INPUT') {
+    if (event.currentTarget.tagName !== 'INPUT') {
       event.preventDefault();
     }
   };
