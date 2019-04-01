@@ -55,7 +55,6 @@ const Group = (props: GroupProps) => {
 };
 
 export const groupHeadingCSS = ({ theme: { spacing } }: GroupProps) => ({
-  label: 'group',
   color: '#999',
   cursor: 'default',
   display: 'block',

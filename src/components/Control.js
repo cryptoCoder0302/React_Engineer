@@ -29,7 +29,6 @@ export const css = ({
   isFocused,
   theme: { colors, borderRadius, spacing },
 }: ControlProps) => ({
-  label: 'control',
   alignItems: 'center',
   backgroundColor: isDisabled ? colors.neutral5 : colors.neutral0,
   borderColor: isDisabled

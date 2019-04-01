@@ -22,7 +22,6 @@ export type MultiValueProps = CommonProps & {
 export const multiValueCSS = ({
   theme: { spacing, borderRadius, colors },
 }: MultiValueProps) => ({
-  label: 'multiValue',
   backgroundColor: colors.neutral10,
   borderRadius: borderRadius / 2,
   display: 'flex',

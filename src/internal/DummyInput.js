@@ -11,7 +11,6 @@ export default class DummyInput extends Component<any> {
         ref={innerRef}
         {...props}
         className={css({
-          label: 'dummyInput',
           // get rid of any default styles
           background: 0,
           border: 0,
