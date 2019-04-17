@@ -226,8 +226,8 @@ export type Props = {
   options: OptionsType,
   /* Number of options to jump in menu when page{up|down} keys are used */
   pageSize: number,
-  /* Placeholder text for the select value */
-  placeholder: string,
+  /* Placeholder for the select value */
+  placeholder: Node,
   /* Status to relay to screen readers */
   screenReaderStatus: ({ count: number }) => string,
   /*
@@ -1198,6 +1198,11 @@ export default class Select extends Component<Props, State> {
         this.selectOption(focusedOption);
         break;
       case 'Enter':
+        if (event.keyCode === 229) {
+          // ignore the keydown event from an Input Method Editor(IME)
+          // ref. https://www.w3.org/TR/uievents/#determine-keydown-keyup-keyCode
+          break;
+        }
         if (menuIsOpen) {
           if (!focusedOption) return;
           if (isComposing) return;
@@ -1474,7 +1479,8 @@ export default class Select extends Component<Props, State> {
 
     if (isMulti) {
       const selectValues: Array<any> = selectValue.map(opt => {
-        let isFocused = opt === focusedValue;
+        const isOptionFocused = opt === focusedValue;
+
         return (
           <MultiValue
             {...commonProps}
@@ -1483,7 +1489,7 @@ export default class Select extends Component<Props, State> {
               Label: MultiValueLabel,
               Remove: MultiValueRemove,
             }}
-            isFocused={isFocused}
+            isFocused={isOptionFocused}
             isDisabled={isDisabled}
             key={this.getOptionValue(opt)}
             removeProps={{

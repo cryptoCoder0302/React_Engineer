@@ -1341,6 +1341,28 @@ cases(
   }
 );
 
+test('hitting Enter on option should not call onChange if the event comes from IME', () => {
+  let spy = jest.fn();
+  let selectWrapper = mount(
+    <Select
+      className="react-select"
+      classNamePrefix="react-select"
+      menuIsOpen
+      onChange={spy}
+      onInputChange={jest.fn()}
+      onMenuClose={jest.fn()}
+      options={OPTIONS}
+      tabSelectsValue={false}
+    />
+  );
+
+  let selectOption = selectWrapper.find('div.react-select__option').at(0);
+  selectWrapper.setState({ focusedOption: { label: '2', value: 'two' } });
+
+  selectOption.simulate('keyDown', { keyCode: 229, key: 'Enter' });
+  expect(spy).not.toHaveBeenCalled();
+});
+
 test('hitting tab on option should not call onChange if tabSelectsValue is false', () => {
   let spy = jest.fn();
   let selectWrapper = mount(
@@ -1835,15 +1857,30 @@ cases(
   },
   {
     'single select > should display default placeholder "Select..."': {},
-    'single select > should display provided placeholder': {
+    'single select > should display provided string placeholder': {
       props: {
+        ...BASIC_PROPS,
         placeholder: 'single Select...',
       },
       expectPlaceholder: 'single Select...',
     },
-    'multi select > should display default placeholder "Select..."': {},
+    'single select > should display provided node placeholder': {
+      props: {
+        ...BASIC_PROPS,
+        placeholder: <span>single Select...</span>,
+      },
+      expectPlaceholder: 'single Select...',
+    },
+    'multi select > should display default placeholder "Select..."': {
+      props: {
+        ...BASIC_PROPS,
+        isMulti: true
+      }
+    },
     'multi select > should display provided placeholder': {
       props: {
+        ...BASIC_PROPS,
+        isMulti: true,
         placeholder: 'multi Select...',
       },
       expectPlaceholder: 'multi Select...',
