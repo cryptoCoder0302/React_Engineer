@@ -296,6 +296,7 @@ type State = {
   ariaLiveContext: string,
   inputIsHidden: boolean,
   isFocused: boolean,
+  isComposing: boolean,
   focusedOption: OptionType | null,
   focusedValue: OptionType | null,
   menuOptions: MenuOptions,
@@ -315,6 +316,7 @@ export default class Select extends Component<Props, State> {
     focusedValue: null,
     inputIsHidden: false,
     isFocused: false,
+    isComposing: false,
     menuOptions: { render: [], focusable: [] },
     selectValue: [],
   };
@@ -323,7 +325,6 @@ export default class Select extends Component<Props, State> {
   // ------------------------------
 
   blockOptionHover: boolean = false;
-  isComposing: boolean = false;
   clearFocusValueOnUpdate: boolean = false;
   commonProps: any; // TODO
   components: SelectComponents;
@@ -551,7 +552,7 @@ export default class Select extends Component<Props, State> {
     }
 
     this.setState({
-      inputIsHidden: nextFocus === -1 ? false : true,
+      inputIsHidden: nextFocus !== -1,
       focusedValue: selectValue[nextFocus],
     });
   }
@@ -983,10 +984,14 @@ export default class Select extends Component<Props, State> {
     }
   }
   onCompositionStart = () => {
-    this.isComposing = true;
+    this.setState({
+      isComposing: true,
+    });
   };
   onCompositionEnd = () => {
-    this.isComposing = false;
+    this.setState({
+      isComposing: false,
+    });
   };
 
   // ==============================
@@ -1136,6 +1141,7 @@ export default class Select extends Component<Props, State> {
       openMenuOnFocus,
     } = this.props;
     const {
+      isComposing,
       focusedOption,
       focusedValue,
       selectValue,
@@ -1176,7 +1182,7 @@ export default class Select extends Component<Props, State> {
         }
         break;
       case 'Tab':
-        if (this.isComposing) return;
+        if (isComposing) return;
 
         if (
           event.shiftKey ||
@@ -1199,7 +1205,7 @@ export default class Select extends Component<Props, State> {
         }
         if (menuIsOpen) {
           if (!focusedOption) return;
-          if (this.isComposing) return;
+          if (isComposing) return;
           this.selectOption(focusedOption);
           break;
         }
