@@ -59,7 +59,7 @@ export const makeAsyncSelect = <C: {}>(
           : undefined,
         inputValue:
           typeof props.inputValue !== 'undefined' ? props.inputValue : '',
-        isLoading: props.defaultOptions === true,
+        isLoading: props.defaultOptions === true ? true : false,
         loadedOptions: [],
         passEmptyOptions: false,
       };
