@@ -296,7 +296,6 @@ type State = {
   ariaLiveContext: string,
   inputIsHidden: boolean,
   isFocused: boolean,
-  isComposing: boolean,
   focusedOption: OptionType | null,
   focusedValue: OptionType | null,
   menuOptions: MenuOptions,
@@ -316,7 +315,6 @@ export default class Select extends Component<Props, State> {
     focusedValue: null,
     inputIsHidden: false,
     isFocused: false,
-    isComposing: false,
     menuOptions: { render: [], focusable: [] },
     selectValue: [],
   };
@@ -325,6 +323,7 @@ export default class Select extends Component<Props, State> {
   // ------------------------------
 
   blockOptionHover: boolean = false;
+  isComposing: boolean = false;
   clearFocusValueOnUpdate: boolean = false;
   commonProps: any; // TODO
   components: SelectComponents;
@@ -369,7 +368,7 @@ export default class Select extends Component<Props, State> {
       'react-select-' + (this.props.instanceId || ++instanceId);
 
     const selectValue = cleanValue(value);
-    const menuOptions = props.menuIsOpen ? this.buildMenuOptions(props, selectValue) : { render: [], focusable: [] };
+    const menuOptions = this.buildMenuOptions(props, selectValue);
 
     this.state.menuOptions = menuOptions;
     this.state.selectValue = selectValue;
@@ -388,18 +387,17 @@ export default class Select extends Component<Props, State> {
     }
   }
   componentWillReceiveProps(nextProps: Props) {
-    const { options, value, menuIsOpen, inputValue } = this.props;
+    const { options, value, inputValue } = this.props;
     // re-cache custom components
     this.cacheComponents(nextProps.components);
     // rebuild the menu options
     if (
       nextProps.value !== value ||
       nextProps.options !== options ||
-      nextProps.menuIsOpen !== menuIsOpen ||
       nextProps.inputValue !== inputValue
     ) {
       const selectValue = cleanValue(nextProps.value);
-      const menuOptions = nextProps.menuIsOpen ? this.buildMenuOptions(nextProps, selectValue) : { render: [], focusable: [] };
+      const menuOptions = this.buildMenuOptions(nextProps, selectValue);
       const focusedValue = this.getNextFocusedValue(selectValue);
       const focusedOption = this.getNextFocusedOption(menuOptions.focusable);
       this.setState({ menuOptions, selectValue, focusedOption, focusedValue });
@@ -985,14 +983,10 @@ export default class Select extends Component<Props, State> {
     }
   }
   onCompositionStart = () => {
-    this.setState({
-      isComposing: true,
-    });
+    this.isComposing = true;
   };
   onCompositionEnd = () => {
-    this.setState({
-      isComposing: false,
-    });
+    this.isComposing = false;
   };
 
   // ==============================
@@ -1142,7 +1136,6 @@ export default class Select extends Component<Props, State> {
       openMenuOnFocus,
     } = this.props;
     const {
-      isComposing,
       focusedOption,
       focusedValue,
       selectValue,
@@ -1183,7 +1176,7 @@ export default class Select extends Component<Props, State> {
         }
         break;
       case 'Tab':
-        if (isComposing) return;
+        if (this.isComposing) return;
 
         if (
           event.shiftKey ||
@@ -1206,7 +1199,7 @@ export default class Select extends Component<Props, State> {
         }
         if (menuIsOpen) {
           if (!focusedOption) return;
-          if (isComposing) return;
+          if (this.isComposing) return;
           this.selectOption(focusedOption);
           break;
         }
