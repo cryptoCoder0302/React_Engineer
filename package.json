@@ -141,6 +141,12 @@
     "packages/*",
     "docs"
   ],
+  "bolt": {
+    "workspaces": [
+      "packages/*",
+      "docs"
+    ]
+  },
   "preconstruct": {
     "packages": [
       "packages/*"
