@@ -919,12 +919,12 @@ export default class Select extends Component<Props, State> {
       }
     } else {
       //$FlowFixMe
-      if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+      if (event.target.tagName !== 'INPUT') {
         this.onMenuClose();
       }
     }
     //$FlowFixMe
-    if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+    if (event.target.tagName !== 'INPUT') {
       event.preventDefault();
     }
   };
