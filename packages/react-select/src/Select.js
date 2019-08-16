@@ -387,7 +387,7 @@ export default class Select extends Component<Props, State> {
       this.focusInput();
     }
   }
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
+  componentWillReceiveProps(nextProps: Props) {
     const { options, value, menuIsOpen, inputValue } = this.props;
     // re-cache custom components
     this.cacheComponents(nextProps.components);

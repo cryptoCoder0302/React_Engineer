@@ -76,7 +76,7 @@ export const makeAsyncSelect = <C: {}>(
         });
       }
     }
-    UNSAFE_componentWillReceiveProps(nextProps: C & AsyncProps) {
+    componentWillReceiveProps(nextProps: C & AsyncProps) {
       // if the cacheOptions prop changes, clear the cache
       if (nextProps.cacheOptions !== this.props.cacheOptions) {
         this.optionsCache = {};
