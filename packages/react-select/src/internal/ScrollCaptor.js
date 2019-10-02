@@ -25,8 +25,9 @@ class ScrollCaptor extends Component<CaptorProps> {
     this.stopListening(this.scrollTarget);
   }
   startListening(el: HTMLElement) {
-    // bail early if no element is available to attach to
+    // bail early if no scroll available
     if (!el) return;
+    if (el.scrollHeight <= el.clientHeight) return;
 
     // all the if statements are to appease Flow 😢
     if (typeof el.addEventListener === 'function') {
@@ -40,6 +41,8 @@ class ScrollCaptor extends Component<CaptorProps> {
     }
   }
   stopListening(el: HTMLElement) {
+    // bail early if no scroll available
+    if (el.scrollHeight <= el.clientHeight) return;
 
     // all the if statements are to appease Flow 😢
     if (typeof el.removeEventListener === 'function') {
