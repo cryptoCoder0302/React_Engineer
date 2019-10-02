@@ -23,7 +23,6 @@ export type AsyncProps = {
   cacheOptions: any,
   onInputChange: (string, InputActionMeta) => void,
   inputValue?: string,
-  isLoading: boolean
 };
 
 export type Props = SelectProps & AsyncProps;
@@ -32,7 +31,6 @@ export const defaultProps = {
   cacheOptions: false,
   defaultOptions: false,
   filterOption: null,
-  isLoading: false
 };
 
 type State = {
@@ -160,7 +158,7 @@ export const makeAsyncSelect = <C: {}>(
       return inputValue;
     };
     render() {
-      const { loadOptions, isLoading: isLoadingProp, ...props } = this.props;
+      const { loadOptions, ...props } = this.props;
       const {
         defaultOptions,
         inputValue,
@@ -181,7 +179,7 @@ export const makeAsyncSelect = <C: {}>(
             this.select = ref;
           }}
           options={options}
-          isLoading={isLoading || isLoadingProp}
+          isLoading={isLoading}
           onInputChange={this.handleInputChange}
         />
       );
