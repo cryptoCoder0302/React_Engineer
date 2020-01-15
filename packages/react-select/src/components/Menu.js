@@ -145,9 +145,7 @@ export function getMenuPlacement({
 
       // BOTTOM: allow browser to increase scrollable area and immediately set scroll
       if (placement === 'bottom') {
-        if (shouldScroll) {
-          scrollTo(scrollParent, scrollDown);
-        }
+        scrollTo(scrollParent, scrollDown);
         return { placement: 'bottom', maxHeight };
       }
       break;
