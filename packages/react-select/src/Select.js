@@ -198,7 +198,7 @@ export type Props = {
   /* Name of the HTML Input (optional - without this, no input will be rendered) */
   name?: string,
   /* Text to display when there are no options */
-  noOptionsMessage: ({ inputValue: string }) => Node | null,
+  noOptionsMessage: ({ inputValue: string }) => string | null,
   /* Handle blur events on the control */
   onBlur?: FocusEventHandler,
   /* Handle change events on the select */
@@ -918,19 +918,13 @@ export default class Select extends Component<Props, State> {
         this.openMenu('first');
       }
     } else {
-      if (
-        // $FlowFixMe
-        event.target.tagName !== 'INPUT' &&
-        event.target.tagName !== 'TEXTAREA'
-      ) {
+      //$FlowFixMe
+      if (event.target.tagName !== 'INPUT') {
         this.onMenuClose();
       }
     }
-    if (
-      // $FlowFixMe
-      event.target.tagName !== 'INPUT' &&
-      event.target.tagName !== 'TEXTAREA'
-    ) {
+    //$FlowFixMe
+    if (event.target.tagName !== 'INPUT') {
       event.preventDefault();
     }
   };
@@ -1026,7 +1020,7 @@ export default class Select extends Component<Props, State> {
     }
   }
   onTouchStart = ({ touches }: TouchEvent) => {
-    const touch = touches && touches.item(0);
+    const touch = touches.item(0);
     if (!touch) {
       return;
     }
@@ -1036,7 +1030,7 @@ export default class Select extends Component<Props, State> {
     this.userIsDragging = false;
   };
   onTouchMove = ({ touches }: TouchEvent) => {
-    const touch = touches && touches.item(0);
+    const touch = touches.item(0);
     if (!touch) {
       return;
     }
@@ -1403,13 +1397,6 @@ export default class Select extends Component<Props, State> {
 
     const id = inputId || this.getElementId('input');
 
-    // aria attributes makes the JSX "noisy", separated for clarity
-    const ariaAttributes = {
-      'aria-autocomplete': 'list',
-      'aria-label': this.props['aria-label'],
-      'aria-labelledby': this.props['aria-labelledby'],
-    };
-
     if (!isSearchable) {
       // use a dummy input to maintain focus/blur functionality
       return (
@@ -1423,10 +1410,16 @@ export default class Select extends Component<Props, State> {
           disabled={isDisabled}
           tabIndex={tabIndex}
           value=""
-          {...ariaAttributes}
         />
       );
     }
+
+    // aria attributes makes the JSX "noisy", separated for clarity
+    const ariaAttributes = {
+      'aria-autocomplete': 'list',
+      'aria-label': this.props['aria-label'],
+      'aria-labelledby': this.props['aria-labelledby'],
+    };
 
     const { cx, theme, selectProps } = this.commonProps;
 

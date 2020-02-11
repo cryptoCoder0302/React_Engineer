@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Tooltip from '@atlaskit/tooltip';
 import Select, { components } from 'react-select';
 import { colourOptions } from '../data';
@@ -15,17 +15,20 @@ const NoOptionsMessage = props => {
   );
 };
 
-const CustomNoOptionsMessage = () => {
-  return (
-    <Select
-      isClearable
-      components={{ NoOptionsMessage }}
-      styles={{ NoOptionsMessage: base => ({ ...base, ...msgStyles }) }}
-      isSearchable
-      name="color"
-      options={[]}
-    />
-  );
-};
+type State = {};
 
-export default CustomNoOptionsMessage;
+export default class CustomNoOptionsMessage extends Component<*, State> {
+  state = {};
+  render() {
+    return (
+      <Select
+        isClearable
+        components={{ NoOptionsMessage }}
+        styles={{ noOptionsMessage: base => ({ ...base, ...msgStyles }) }}
+        isSearchable
+        name="color"
+        options={[]}
+      />
+    );
+  }
+}
