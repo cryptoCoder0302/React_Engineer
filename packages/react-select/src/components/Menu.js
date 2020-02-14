@@ -1,7 +1,6 @@
 // @flow
 /** @jsx jsx */
 import {
-  createContext,
   Component,
   type Element as ReactElement,
   type ElementRef,
@@ -9,6 +8,7 @@ import {
 } from 'react';
 import { jsx } from '@emotion/core';
 import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
 
 import {
   animatedScrollTo,
@@ -258,16 +258,15 @@ export const menuCSS = ({
   zIndex: 1,
 });
 
-const PortalPlacementContext = createContext<() => void>(() => { });
-
 // NOTE: internal only
 export class MenuPlacer extends Component<MenuPlacerProps, MenuState> {
   state = {
     maxHeight: this.props.maxMenuHeight,
     placement: null,
   };
-  static contextType = PortalPlacementContext;
-
+  static contextTypes = {
+    getPortalPlacement: PropTypes.func,
+  };
   getPlacement = (ref: ElementRef<*>) => {
     const {
       minMenuHeight,
@@ -482,6 +481,14 @@ export const menuPortalCSS = ({ rect, offset, position }: PortalStyleArgs) => ({
 
 export class MenuPortal extends Component<MenuPortalProps, MenuPortalState> {
   state = { placement: null };
+  static childContextTypes = {
+    getPortalPlacement: PropTypes.func,
+  };
+  getChildContext() {
+    return {
+      getPortalPlacement: this.getPortalPlacement,
+    };
+  }
 
   // callback for occassions where the menu must "flip"
   getPortalPlacement = ({ placement }: MenuState) => {
@@ -519,10 +526,6 @@ export class MenuPortal extends Component<MenuPortalProps, MenuPortalState> {
       <div css={getStyles('menuPortal', state)}>{children}</div>
     );
 
-    return (
-      <PortalPlacementContext.Provider value={this.getPortalPlacement}>
-        {appendTo ? createPortal(menuWrapper, appendTo) : menuWrapper}
-      </PortalPlacementContext.Provider>
-    );
+    return appendTo ? createPortal(menuWrapper, appendTo) : menuWrapper;
   }
 }
