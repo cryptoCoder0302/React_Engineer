@@ -1089,9 +1089,7 @@ export default class Select extends Component<Props, State> {
     const inputValue = event.currentTarget.value;
     this.inputIsHiddenAfterUpdate = false;
     this.onInputChange(inputValue, { action: 'input-change' });
-    if (!this.props.menuIsOpen) {
-      this.onMenuOpen();
-    }
+    this.onMenuOpen();
   };
   onInputFocus = (event: SyntheticFocusEvent<HTMLInputElement>) => {
     const { isSearchable, isMulti } = this.props;
@@ -1800,8 +1798,8 @@ export default class Select extends Component<Props, State> {
     if (!this.state.isFocused) return null;
     return (
       <A11yText aria-live="polite">
-        <p id="aria-selection-event">&nbsp;{this.state.ariaLiveSelection}</p>
-        <p id="aria-context">&nbsp;{this.constructAriaLiveMessage()}</p>
+        <span id="aria-selection-event">&nbsp;{this.state.ariaLiveSelection}</span>
+        <span id="aria-context">&nbsp;{this.constructAriaLiveMessage()}</span>
       </A11yText>
     );
   }
