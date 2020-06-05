@@ -36,7 +36,7 @@ yarn add react-select
 ```
 
 Then use it in your app:
-#### With React Component
+
 ```js
 import React from 'react';
 import Select from 'react-select';
@@ -71,36 +71,6 @@ class App extends React.Component {
 }
 ```
 
-#### With React Hooks
-```
-import React, { useState } from "react";
-import Select from "react-select";
-
-const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" }
-];
-
-export default function App() {
-
-  const [selectedOption, setSelectedOption] = useState(null);
-  const handleChange = selectedOption => {
-    setselectedOption(selectedOption);
-  };
-  
-  return (
-    <div className="App">
-      <Select
-        defaultValue={selectedOption}
-        onChange={setSelectedOption}
-        options={options}
-      />
-    </div>
-  );
-}
-
-```
 ## Props
 
 Common props you may want to specify include:
