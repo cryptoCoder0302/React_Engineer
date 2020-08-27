@@ -1041,7 +1041,7 @@ export default class Select extends Component<Props, State> {
     }
   }
   onTouchStart = ({ touches }: TouchEvent) => {
-    const touch = touches.item(0);
+    const touch = touches && touches.item(0);
     if (!touch) {
       return;
     }
@@ -1051,7 +1051,7 @@ export default class Select extends Component<Props, State> {
     this.userIsDragging = false;
   };
   onTouchMove = ({ touches }: TouchEvent) => {
-    const touch = touches.item(0);
+    const touch = touches && touches.item(0);
     if (!touch) {
       return;
     }
@@ -1104,7 +1104,9 @@ export default class Select extends Component<Props, State> {
     const inputValue = event.currentTarget.value;
     this.inputIsHiddenAfterUpdate = false;
     this.onInputChange(inputValue, { action: 'input-change' });
-    this.onMenuOpen();
+    if (!this.props.menuIsOpen) {
+      this.onMenuOpen();
+    }
   };
   onInputFocus = (event: SyntheticFocusEvent<HTMLInputElement>) => {
     const { isSearchable, isMulti } = this.props;
