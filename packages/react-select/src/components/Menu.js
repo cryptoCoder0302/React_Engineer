@@ -7,7 +7,7 @@ import {
   type ElementRef,
   type Node,
 } from 'react';
-import { jsx } from '@emotion/core';
+import { jsx } from '@emotion/react';
 import { createPortal } from 'react-dom';
 
 import {
@@ -258,9 +258,7 @@ export const menuCSS = ({
   zIndex: 1,
 });
 
-const PortalPlacementContext = createContext<{
-  getPortalPlacement?: (() => void) | null,
-}>({ getPortalPlacement: null });
+const PortalPlacementContext = createContext<() => void>(() => { });
 
 // NOTE: internal only
 export class MenuPlacer extends Component<MenuPlacerProps, MenuState> {
@@ -279,6 +277,7 @@ export class MenuPlacer extends Component<MenuPlacerProps, MenuState> {
       menuShouldScrollIntoView,
       theme,
     } = this.props;
+    const { getPortalPlacement } = this.context;
 
     if (!ref) return;
 
@@ -296,7 +295,6 @@ export class MenuPlacer extends Component<MenuPlacerProps, MenuState> {
       theme,
     });
 
-    const { getPortalPlacement } = this.context;
     if (getPortalPlacement) getPortalPlacement(state);
 
     this.setState(state);
@@ -522,9 +520,7 @@ export class MenuPortal extends Component<MenuPortalProps, MenuPortalState> {
     );
 
     return (
-      <PortalPlacementContext.Provider
-        value={{ getPortalPlacement: this.getPortalPlacement }}
-      >
+      <PortalPlacementContext.Provider value={this.getPortalPlacement}>
         {appendTo ? createPortal(menuWrapper, appendTo) : menuWrapper}
       </PortalPlacementContext.Provider>
     );
