@@ -1,6 +1,6 @@
 // @flow
 /** @jsx jsx */
-import { jsx } from '@emotion/react';
+import { jsx } from '@emotion/core';
 
 const Svg = ({ size, ...props }: { size: number }) => (
   <svg
