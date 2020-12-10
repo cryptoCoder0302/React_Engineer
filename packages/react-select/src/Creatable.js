@@ -36,6 +36,8 @@ export type CreatableProps = {
      created, and `onChange` will **not** be called. Use this when you need more
      control over what happens when new options are created. */
   onCreateOption?: string => void,
+  /* Sets the position of the createOption element in your options list. Defaults to 'last' */
+  createOptionPosition: 'first' | 'last',
   /* Name of the HTML Input (optional - without this, no input will be rendered) */
   name?: string,
   options?: OptionsType,
@@ -99,7 +101,7 @@ export const makeCreatableSelect = <C: {}>(
         options: options,
       };
     }
-    static getDerivedStateFromProps(props: CreatableProps & C, state: State) {
+    UNSAFE_componentWillReceiveProps(nextProps: CreatableProps & C) {
       const {
         allowCreateWhileLoading,
         createOptionPosition,
@@ -109,15 +111,15 @@ export const makeCreatableSelect = <C: {}>(
         isLoading,
         isValidNewOption,
         value,
-      } = props;
-      const options = props.options || [];
-      let { newOption } = state;
+      } = nextProps;
+      const options = nextProps.options || [];
+      let { newOption } = this.state;
       if (isValidNewOption(inputValue, cleanValue(value), options)) {
         newOption = getNewOptionData(inputValue, formatCreateLabel(inputValue));
       } else {
         newOption = undefined;
       }
-      return {
+      this.setState({
         newOption: newOption,
         options:
           (allowCreateWhileLoading || !isLoading) && newOption
@@ -125,7 +127,7 @@ export const makeCreatableSelect = <C: {}>(
               ? [newOption, ...options]
               : [...options, newOption]
             : options,
-      };
+      });
     }
     onChange = (newValue: ValueType, actionMeta: ActionMeta) => {
       const {
