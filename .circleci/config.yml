@@ -70,5 +70,5 @@ jobs:
                   command: |
                       yarn global add cypress
                       yarn install --silent
-                      yarn cypress install
+                      cypress install
                       yarn e2e

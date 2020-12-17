@@ -440,11 +440,6 @@ export default class Select extends Component<Props, State> {
       this.focusInput();
     }
 
-    if (isFocused && isDisabled && !prevProps.isDisabled) {
-      // ensure select state gets blurred in case Select is programatically disabled while focused
-      this.setState({ isFocused: false }, this.onMenuClose);
-    }
-
     // scroll the focused option into view if necessary
     if (
       this.menuListRef &&
@@ -747,15 +742,14 @@ export default class Select extends Component<Props, State> {
     };
   }
 
-  getValue = () => this.state.selectValue;
-
-  cx = (...args: any) => classNames(this.props.classNamePrefix, ...args);
-
   getCommonProps() {
-    const { clearValue, cx, getStyles, getValue, setValue, selectOption, props } = this;
-    const { isMulti, isRtl, options } = props;
+    const { clearValue, getStyles, setValue, selectOption, props } = this;
+    const { classNamePrefix, isMulti, isRtl, options } = props;
+    const { selectValue } = this.state;
     const hasValue = this.hasValue();
+    const getValue = () => selectValue;
 
+    const cx = classNames.bind(null, classNamePrefix);
     return {
       cx,
       clearValue,
@@ -1526,7 +1520,7 @@ export default class Select extends Component<Props, State> {
             }}
             isFocused={isOptionFocused}
             isDisabled={isDisabled}
-            key={`${this.getOptionValue(opt)}${index}`}
+            key={this.getOptionValue(opt)}
             index={index}
             removeProps={{
               onClick: () => this.removeValue(opt),
