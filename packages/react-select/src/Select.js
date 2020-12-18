@@ -81,7 +81,7 @@ export type Props = {
   'aria-labelledby'?: string,
   /* Focus the control when it is mounted */
   autoFocus?: boolean,
-  /* Remove the currently focused option when the user presses backspace when Select isClearable or isMulti */
+  /* Remove the currently focused option when the user presses backspace */
   backspaceRemovesValue: boolean,
   /* Remove focus from the input when the user selects an option (handy for dismissing the keyboard on touch devices) */
   blurInputOnSelect: boolean,
@@ -682,12 +682,18 @@ export default class Select extends Component<Props, State> {
     }
   };
   removeValue = (removedValue: OptionType) => {
+    const { isMulti } = this.props;
     const { selectValue } = this.state;
     const candidate = this.getOptionValue(removedValue);
-    const newValue = selectValue.filter(
+    const newValues = selectValue.filter(
       i => this.getOptionValue(i) !== candidate
     );
-    this.onChange(newValue.length ? newValue : null, {
+    const newValue = isMulti
+      ? newValues
+      : newValues.length > 0
+      ? newValues[0]
+      : null;
+    this.onChange(newValue, {
       action: 'remove-value',
       removedValue,
     });
@@ -704,16 +710,22 @@ export default class Select extends Component<Props, State> {
     this.onChange(isMulti ? [] : null, { action: 'clear' });
   };
   popValue = () => {
+    const { isMulti } = this.props;
     const { selectValue } = this.state;
     const lastSelectedValue = selectValue[selectValue.length - 1];
-    const newValue = selectValue.slice(0, selectValue.length - 1);
+    const newValues = selectValue.slice(0, selectValue.length - 1);
+    const newValue = isMulti
+      ? newValues
+      : newValues.length > 0
+      ? newValues[0]
+      : null;
     this.announceAriaLiveSelection({
       event: 'pop-value',
       context: {
         value: lastSelectedValue ? this.getOptionLabel(lastSelectedValue) : '',
       },
     });
-    this.onChange(newValue.length ? newValue : null, {
+    this.onChange(isMulti ? newValue : null, {
       action: 'pop-value',
       removedValue: lastSelectedValue,
     });
