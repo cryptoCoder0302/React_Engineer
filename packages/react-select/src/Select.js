@@ -682,12 +682,13 @@ export default class Select extends Component<Props, State> {
     }
   };
   removeValue = (removedValue: OptionType) => {
+    const { isMulti } = this.props;
     const { selectValue } = this.state;
     const candidate = this.getOptionValue(removedValue);
     const newValue = selectValue.filter(
       i => this.getOptionValue(i) !== candidate
     );
-    this.onChange(newValue.length ? newValue : null, {
+    this.onChange(isMulti ? newValue : null, {
       action: 'remove-value',
       removedValue,
     });
@@ -704,6 +705,7 @@ export default class Select extends Component<Props, State> {
     this.onChange(isMulti ? [] : null, { action: 'clear' });
   };
   popValue = () => {
+    const { isMulti } = this.props;
     const { selectValue } = this.state;
     const lastSelectedValue = selectValue[selectValue.length - 1];
     const newValue = selectValue.slice(0, selectValue.length - 1);
@@ -713,7 +715,7 @@ export default class Select extends Component<Props, State> {
         value: lastSelectedValue ? this.getOptionLabel(lastSelectedValue) : '',
       },
     });
-    this.onChange(newValue.length ? newValue : null, {
+    this.onChange(isMulti ? newValue : null, {
       action: 'pop-value',
       removedValue: lastSelectedValue,
     });
@@ -742,14 +744,15 @@ export default class Select extends Component<Props, State> {
     };
   }
 
-  getCommonProps() {
-    const { clearValue, getStyles, setValue, selectOption, props } = this;
-    const { classNamePrefix, isMulti, isRtl, options } = props;
-    const { selectValue } = this.state;
-    const hasValue = this.hasValue();
-    const getValue = () => selectValue;
+  getValue = () => this.state.selectValue;
 
-    const cx = classNames.bind(null, classNamePrefix);
+  cx = (...args: any) => classNames(this.props.classNamePrefix, ...args);
+
+  getCommonProps() {
+    const { clearValue, cx, getStyles, getValue, setValue, selectOption, props } = this;
+    const { isMulti, isRtl, options } = props;
+    const hasValue = this.hasValue();
+
     return {
       cx,
       clearValue,
@@ -1520,7 +1523,7 @@ export default class Select extends Component<Props, State> {
             }}
             isFocused={isOptionFocused}
             isDisabled={isDisabled}
-            key={this.getOptionValue(opt)}
+            key={`${this.getOptionValue(opt)}${index}`}
             index={index}
             removeProps={{
               onClick: () => this.removeValue(opt),

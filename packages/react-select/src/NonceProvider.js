@@ -1,13 +1,12 @@
 // @flow
 import React, { Component, type Node } from 'react';
-import { CacheProvider } from '@emotion/react';
+import { CacheProvider } from '@emotion/core';
 import createCache from '@emotion/cache';
 import memoizeOne from 'memoize-one';
 
 type NonceProviderProps = {
   nonce: string,
   children: Node,
-  key: string,
 };
 
 export default class NonceProvider extends Component<NonceProviderProps> {
@@ -15,14 +14,11 @@ export default class NonceProvider extends Component<NonceProviderProps> {
     super(props);
     this.createEmotionCache = memoizeOne(this.createEmotionCache);
   }
-  createEmotionCache = (nonce: string, key: string) => {
-    return createCache({ nonce, key });
+  createEmotionCache = (nonce: string) => {
+    return createCache({ nonce });
   };
   render() {
-    const emotionCache = this.createEmotionCache(
-      this.props.nonce,
-      this.props.key
-    );
+    const emotionCache = this.createEmotionCache(this.props.nonce);
     return (
       <CacheProvider value={emotionCache}>{this.props.children}</CacheProvider>
     );
