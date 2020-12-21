@@ -682,18 +682,12 @@ export default class Select extends Component<Props, State> {
     }
   };
   removeValue = (removedValue: OptionType) => {
-    const { isMulti } = this.props;
     const { selectValue } = this.state;
     const candidate = this.getOptionValue(removedValue);
-    const newValueArray = selectValue.filter(
+    const newValue = selectValue.filter(
       i => this.getOptionValue(i) !== candidate
     );
-    const newValue = isMulti
-      ? newValueArray
-      : newValueArray.length > 0
-      ? newValueArray[0]
-      : null;
-    this.onChange(newValue, {
+    this.onChange(newValue.length ? newValue : null, {
       action: 'remove-value',
       removedValue,
     });
@@ -710,22 +704,16 @@ export default class Select extends Component<Props, State> {
     this.onChange(isMulti ? [] : null, { action: 'clear' });
   };
   popValue = () => {
-    const { isMulti } = this.props;
     const { selectValue } = this.state;
     const lastSelectedValue = selectValue[selectValue.length - 1];
-    const newValueArray = selectValue.slice(0, selectValue.length - 1);
-    const newValue = isMulti
-      ? newValueArray
-      : newValueArray.length > 0
-      ? newValueArray[0]
-      : null;
+    const newValue = selectValue.slice(0, selectValue.length - 1);
     this.announceAriaLiveSelection({
       event: 'pop-value',
       context: {
         value: lastSelectedValue ? this.getOptionLabel(lastSelectedValue) : '',
       },
     });
-    this.onChange(newValue, {
+    this.onChange(newValue.length ? newValue : null, {
       action: 'pop-value',
       removedValue: lastSelectedValue,
     });
