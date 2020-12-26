@@ -324,8 +324,8 @@ const Menu = (props: MenuProps) => {
     <div
       css={getStyles('menu', props)}
       className={cx({ menu: true }, className)}
-      ref={innerRef}
       {...innerProps}
+      ref={innerRef}
     >
       {children}
     </div>
@@ -350,8 +350,6 @@ export type MenuListProps = {
   children: Node,
   /** Inner ref to DOM Node */
   innerRef: InnerRef,
-  /** Props to be passed to the menu-list wrapper. */
-  innerProps: {},
 };
 export type MenuListComponentProps = CommonProps &
   MenuListProps &
@@ -370,15 +368,7 @@ export const menuListCSS = ({
   WebkitOverflowScrolling: 'touch',
 });
 export const MenuList = (props: MenuListComponentProps) => {
-  const {
-    children,
-    className,
-    cx,
-    getStyles,
-    innerProps,
-    innerRef,
-    isMulti,
-  } = props;
+  const { children, className, cx, getStyles, isMulti, innerRef } = props;
   return (
     <div
       css={getStyles('menuList', props)}
@@ -390,7 +380,6 @@ export const MenuList = (props: MenuListComponentProps) => {
         className
       )}
       ref={innerRef}
-      {...innerProps}
     >
       {children}
     </div>
@@ -473,7 +462,6 @@ export type MenuPortalProps = CommonProps & {
   appendTo: HTMLElement,
   children: Node, // ideally Menu<MenuProps>
   controlElement: HTMLElement,
-  innerProps: {},
   menuPlacement: MenuPlacement,
   menuPosition: MenuPosition,
 };
@@ -510,10 +498,7 @@ export class MenuPortal extends Component<MenuPortalProps, MenuPortalState> {
     const {
       appendTo,
       children,
-      className,
       controlElement,
-      cx,
-      innerProps,
       menuPlacement,
       menuPosition: position,
       getStyles,
@@ -533,18 +518,7 @@ export class MenuPortal extends Component<MenuPortalProps, MenuPortalState> {
 
     // same wrapper element whether fixed or portalled
     const menuWrapper = (
-      <div
-        css={getStyles('menuPortal', state)}
-        className={cx(
-          {
-            'menu-portal': true,
-          },
-          className
-        )}
-        {...innerProps}
-      >
-        {children}
-      </div>
+      <div css={getStyles('menuPortal', state)}>{children}</div>
     );
 
     return (

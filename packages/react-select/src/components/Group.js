@@ -8,12 +8,10 @@ import type { CommonProps } from '../types';
 type ComponentProps = {
   /** The children to be rendered. */
   children: Node,
-  /** Component to wrap the label, receives headingProps. */
+  /** Component to wrap the label, recieves headingProps. */
   Heading: ComponentType<any>,
   /** Props to pass to Heading. */
   headingProps: any,
-  /** Props to be passed to the group element. */
-  innerProps: {},
   /** Label to be displayed in the heading component. */
   label: Node,
 };
@@ -32,7 +30,6 @@ const Group = (props: GroupProps) => {
     getStyles,
     Heading,
     headingProps,
-    innerProps,
     label,
     theme,
     selectProps,
@@ -41,7 +38,6 @@ const Group = (props: GroupProps) => {
     <div
       css={getStyles('group', props)}
       className={cx({ group: true }, className)}
-      {...innerProps}
     >
       <Heading
         {...headingProps}
