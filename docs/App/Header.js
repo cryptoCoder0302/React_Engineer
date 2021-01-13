@@ -106,16 +106,23 @@ const Container = props => (
 );
 
 type HeaderProps = RouterProps & { children: Node };
-type HeaderState = { stars: number };
+type HeaderState = { contentHeight: 'auto' | number, stars: number };
 
 const apiUrl = 'https://api.github.com/repos/jedwatson/react-select';
 
 class Header extends Component<HeaderProps, HeaderState> {
   nav: HTMLElement;
   content: HTMLElement;
-  state = { stars: 0 };
+  state = { contentHeight: 'auto', stars: 0 };
   componentDidMount() {
     this.getStarCount();
+  }
+  UNSAFE_componentWillReceiveProps({ location }: HeaderProps) {
+    const valid = ['/', '/home'];
+    const shouldCollapse = !valid.includes(this.props.location.pathname);
+    if (location.pathname !== this.props.location.pathname && shouldCollapse) {
+      this.toggleCollapse();
+    }
   }
   getStarCount = () => {
     fetch(apiUrl)
@@ -132,28 +139,25 @@ class Header extends Component<HeaderProps, HeaderState> {
     const valid = ['/', '/home'];
     return valid.includes(props.location.pathname);
   };
-  setContentRef = ref => {
+  toggleCollapse = () => {
+    const contentHeight = this.content.scrollHeight;
+    this.setState({ contentHeight });
+  };
+  getContent = ref => {
     if (!ref) return;
     this.content = ref;
   };
-  getContentHeight = () => {
-    if (!this.content) {
-      return 'auto';
-    }
-
-    return this.content.scrollHeight;
-  }
   render() {
     const { children, history } = this.props;
-    const { stars } = this.state;
+    const { contentHeight, stars } = this.state;
 
     return (
       <Gradient>
         {children}
         <Collapse
           isCollapsed={!this.isHome()}
-          height={this.getContentHeight()}
-          innerRef={this.setContentRef}
+          height={contentHeight}
+          innerRef={this.getContent}
         >
           <Container>
             <h1
