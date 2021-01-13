@@ -501,7 +501,7 @@ export default class Select extends Component<Props, State> {
   openMenu(focusOption: 'first' | 'last') {
     const { selectValue, isFocused } = this.state;
     const menuOptions = this.buildMenuOptions(this.props, selectValue);
-    const { isMulti, tabSelectsValue } = this.props;
+    const { isMulti } = this.props;
     let openAtIndex =
       focusOption === 'first' ? 0 : menuOptions.focusable.length - 1;
 
@@ -524,10 +524,7 @@ export default class Select extends Component<Props, State> {
       },
       () => {
         this.onMenuOpen();
-        this.announceAriaLiveContext({
-          event: 'menu',
-          context: { tabSelectsValue },
-        });
+        this.announceAriaLiveContext({ event: 'menu' });
       }
     );
   }
@@ -585,7 +582,7 @@ export default class Select extends Component<Props, State> {
   }
 
   focusOption(direction: FocusDirection = 'first') {
-    const { pageSize, tabSelectsValue } = this.props;
+    const { pageSize } = this.props;
     const { focusedOption, menuOptions } = this.state;
     const options = menuOptions.focusable;
 
@@ -594,10 +591,7 @@ export default class Select extends Component<Props, State> {
     let focusedIndex = options.indexOf(focusedOption);
     if (!focusedOption) {
       focusedIndex = -1;
-      this.announceAriaLiveContext({
-        event: 'menu',
-        context: { tabSelectsValue },
-      });
+      this.announceAriaLiveContext({ event: 'menu' });
     }
 
     if (direction === 'up') {
@@ -620,10 +614,7 @@ export default class Select extends Component<Props, State> {
     });
     this.announceAriaLiveContext({
       event: 'menu',
-      context: {
-        isDisabled: isOptionDisabled(options[nextFocus]),
-        tabSelectsValue,
-      },
+      context: { isDisabled: isOptionDisabled(options[nextFocus]) },
     });
   }
   onChange = (newValue: ValueType, actionMeta: ActionMeta) => {
@@ -1724,6 +1715,7 @@ export default class Select extends Component<Props, State> {
               Heading={GroupHeading}
               headingProps={{
                 id: headingId,
+                data: item.data,
               }}
               label={this.formatGroupLabel(item.data)}
             >
