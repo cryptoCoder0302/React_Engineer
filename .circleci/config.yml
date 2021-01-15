@@ -57,7 +57,6 @@ jobs:
             - run:
                   name: Running unit tests
                   command: |
-                      yarn prettier:check
                       yarn lint
                       yarn flow check --flowconfig-name=.flowconfig-ci
                       yarn test:jest
