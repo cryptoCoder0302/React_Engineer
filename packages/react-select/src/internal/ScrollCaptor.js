@@ -1,66 +1,30 @@
 // @flow
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
-import React, { PureComponent, type Element } from 'react';
-import ScrollLock from './ScrollLock/index';
 
-type RefCallback<T> = (T | null) => void;
+import React, { Component, type Element } from 'react';
 
-type Props = {
-  children: (RefCallback<HTMLElement>) => Element<*>,
-  lockEnabled: boolean,
-  captureEnabled: boolean,
+import NodeResolver from './NodeResolver';
+
+export type CaptorProps = {
+  children: Element<*>,
   onBottomArrive?: (event: SyntheticEvent<HTMLElement>) => void,
   onBottomLeave?: (event: SyntheticEvent<HTMLElement>) => void,
   onTopArrive?: (event: SyntheticEvent<HTMLElement>) => void,
   onTopLeave?: (event: SyntheticEvent<HTMLElement>) => void,
 };
 
-type State = {
-  enableLock: boolean,
-};
-
-const defaultProps = {
-  captureEnabled: true,
-};
-
-export default class ScrollManager extends PureComponent<Props, State> {
-  static defaultProps = defaultProps;
-
+class ScrollCaptor extends Component<CaptorProps> {
   isBottom: boolean = false;
   isTop: boolean = false;
+  scrollTarget: HTMLElement;
   touchStart: number;
 
-  state = {
-    enableLock: false,
-  };
-
-  targetRef = React.createRef<HTMLElement>();
-
-  blurSelectInput = () =>
-    document.activeElement && document.activeElement.blur();
-
   componentDidMount() {
-    if (this.props.captureEnabled) {
-      this.startListening(this.targetRef.current);
-    }
+    this.startListening(this.scrollTarget);
   }
-
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.captureEnabled !== this.props.captureEnabled) {
-      if (this.props.captureEnabled) {
-        this.startListening(this.targetRef.current);
-      } else {
-        this.stopListening(this.targetRef.current);
-      }
-    }
-  }
-
   componentWillUnmount() {
-    this.stopListening(this.targetRef.current);
+    this.stopListening(this.scrollTarget);
   }
-
-  startListening(el: ?HTMLElement) {
+  startListening(el: HTMLElement) {
     // bail early if no element is available to attach to
     if (!el) return;
 
@@ -75,9 +39,7 @@ export default class ScrollManager extends PureComponent<Props, State> {
       el.addEventListener('touchmove', this.onTouchMove, false);
     }
   }
-
-  stopListening(el: ?HTMLElement) {
-    // bail early if no element is available to detach from
+  stopListening(el: HTMLElement) {
     if (!el) return;
 
     // all the if statements are to appease Flow 😢
@@ -103,12 +65,8 @@ export default class ScrollManager extends PureComponent<Props, State> {
       onTopArrive,
       onTopLeave,
     } = this.props;
-
-    // Reference should never be `null` at this point, but flow complains otherwise
-    if (this.targetRef.current === null) return;
-
-    const { scrollTop, scrollHeight, clientHeight } = this.targetRef.current;
-    const target = this.targetRef.current;
+    const { scrollTop, scrollHeight, clientHeight } = this.scrollTarget;
+    const target = this.scrollTarget;
     const isDeltaPositive = delta > 0;
     const availableScroll = scrollHeight - clientHeight - scrollTop;
     let shouldCancelScroll = false;
@@ -160,35 +118,26 @@ export default class ScrollManager extends PureComponent<Props, State> {
     this.handleEventDelta(event, deltaY);
   };
 
-  setTargetRef = (instance: HTMLElement | null) => {
-    this.targetRef.current = instance;
-    this.setState({ enableLock: !!instance });
+  getScrollTarget = (ref: HTMLElement) => {
+    this.scrollTarget = ref;
   };
 
   render() {
-    const { children, lockEnabled } = this.props;
-
-    /*
-     * Div
-     * ------------------------------
-     * blocks scrolling on non-body elements behind the menu
-     * ScrollLock
-     * ------------------------------
-     * actually does the scroll locking
-     */
     return (
-      <React.Fragment>
-        {lockEnabled && (
-          <div
-            onClick={this.blurSelectInput}
-            css={{ position: 'fixed', left: 0, bottom: 0, right: 0, top: 0 }}
-          />
-        )}
-        {children(this.setTargetRef)}
-        {lockEnabled && this.state.enableLock && this.targetRef.current && (
-          <ScrollLock touchScrollTarget={this.targetRef.current} />
-        )}
-      </React.Fragment>
+      <NodeResolver innerRef={this.getScrollTarget}>
+        {this.props.children}
+      </NodeResolver>
     );
   }
+}
+
+type SwitchProps = CaptorProps & {
+  isEnabled: boolean,
+};
+
+export default function ScrollCaptorSwitch({
+  isEnabled = true,
+  ...props
+}: SwitchProps) {
+  return isEnabled ? <ScrollCaptor {...props} /> : props.children;
 }

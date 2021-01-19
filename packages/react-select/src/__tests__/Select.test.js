@@ -12,7 +12,7 @@ import {
 } from './constants';
 import Select from '../Select';
 
-import { matchers } from 'jest-emotion';
+import { matchers } from '@emotion/jest';
 
 expect.extend(matchers);
 
@@ -2305,7 +2305,7 @@ test('clear select by clicking on clear button > should not call onMenuOpen', ()
     container.querySelector('.react-select__clear-indicator'),
     { button: 0 }
   );
-  expect(onChangeSpy).toBeCalledWith(null, {
+  expect(onChangeSpy).toBeCalledWith([], {
     action: 'clear',
     name: BASIC_PROPS.name,
   });
