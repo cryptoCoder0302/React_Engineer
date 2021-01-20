@@ -370,9 +370,24 @@ export default class Select extends Component<Props, State> {
 
     const selectValue = cleanValue(value);
 
-    this.state.menuOptions = props.menuIsOpen
+    this.buildMenuOptions = memoizeOne(
+      this.buildMenuOptions,
+      (newArgs: any, lastArgs: any) => {
+        const [newProps, newSelectValue] = (newArgs: [Props, OptionsType]);
+        const [lastProps, lastSelectValue] = (lastArgs: [Props, OptionsType]);
+
+        return (
+          newSelectValue === lastSelectValue &&
+          newProps.inputValue === lastProps.inputValue &&
+          newProps.options === lastProps.options
+        );
+      }
+    ).bind(this);
+    const menuOptions = props.menuIsOpen
       ? this.buildMenuOptions(props, selectValue)
       : { render: [], focusable: [] };
+
+    this.state.menuOptions = menuOptions;
     this.state.selectValue = selectValue;
   }
   componentDidMount() {
