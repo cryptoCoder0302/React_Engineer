@@ -370,24 +370,9 @@ export default class Select extends Component<Props, State> {
 
     const selectValue = cleanValue(value);
 
-    this.buildMenuOptions = memoizeOne(
-      this.buildMenuOptions,
-      (newArgs: any, lastArgs: any) => {
-        const [newProps, newSelectValue] = (newArgs: [Props, OptionsType]);
-        const [lastProps, lastSelectValue] = (lastArgs: [Props, OptionsType]);
-
-        return (
-          newSelectValue === lastSelectValue &&
-          newProps.inputValue === lastProps.inputValue &&
-          newProps.options === lastProps.options
-        );
-      }
-    ).bind(this);
-    const menuOptions = props.menuIsOpen
+    this.state.menuOptions = props.menuIsOpen
       ? this.buildMenuOptions(props, selectValue)
       : { render: [], focusable: [] };
-
-    this.state.menuOptions = menuOptions;
     this.state.selectValue = selectValue;
   }
   componentDidMount() {
@@ -702,18 +687,12 @@ export default class Select extends Component<Props, State> {
     }
   };
   removeValue = (removedValue: OptionType) => {
-    const { isMulti } = this.props;
     const { selectValue } = this.state;
     const candidate = this.getOptionValue(removedValue);
-    const newValueArray = selectValue.filter(
+    const newValue = selectValue.filter(
       i => this.getOptionValue(i) !== candidate
     );
-    const newValue = isMulti
-      ? newValueArray
-      : newValueArray.length > 0
-      ? newValueArray[0]
-      : null;
-    this.onChange(newValue, {
+    this.onChange(newValue.length ? newValue : null, {
       action: 'remove-value',
       removedValue,
     });
@@ -726,25 +705,19 @@ export default class Select extends Component<Props, State> {
     this.focusInput();
   };
   clearValue = () => {
-    this.onChange(this.props.isMulti ? [] : null, { action: 'clear' });
+    this.onChange(null, { action: 'clear' });
   };
   popValue = () => {
-    const { isMulti } = this.props;
     const { selectValue } = this.state;
     const lastSelectedValue = selectValue[selectValue.length - 1];
-    const newValueArray = selectValue.slice(0, selectValue.length - 1);
-    const newValue = isMulti
-      ? newValueArray
-      : newValueArray.length > 0
-      ? newValueArray[0]
-      : null;
+    const newValue = selectValue.slice(0, selectValue.length - 1);
     this.announceAriaLiveSelection({
       event: 'pop-value',
       context: {
         value: lastSelectedValue ? this.getOptionLabel(lastSelectedValue) : '',
       },
     });
-    this.onChange(newValue, {
+    this.onChange(newValue.length ? newValue : null, {
       action: 'pop-value',
       removedValue: lastSelectedValue,
     });
