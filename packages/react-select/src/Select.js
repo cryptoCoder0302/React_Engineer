@@ -6,12 +6,7 @@ import { MenuPlacer } from './components/Menu';
 import isEqual from './internal/react-fast-compare';
 
 import { createFilter } from './filters';
-import {
-  A11yText,
-  DummyInput,
-  ScrollBlock,
-  ScrollCaptor,
-} from './internal/index';
+import { A11yText, DummyInput, ScrollManager } from './internal/index';
 import {
   valueFocusAriaMessage,
   optionFocusAriaMessage,
@@ -341,19 +336,19 @@ export default class Select extends Component<Props, State> {
   // ------------------------------
 
   controlRef: ElRef = null;
-  getControlRef = (ref: HTMLElement) => {
+  getControlRef = (ref: ?HTMLElement) => {
     this.controlRef = ref;
   };
   focusedOptionRef: ElRef = null;
-  getFocusedOptionRef = (ref: HTMLElement) => {
+  getFocusedOptionRef = (ref: ?HTMLElement) => {
     this.focusedOptionRef = ref;
   };
   menuListRef: ElRef = null;
-  getMenuListRef = (ref: HTMLElement) => {
+  getMenuListRef = (ref: ?HTMLElement) => {
     this.menuListRef = ref;
   };
   inputRef: ElRef = null;
-  getInputRef = (ref: HTMLElement) => {
+  getInputRef = (ref: ?HTMLElement) => {
     this.inputRef = ref;
   };
 
@@ -702,12 +697,18 @@ export default class Select extends Component<Props, State> {
     }
   };
   removeValue = (removedValue: OptionType) => {
+    const { isMulti } = this.props;
     const { selectValue } = this.state;
     const candidate = this.getOptionValue(removedValue);
-    const newValue = selectValue.filter(
+    const newValueArray = selectValue.filter(
       i => this.getOptionValue(i) !== candidate
     );
-    this.onChange(newValue.length ? newValue : null, {
+    const newValue = isMulti
+      ? newValueArray
+      : newValueArray.length > 0
+      ? newValueArray[0]
+      : null;
+    this.onChange(newValue, {
       action: 'remove-value',
       removedValue,
     });
@@ -720,19 +721,25 @@ export default class Select extends Component<Props, State> {
     this.focusInput();
   };
   clearValue = () => {
-    this.onChange(null, { action: 'clear' });
+    this.onChange(this.props.isMulti ? [] : null, { action: 'clear' });
   };
   popValue = () => {
+    const { isMulti } = this.props;
     const { selectValue } = this.state;
     const lastSelectedValue = selectValue[selectValue.length - 1];
-    const newValue = selectValue.slice(0, selectValue.length - 1);
+    const newValueArray = selectValue.slice(0, selectValue.length - 1);
+    const newValue = isMulti
+      ? newValueArray
+      : newValueArray.length > 0
+      ? newValueArray[0]
+      : null;
     this.announceAriaLiveSelection({
       event: 'pop-value',
       context: {
         value: lastSelectedValue ? this.getOptionLabel(lastSelectedValue) : '',
       },
     });
-    this.onChange(newValue.length ? newValue : null, {
+    this.onChange(newValue, {
       action: 'pop-value',
       removedValue: lastSelectedValue,
     });
@@ -1770,22 +1777,26 @@ export default class Select extends Component<Props, State> {
             isLoading={isLoading}
             placement={placement}
           >
-            <ScrollCaptor
-              isEnabled={captureMenuScroll}
+            <ScrollManager
+              captureEnabled={captureMenuScroll}
               onTopArrive={onMenuScrollToTop}
               onBottomArrive={onMenuScrollToBottom}
+              lockEnabled={menuShouldBlockScroll}
             >
-              <ScrollBlock isEnabled={menuShouldBlockScroll}>
+              {scrollTargetRef => (
                 <MenuList
                   {...commonProps}
-                  innerRef={this.getMenuListRef}
+                  innerRef={(instance: HTMLElement | null): void => {
+                    this.getMenuListRef(instance);
+                    scrollTargetRef(instance);
+                  }}
                   isLoading={isLoading}
                   maxHeight={maxHeight}
                 >
                   {menuUI}
                 </MenuList>
-              </ScrollBlock>
-            </ScrollCaptor>
+              )}
+            </ScrollManager>
           </Menu>
         )}
       </MenuPlacer>
