@@ -343,8 +343,8 @@ function buildCategorizedOptions(
     .map((groupOrOption, groupOrOptionIndex) => {
       if (groupOrOption.options) {
         const categorizedOptions = groupOrOption.options
-          .map(option =>
-            toCategorizedOption(props, option, selectValue, option)
+          .map((option, optionIndex) =>
+            toCategorizedOption(props, option, selectValue, optionIndex)
           )
           .filter(categorizedOption => isFocusable(props, categorizedOption));
         return categorizedOptions.length > 0
@@ -872,11 +872,7 @@ export default class Select extends Component<Props, State> {
     this.focusInput();
   };
   clearValue = () => {
-    const { selectValue } = this.state;
-    this.onChange(this.props.isMulti ? [] : null, {
-      action: 'clear',
-      removedValues: selectValue,
-    });
+    this.onChange(this.props.isMulti ? [] : null, { action: 'clear' });
   };
   popValue = () => {
     const { isMulti } = this.props;
