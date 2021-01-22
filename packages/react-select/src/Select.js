@@ -771,16 +771,16 @@ export default class Select extends Component<Props, State> {
       cx,
       getStyles,
       getValue,
-      selectOption,
       setValue,
+      selectOption,
       props,
     } = this;
     const { isMulti, isRtl, options } = props;
     const hasValue = this.hasValue();
 
     return {
-      clearValue,
       cx,
+      clearValue,
       getStyles,
       getValue,
       hasValue,
@@ -788,8 +788,8 @@ export default class Select extends Component<Props, State> {
       isRtl,
       options,
       selectOption,
-      selectProps: props,
       setValue,
+      selectProps: props,
       theme: this.getTheme(),
     };
   }
@@ -1446,7 +1446,6 @@ export default class Select extends Component<Props, State> {
     } = this.props;
     const { Input } = this.components;
     const { inputIsHidden } = this.state;
-    const { commonProps } = this;
 
     const id = inputId || this.getElementId('input');
 
@@ -1476,12 +1475,15 @@ export default class Select extends Component<Props, State> {
       );
     }
 
+    const { cx, theme, selectProps } = this.commonProps;
+
     return (
       <Input
-        {...commonProps}
         autoCapitalize="none"
         autoComplete="off"
         autoCorrect="off"
+        cx={cx}
+        getStyles={this.getStyles}
         id={id}
         innerRef={this.getInputRef}
         isDisabled={isDisabled}
@@ -1489,9 +1491,11 @@ export default class Select extends Component<Props, State> {
         onBlur={this.onInputBlur}
         onChange={this.handleInputChange}
         onFocus={this.onInputFocus}
+        selectProps={selectProps}
         spellCheck="false"
         tabIndex={tabIndex}
         form={form}
+        theme={theme}
         type="text"
         value={inputValue}
         {...ariaAttributes}

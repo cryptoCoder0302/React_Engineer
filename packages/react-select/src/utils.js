@@ -3,7 +3,6 @@
 import { type ElementRef } from 'react';
 import type {
   ClassNamesState,
-  CommonProps,
   InputActionMeta,
   OptionsType,
   ValueType,
@@ -66,31 +65,6 @@ export const cleanValue = (value: ValueType): OptionsType => {
   if (Array.isArray(value)) return value.filter(Boolean);
   if (typeof value === 'object' && value !== null) return [value];
   return [];
-};
-
-// ==============================
-// Clean Common Props
-// ==============================
-
-export const cleanCommonProps = (props: CommonProps): any => {
-  //className
-  const {
-    className, // not listed in commonProps documentation, needs to be removed to allow Emotion to generate classNames
-    clearValue,
-    cx,
-    getStyles,
-    getValue,
-    hasValue,
-    isMulti,
-    isRtl,
-    options, // not listed in commonProps documentation
-    selectOption,
-    selectProps,
-    setValue,
-    theme, // not listed in commonProps documentation
-    ...innerProps
-  } = props;
-  return { ...innerProps };
 };
 
 // ==============================

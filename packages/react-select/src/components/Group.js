@@ -1,8 +1,7 @@
 // @flow
 /** @jsx jsx */
 import { type Node, type ComponentType } from 'react';
-import { jsx } from '@emotion/core';
-import { cleanCommonProps } from '../utils';
+import { jsx } from '@emotion/react';
 
 import type { CommonProps } from '../types';
 
@@ -15,8 +14,6 @@ type ComponentProps = {
   headingProps: any,
   /** Label to be displayed in the heading component. */
   label: Node,
-  /* The data of the group. */
-  data: any,
 };
 export type GroupProps = CommonProps & ComponentProps;
 
@@ -70,13 +67,12 @@ export const groupHeadingCSS = ({ theme: { spacing } }: GroupProps) => ({
 });
 
 export const GroupHeading = (props: any) => {
-  const { getStyles, cx, className } = props;
-  const { data, ...innerProps } = cleanCommonProps(props);
+  const { className, cx, getStyles, theme, selectProps, ...cleanProps } = props;
   return (
     <div
-      css={getStyles('groupHeading', props)}
+      css={getStyles('groupHeading', { theme, ...cleanProps })}
       className={cx({ 'group-heading': true }, className)}
-      {...innerProps}
+      {...cleanProps}
     />
   );
 };
