@@ -197,7 +197,6 @@ cases(
     'single select > should match accented char': {
       props: {
         ...BASIC_PROPS,
-        inputValue: '',
         menuIsOpen: true,
         options: OPTIONS_ACCENTED,
       },
@@ -207,7 +206,6 @@ cases(
     'single select > should ignore accented char in query': {
       props: {
         ...BASIC_PROPS,
-        inputValue: '',
         menuIsOpen: true,
         options: OPTIONS_ACCENTED,
       },
@@ -231,7 +229,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: (value, search) => value.value.indexOf(search) > -1,
-        inputValue: '',
         menuIsOpen: true,
         value: OPTIONS[0],
       },
@@ -242,7 +239,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: (value, search) => value.value.indexOf(search) > -1,
-        inputValue: '',
         isMulti: true,
         menuIsOpen: true,
         value: OPTIONS[0],
@@ -255,7 +251,7 @@ cases(
 
 cases(
   'filterOption prop is null',
-  ({ props, searchString = '', expectResultsLength }) => {
+  ({ props, searchString, expectResultsLength }) => {
     let { container, rerender } = render(<Select {...props} />);
     rerender(<Select {...props} inputValue={searchString} />);
     expect(container.querySelectorAll('.react-select__option')).toHaveLength(
@@ -267,7 +263,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: null,
-        inputValue: '',
         menuIsOpen: true,
         value: OPTIONS[0],
       },
@@ -278,7 +273,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: null,
-        inputValue: '',
         isMulti: true,
         menuIsOpen: true,
         value: OPTIONS[0],
@@ -303,7 +297,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: (value, search) => value.value.indexOf(search) > -1,
-        inputValue: '',
         menuIsOpen: true,
       },
       searchString: 'some text not in options',
@@ -312,7 +305,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: (value, search) => value.value.indexOf(search) > -1,
-        inputValue: '',
         menuIsOpen: true,
       },
       searchString: 'some text not in options',
@@ -334,7 +326,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: (value, search) => value.value.indexOf(search) > -1,
-        inputValue: '',
         menuIsOpen: true,
         noOptionsMessage: () =>
           'this is custom no option message for single select',
@@ -347,7 +338,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: (value, search) => value.value.indexOf(search) > -1,
-        inputValue: '',
         menuIsOpen: true,
         noOptionsMessage: () =>
           'this is custom no option message for multi select',
@@ -1916,40 +1906,6 @@ test('accessibility > screenReaderStatus function prop > to pass custom text to 
   setInputValue('100');
   expect(container.querySelector(liveRegionId).textContent).toMatch(
     'There are 0 options available'
-  );
-});
-
-test('accessibility > A11yTexts can be provided through ariaLiveMessages prop', () => {
-  const ariaLiveMessages = {
-    selectValue: (event, context) => {
-      const { value, isDisabled } = context;
-      if (event === 'select-option' && !isDisabled) {
-        return `CUSTOM: option ${value} is selected.`;
-      }
-    },
-  };
-
-  let { container } = render(
-    <Select
-      {...BASIC_PROPS}
-      ariaLiveMessages={ariaLiveMessages}
-      options={OPTIONS}
-      inputValue={''}
-      menuIsOpen
-    />
-  );
-  const liveRegionEventId = '#aria-selection-event';
-  fireEvent.focus(container.querySelector('.react-select__input input'));
-
-  let menu = container.querySelector('.react-select__menu');
-  fireEvent.keyDown(menu, { keyCode: 40, key: 'ArrowDown' });
-  fireEvent.keyDown(container.querySelector('.react-select__menu'), {
-    keyCode: 13,
-    key: 'Enter',
-  });
-
-  expect(container.querySelector(liveRegionEventId).textContent).toMatch(
-    'CUSTOM: option 0 is selected.'
   );
 });
 
