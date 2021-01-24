@@ -1,15 +1,8 @@
-export interface Data {
-  key: string;
-  label: string;
-  level: number;
-  path: string;
-}
-
 class HeadingStore {
-  store: { [key: string]: Data } = {};
-  headings: { [key: string]: Data[] } = {};
+  store = {};
+  headings = {};
 
-  add(key: string, data: Data) {
+  add(key, data) {
     if (!this.headings[location.pathname]) {
       this.headings[location.pathname] = [];
     }
@@ -22,13 +15,13 @@ class HeadingStore {
   getStore() {
     return this.store;
   }
-  getPageHeadings(page: string) {
+  getPageHeadings(page) {
     return this.headings[page];
   }
   getAllHeadings() {
     return this.headings;
   }
-  getHeadingByKey(key: string) {
+  getHeadingByKey(key) {
     return this.store[key];
   }
 }

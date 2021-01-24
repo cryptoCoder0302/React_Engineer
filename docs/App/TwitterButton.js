@@ -1,3 +1,4 @@
+// @flow
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 

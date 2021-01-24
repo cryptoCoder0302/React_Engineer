@@ -1,10 +1,8 @@
+// @flow
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
 
-interface Props {
-  readonly count: number;
-  readonly repo: string;
-}
+type Props = { count: number, repo: string };
 
 const StarButton = ({ count, repo }: Props) => (
   <div css={{ alignItems: 'center', display: 'inline-flex', minWidth: 128 }}>

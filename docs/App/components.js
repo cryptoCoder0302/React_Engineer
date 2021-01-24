@@ -1,11 +1,7 @@
+// @flow
 /** @jsx jsx */
-import { Component } from 'react';
-import {
-  Link,
-  LinkProps,
-  RouteComponentProps,
-  withRouter,
-} from 'react-router-dom';
+import { Component, type ElementConfig } from 'react';
+import { Link, withRouter } from 'react-router-dom';
 import { jsx } from '@emotion/react';
 
 const navWidth = 180;
@@ -15,7 +11,7 @@ const contentGutter = 30;
 const smallDevice = '@media (max-width: 769px)';
 const largeDevice = '@media (min-width: 770px)';
 
-export const AppContainer = (props: JSX.IntrinsicElements['div']) => (
+export const AppContainer = (props: any) => (
   <div
     css={{
       boxSizing: 'border-box',
@@ -28,7 +24,7 @@ export const AppContainer = (props: JSX.IntrinsicElements['div']) => (
     {...props}
   />
 );
-export const PageContent = (props: JSX.IntrinsicElements['div']) => (
+export const PageContent = (props: any) => (
   <div
     css={{
       paddingBottom: contentGutter * 4,
@@ -41,7 +37,7 @@ export const PageContent = (props: JSX.IntrinsicElements['div']) => (
     {...props}
   />
 );
-export const AppContent = (props: JSX.IntrinsicElements['div']) => (
+export const AppContent = (props: any) => (
   <div
     css={{
       flex: '1 1 auto',
@@ -60,7 +56,7 @@ export const AppContent = (props: JSX.IntrinsicElements['div']) => (
 // Navigation
 // ==============================
 
-export const PrimaryNav = (props: JSX.IntrinsicElements['div']) => (
+export const PrimaryNav = (props: any) => (
   <div
     css={{
       backgroundColor: 'rgba(0, 0, 0, 0.11)',
@@ -83,10 +79,8 @@ export const PrimaryNav = (props: JSX.IntrinsicElements['div']) => (
     />
   </div>
 );
-export const PrimaryNavItem = ({
-  selected,
-  ...props
-}: LinkProps & { readonly selected: boolean }) => (
+type PrimaryNavItemProps = ElementConfig<typeof Link> & { selected: boolean };
+export const PrimaryNavItem = ({ selected, ...props }: PrimaryNavItemProps) => (
   <Link
     css={{
       color: selected ? 'white' : '#DEEBFF',
@@ -115,8 +109,8 @@ export const PrimaryNavItem = ({
 // ==============================
 
 // Return scroll to top on route change
-class ScrollToTop extends Component<RouteComponentProps> {
-  componentDidUpdate(prevProps: RouteComponentProps) {
+class ScrollToTop extends Component<*> {
+  componentDidUpdate(prevProps) {
     const { history, location } = this.props;
 
     // do not influence scroll on browser back/forward

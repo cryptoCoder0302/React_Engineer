@@ -1,19 +1,26 @@
-import React, { Component, RefCallback } from 'react';
+// @flow
+
+import React, {
+  Component,
+  type ElementRef,
+  type Element as ReactElement,
+} from 'react';
 import rafSchedule from 'raf-schd';
 import NodeResolver from 'react-node-resolver';
 
-interface Props {
-  readonly onChange: (elements: readonly (string | null)[]) => void;
-}
-interface State {
-  readonly elements: readonly HTMLElement[];
-}
+type Props = {
+  children: ReactElement<*>,
+  onChange: (Array<any>) => void,
+};
+type State = {
+  elements: Array<HTMLElement>,
+};
 
-function getStyle(el: HTMLElement, prop: string) {
+function getStyle(el, prop, numeric = true) {
   const val = window.getComputedStyle(el, null).getPropertyValue(prop);
-  return parseFloat(val);
+  return numeric ? parseFloat(val) : val;
 }
-function isInView(el: HTMLElement) {
+function isInView(el) {
   let rect = el.getBoundingClientRect();
 
   const topOffset =
@@ -27,9 +34,9 @@ function isInView(el: HTMLElement) {
 }
 
 export default class ScrollSpy extends Component<Props, State> {
-  nav: HTMLElement | undefined;
+  nav: Element;
   allIds = [];
-  state: State = { elements: [] };
+  state = { elements: [] };
   static defaultProps = { preserveHeight: false };
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll, false);
@@ -49,17 +56,19 @@ export default class ScrollSpy extends Component<Props, State> {
       onChange(idsInView);
     }
   });
-  getElements: RefCallback<HTMLElement> = ref => {
+  getElements = (ref: ElementRef<*>) => {
     if (!ref) return;
     this.nav = ref;
   };
   buildNodeList = () => {
     if (!this.nav) return;
 
-    const anchorList = this.nav.querySelectorAll<HTMLElement>('[data-hash]');
-    const elements = Array.from(anchorList).map(
-      i => document.querySelector<HTMLElement>(`#${i.dataset.hash}`)!
+    const anchorList = this.nav.querySelectorAll('[data-hash]');
+    const els = Array.from(anchorList).map(i =>
+      document.querySelector(`#${i.dataset.hash}`)
     );
+
+    const elements = ((els: any): Array<HTMLElement>); // suck it flow...
 
     this.setState({ elements });
   };

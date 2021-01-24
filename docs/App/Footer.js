@@ -1,10 +1,12 @@
+// @flow
 /** @jsx jsx */
+import { type Node } from 'react';
 import { jsx } from '@emotion/react';
 
 // const smallDevice = '@media (max-width: 769px)';
 const largeDevice = '@media (min-width: 770px)';
 
-const Wrapper = (props: JSX.IntrinsicElements['div']) => (
+const Wrapper = props => (
   <div
     css={{
       backgroundColor: '#FAFBFC',
@@ -16,7 +18,7 @@ const Wrapper = (props: JSX.IntrinsicElements['div']) => (
     {...props}
   />
 );
-const Container = (props: JSX.IntrinsicElements['div']) => (
+const Container = props => (
   <div
     css={{
       boxSizing: 'border-box',
@@ -37,7 +39,7 @@ const Container = (props: JSX.IntrinsicElements['div']) => (
     {...props}
   />
 );
-const A = (props: JSX.IntrinsicElements['a']) => (
+const A = props => (
   <a
     {...props}
     css={{
@@ -55,7 +57,7 @@ const A = (props: JSX.IntrinsicElements['a']) => (
   />
 );
 
-export default function Footer() {
+export default function Footer(): Node {
   return (
     <Wrapper>
       <Container>

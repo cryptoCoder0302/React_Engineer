@@ -1,13 +1,15 @@
+// @flow
 /** @jsx jsx */
-import { Component, FunctionComponent, MouseEvent, RefCallback } from 'react';
+import { Component, type ElementRef } from 'react';
 import { jsx } from '@emotion/react';
-import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
+import type { RouterProps } from '../types';
 import { animatedScrollTo } from 'react-select/src/utils';
 import routes from './routes';
 import ScrollSpy from './ScrollSpy';
 import Sticky from './Sticky';
-import store, { Data } from '../markdown/store';
+import store from '../markdown/store';
 
 const navWidth = 180;
 const appGutter = 20;
@@ -16,7 +18,7 @@ const contentGutter = 30;
 const smallDevice = '@media (max-width: 769px)';
 const largeDevice = '@media (min-width: 770px)';
 
-const NavSection: FunctionComponent<RouteComponentProps> = () => {
+const NavSection = () => {
   const routeKeys = Object.keys(routes);
   return (
     <Switch>
@@ -27,21 +29,18 @@ const NavSection: FunctionComponent<RouteComponentProps> = () => {
   );
 };
 
-interface NavState {
-  readonly links: readonly Data[];
-  readonly activeId: string | null;
-}
+type NavState = { links: Array<Object>, activeId: string | null };
 
-class PageNav extends Component<RouteComponentProps, NavState> {
-  scrollSpy!: ScrollSpy;
-  state: NavState = { activeId: null, links: [] };
+class PageNav extends Component<RouterProps, NavState> {
+  scrollSpy: ElementRef<typeof ScrollSpy>;
+  state = { activeId: null, links: [] };
   componentDidMount() {
     const { match } = this.props;
 
     // eslint-disable-next-line
     this.setState({ links: store.getPageHeadings(match.path) });
   }
-  componentDidUpdate({ history, location }: RouteComponentProps) {
+  componentDidUpdate({ history, location }: RouterProps) {
     const { hash } = this.props.location; // old hash
     const shouldRefresh = location.hash !== hash && history.action !== 'POP';
 
@@ -50,26 +49,20 @@ class PageNav extends Component<RouteComponentProps, NavState> {
       this.scrollSpy.buildNodeList();
     }
   }
-  getSelected = (ids: readonly (string | null)[]) => {
+  getSelected = ids => {
     const activeId = ids[0];
     if (activeId !== this.state.activeId) {
       this.setState({ activeId });
     }
   };
-  getScrollSpy: RefCallback<ScrollSpy> = ref => {
+  getScrollSpy = ref => {
     if (!ref) return;
     this.scrollSpy = ref;
   };
-  handleItemClick = ({
-    event,
-    hash,
-  }: {
-    readonly event: MouseEvent<HTMLDivElement>;
-    readonly hash: string;
-  }) => {
+  handleItemClick = ({ event, hash }) => {
     event.preventDefault();
     const path = `#${hash}`;
-    const el = document.querySelector<HTMLElement>(path);
+    const el = document.querySelector(path);
     const { history } = this.props;
 
     if (el && el.offsetTop) {
@@ -112,7 +105,7 @@ class PageNav extends Component<RouteComponentProps, NavState> {
 
 export default NavSection;
 
-const Nav = (props: JSX.IntrinsicElements['div']) => (
+const Nav = (props: any) => (
   <div
     css={{
       [smallDevice]: {
@@ -138,17 +131,9 @@ const Nav = (props: JSX.IntrinsicElements['div']) => (
     {...props}
   />
 );
+type NavItemProps = { level: 2 | 3, selected: boolean };
 
-interface NavItemProps {
-  readonly level: number;
-  readonly selected: boolean;
-}
-
-const NavItem = ({
-  level,
-  selected,
-  ...props
-}: NavItemProps & JSX.IntrinsicElements['div']) => (
+const NavItem = ({ level, selected, ...props }: NavItemProps) => (
   <div
     role="button"
     css={{
@@ -165,15 +150,15 @@ const NavItem = ({
       },
 
       [smallDevice]: {
-        display: level === 3 ? 'none' : undefined,
-        boxShadow: selected ? 'inset 0 -1px 0 black' : undefined,
+        display: level === 3 ? 'none' : null,
+        boxShadow: selected ? 'inset 0 -1px 0 black' : null,
         padding: `10px ${appGutter}px`,
       },
 
       [largeDevice]: {
         backgroundColor: selected ? 'white' : 'transparent',
         display: 'block',
-        fontSize: level === 3 ? '0.9em' : undefined,
+        fontSize: level === 3 ? '0.9em' : null,
         fontWeight: selected ? 800 : 'inherit',
         padding: '10px 20px 10px 0',
         paddingLeft: level === 3 ? 10 : 0,
