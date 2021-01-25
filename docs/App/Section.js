@@ -1,9 +1,11 @@
-import React, { FunctionComponent } from 'react';
-import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+// @flow
+import React from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
+import type { RouterProps } from '../types';
 import routes from './routes';
 
-const Section: FunctionComponent<RouteComponentProps> = () => {
+const Section = () => {
   const routeKeys = Object.keys(routes);
   return (
     <Switch>
@@ -15,7 +17,7 @@ const Section: FunctionComponent<RouteComponentProps> = () => {
   );
 };
 
-const Content = ({ location, match }: RouteComponentProps) => {
+const Content = ({ location, match }: RouterProps) => {
   const page = routes[match.path];
 
   return (

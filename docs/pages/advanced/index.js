@@ -1,22 +1,24 @@
+// @flow
 import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import md from '../../markdown/renderer';
 import ExampleWrapper from '../../ExampleWrapper';
 import {
   AccessingInternals,
-  ControlledMenu,
-  OnSelectResetsInput,
   BasicGrouped,
   CreateFilter,
+  ControlledMenu,
+  CustomAriaLive,
   CustomFilterOptions,
   CustomGetOptionLabel,
   CustomGetOptionValue,
   CustomIsOptionDisabled,
   Experimental,
-  Popout,
   MenuBuffer,
   MenuPortal,
   MultiSelectSort,
+  Popout,
+  OnSelectResetsInput,
 } from '../../examples';
 
 export default function Advanced() {
@@ -31,6 +33,20 @@ export default function Advanced() {
       </Helmet>
       {md`
       # Advanced
+
+      ## Accessibility
+      Accessibility is import. React-select is committed to providing a custom experience to all users and relies heavily on the aria-live spec to provide 
+      a custom experience for all users. As such, we also provide an api to address internationalization or further customization.
+
+      ${(
+        <ExampleWrapper
+          label="Custom aria live example"
+          urlPath="docs/examples/CustomAriaLive.js"
+          raw={require('!!raw-loader!../../examples/CustomAriaLive.js')}
+        >
+          <CustomAriaLive />
+        </ExampleWrapper>
+      )}
 
       ## Sortable MultiSelect
       Using the [react-sortable-hoc](https://www.npmjs.com/package/react-sortable-hoc) package we can easily allow sorting of MultiSelect values by drag and drop.
@@ -53,7 +69,7 @@ export default function Advanced() {
       without having to rewrite the logic wholesale.
 
       ~~~jsx
-      // default filter configuration
+      // default filter configuration 
       ignoreCase: true,
       ignoreAccents: true,
       matchFrom: 'any',
@@ -86,7 +102,7 @@ export default function Advanced() {
           <CustomFilterOptions />
         </ExampleWrapper>
       )}
-      ~~~jsx
+      ~~~jsx 
       ~~~
       > Please note that if you are using a Select that is creatable, you would also likey want to include the "Create" option.
       ~~~jsx

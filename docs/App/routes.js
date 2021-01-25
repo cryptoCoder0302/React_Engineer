@@ -1,4 +1,3 @@
-import { ComponentType } from 'react';
 import Home from '../pages/home';
 import Props from '../pages/props';
 import Styles from '../pages/styles';
@@ -8,7 +7,7 @@ import Creatable from '../pages/creatable';
 import Advanced from '../pages/advanced';
 import UpgradeGuide from '../pages/upgradeGuide';
 
-const routes: { readonly [key: string]: ComponentType } = {
+export default {
   '/home': Home,
   '/props': Props,
   '/styles': Styles,
@@ -18,5 +17,3 @@ const routes: { readonly [key: string]: ComponentType } = {
   '/advanced': Advanced,
   '/upgrade-guide': UpgradeGuide,
 };
-
-export default routes;

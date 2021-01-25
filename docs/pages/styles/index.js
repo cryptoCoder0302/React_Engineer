@@ -1,6 +1,4 @@
-/** @jsx jsx */
 import React, { Fragment } from 'react';
-import { jsx } from '@emotion/react';
 import Helmet from 'react-helmet';
 import md from '../../markdown/renderer';
 import ExampleWrapper from '../../ExampleWrapper';
@@ -108,9 +106,9 @@ export default function Styles() {
           options={...}
         />
       );
-      ~~~
+      ~~~ 
 
-
+    
     ## Select Props
     In the second argument \`state\`, you have access to \`selectProps\` which will allow you to gain access to
     your own arguments passed into the \`Select\` body.
