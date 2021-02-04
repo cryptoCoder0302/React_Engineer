@@ -58,12 +58,6 @@ export default function Home() {
   yarn add react-select
   ~~~
 
-  or
-
-  ~~~bash
-  npm i --save react-select
-  ~~~
-
   Import the default export and render in your component:
 
   ~~~jsx
