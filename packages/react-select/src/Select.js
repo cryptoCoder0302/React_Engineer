@@ -375,9 +375,7 @@ function buildFocusableOptionsFromCategorizedOptions(
 ) {
   return categorizedOptions.reduce((optionsAccumulator, categorizedOption) => {
     if (categorizedOption.type === 'group') {
-      optionsAccumulator.push(
-        ...categorizedOption.options.map(option => option.data)
-      );
+      optionsAccumulator.push(...categorizedOption.data.options);
     } else {
       optionsAccumulator.push(categorizedOption.data);
     }
