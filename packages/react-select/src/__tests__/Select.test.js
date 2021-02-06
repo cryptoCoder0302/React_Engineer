@@ -197,7 +197,6 @@ cases(
     'single select > should match accented char': {
       props: {
         ...BASIC_PROPS,
-        inputValue: '',
         menuIsOpen: true,
         options: OPTIONS_ACCENTED,
       },
@@ -207,7 +206,6 @@ cases(
     'single select > should ignore accented char in query': {
       props: {
         ...BASIC_PROPS,
-        inputValue: '',
         menuIsOpen: true,
         options: OPTIONS_ACCENTED,
       },
@@ -231,7 +229,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: (value, search) => value.value.indexOf(search) > -1,
-        inputValue: '',
         menuIsOpen: true,
         value: OPTIONS[0],
       },
@@ -242,7 +239,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: (value, search) => value.value.indexOf(search) > -1,
-        inputValue: '',
         isMulti: true,
         menuIsOpen: true,
         value: OPTIONS[0],
@@ -255,7 +251,7 @@ cases(
 
 cases(
   'filterOption prop is null',
-  ({ props, searchString = '', expectResultsLength }) => {
+  ({ props, searchString, expectResultsLength }) => {
     let { container, rerender } = render(<Select {...props} />);
     rerender(<Select {...props} inputValue={searchString} />);
     expect(container.querySelectorAll('.react-select__option')).toHaveLength(
@@ -267,7 +263,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: null,
-        inputValue: '',
         menuIsOpen: true,
         value: OPTIONS[0],
       },
@@ -278,7 +273,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: null,
-        inputValue: '',
         isMulti: true,
         menuIsOpen: true,
         value: OPTIONS[0],
@@ -303,7 +297,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: (value, search) => value.value.indexOf(search) > -1,
-        inputValue: '',
         menuIsOpen: true,
       },
       searchString: 'some text not in options',
@@ -312,7 +305,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: (value, search) => value.value.indexOf(search) > -1,
-        inputValue: '',
         menuIsOpen: true,
       },
       searchString: 'some text not in options',
@@ -334,7 +326,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: (value, search) => value.value.indexOf(search) > -1,
-        inputValue: '',
         menuIsOpen: true,
         noOptionsMessage: () =>
           'this is custom no option message for single select',
@@ -347,7 +338,6 @@ cases(
       props: {
         ...BASIC_PROPS,
         filterOption: (value, search) => value.value.indexOf(search) > -1,
-        inputValue: '',
         menuIsOpen: true,
         noOptionsMessage: () =>
           'this is custom no option message for multi select',
@@ -1671,6 +1661,7 @@ test('should call onChange with `null` on hitting backspace when backspaceRemove
   expect(onChangeSpy).toHaveBeenCalledWith(null, {
     action: 'clear',
     name: 'test-input-name',
+    removedValues: [],
   });
 });
 
@@ -1849,7 +1840,7 @@ test('accessibility > interacting with disabled options shows correct A11yText',
     />
   );
   const liveRegionId = '#aria-context';
-  const liveRegionEventId = '#aria-selection';
+  const liveRegionEventId = '#aria-selection-event';
   fireEvent.focus(container.querySelector('.react-select__input input'));
 
   // navigate to disabled option
@@ -1869,29 +1860,6 @@ test('accessibility > interacting with disabled options shows correct A11yText',
 
   expect(container.querySelector(liveRegionEventId).textContent).toMatch(
     'option 1 is disabled. Select another option.'
-  );
-});
-
-test('accessibility > interacting with multi values options shows correct A11yText', () => {
-  let { container } = render(
-    <Select {...BASIC_PROPS} isMulti value={[OPTIONS[0], OPTIONS[1]]} />
-  );
-  const liveRegionId = '#aria-context';
-  let input = container.querySelector('.react-select__value-container input');
-
-  fireEvent.focus(container.querySelector('.react-select__input input'));
-  expect(container.querySelector(liveRegionId).textContent).toMatch(
-    ' Select is focused ,type to refine list, press Down to open the menu,  press left to focus selected values'
-  );
-
-  fireEvent.keyDown(input, { keyCode: 37, key: 'ArrowLeft' });
-  expect(container.querySelector(liveRegionId).textContent).toMatch(
-    'value 1 focused, 2 of 2.  Use left and right to toggle between focused values, press Backspace to remove the currently focused value'
-  );
-
-  fireEvent.keyDown(input, { keyCode: 37, key: 'ArrowLeft' });
-  expect(container.querySelector(liveRegionId).textContent).toMatch(
-    'value 0 focused, 1 of 2.  Use left and right to toggle between focused values, press Backspace to remove the currently focused value'
   );
 });
 
@@ -1939,40 +1907,6 @@ test('accessibility > screenReaderStatus function prop > to pass custom text to 
   setInputValue('100');
   expect(container.querySelector(liveRegionId).textContent).toMatch(
     'There are 0 options available'
-  );
-});
-
-test('accessibility > A11yTexts can be provided through ariaLiveMessages prop', () => {
-  const ariaLiveMessages = {
-    onChange: (value, context) => {
-      const { action, isDisabled, label } = context;
-      if (action === 'select-option' && !isDisabled) {
-        return `CUSTOM: option ${label} is selected.`;
-      }
-    },
-  };
-
-  let { container } = render(
-    <Select
-      {...BASIC_PROPS}
-      ariaLiveMessages={ariaLiveMessages}
-      options={OPTIONS}
-      inputValue={''}
-      menuIsOpen
-    />
-  );
-  const liveRegionEventId = '#aria-selection';
-  fireEvent.focus(container.querySelector('.react-select__input input'));
-
-  let menu = container.querySelector('.react-select__menu');
-  fireEvent.keyDown(menu, { keyCode: 40, key: 'ArrowDown' });
-  fireEvent.keyDown(container.querySelector('.react-select__menu'), {
-    keyCode: 13,
-    key: 'Enter',
-  });
-
-  expect(container.querySelector(liveRegionEventId).textContent).toMatch(
-    'CUSTOM: option 0 is selected.'
   );
 });
 
@@ -2375,6 +2309,7 @@ test('clear select by clicking on clear button > should not call onMenuOpen', ()
   expect(onChangeSpy).toBeCalledWith([], {
     action: 'clear',
     name: BASIC_PROPS.name,
+    removedValues: [{ label: '0', value: 'zero' }],
   });
 });
 
@@ -2698,6 +2633,7 @@ test('to clear value when hitting escape if escapeClearsValue and isClearable ar
   expect(onInputChangeSpy).toHaveBeenCalledWith(null, {
     action: 'clear',
     name: BASIC_PROPS.name,
+    removedValues: [{ label: '0', value: 'zero' }],
   });
 });
 
