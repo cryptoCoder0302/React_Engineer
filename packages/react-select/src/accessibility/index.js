@@ -1,92 +1,133 @@
 // @flow
 
-import { type OptionType, type OptionsType } from '../types';
+import {
+  type ActionMeta,
+  type OptionType,
+  type OptionsType,
+  type ValueType,
+} from '../types';
 
-export type InstructionsContext = {
+export type FocusedType = 'option' | 'value';
+
+export type GuidanceType = 'menu' | 'input' | 'value';
+
+export type OptionContext = {
+  // derived label of selected option via getOptionLabel
+  // Note: different aria attributes could potentially introduce need for DOM query selectors
+  label?: string,
+  // selected option was disabled, used only for accessibility purposes
+  isDisabled?: boolean,
+};
+
+export type SelectionContext = ActionMeta &
+  OptionContext & {
+    // selected "thing" (option, removedValue, value)
+    selected?: OptionType | null,
+  };
+
+export type FocusedContext = OptionContext & {
+  type: FocusedType,
+  options: OptionsType,
+  value?: ValueType,
+};
+
+export type GuidanceContext = OptionContext & {
   isSearchable?: boolean,
   isMulti?: boolean,
-  label?: string,
   isDisabled?: boolean,
   tabSelectsValue?: boolean,
 };
-export type ValueEventContext = { value: string, isDisabled?: boolean };
 
-export const instructionsAriaMessage = (
-  event: string,
-  context?: InstructionsContext = {}
-) => {
-  const { isSearchable, isMulti, label, isDisabled, tabSelectsValue } = context;
-  switch (event) {
-    case 'menu':
-      return `Use Up and Down to choose options${
-        isDisabled ? '' : ', press Enter to select the currently focused option'
-      }, press Escape to exit the menu${
-        tabSelectsValue
-          ? ', press Tab to select the option and exit the menu'
-          : ''
-      }.`;
-    case 'input':
-      return `${label ? label : 'Select'} is focused ${
-        isSearchable ? ',type to refine list' : ''
-      }, press Down to open the menu, ${
-        isMulti ? ' press left to focus selected values' : ''
-      }`;
-    case 'value':
-      return 'Use left and right to toggle between focused values, press Backspace to remove the currently focused value';
-  }
+export type AriaSelectionType = SelectionContext & {
+  // first parameter passed in onChange
+  value?: ValueType,
 };
 
-export const valueEventAriaMessage = (
-  event: string,
-  context: ValueEventContext
-) => {
-  const { value, isDisabled } = context;
-  if (!value) return;
-  switch (event) {
-    case 'deselect-option':
-    case 'pop-value':
-    case 'remove-value':
-      return `option ${value}, deselected.`;
-    case 'select-option':
-      return isDisabled
-        ? `option ${value} is disabled. Select another option.`
-        : `option ${value}, selected.`;
-  }
+export type AriaLiveMessagesProps = {
+  onChange?: (value: ValueType, context: SelectionContext) => string,
+  onFocus?: (focused: OptionType, context: FocusedContext) => string,
+  onFilter?: (args: {
+    inputValue: string,
+    screenReaderMessage: string,
+  }) => string,
+  guidance?: (type: GuidanceType, context?: GuidanceContext) => string,
 };
 
-export const valueFocusAriaMessage = ({
-  focusedValue,
-  getOptionLabel,
-  selectValue,
-}: {
-  focusedValue: OptionType,
-  getOptionLabel: (option: OptionType) => string,
-  selectValue: OptionsType,
-}) =>
-  `value ${getOptionLabel(focusedValue)} focused, ${selectValue.indexOf(
-    focusedValue
-  ) + 1} of ${selectValue.length}.`;
+export function getAriaLiveMessages() {
+  return {
+    guidance: (type: GuidanceType, context?: GuidanceContext = {}) => {
+      const {
+        isSearchable,
+        isMulti,
+        label,
+        isDisabled,
+        tabSelectsValue,
+      } = context;
+      switch (type) {
+        case 'menu':
+          return `Use Up and Down to choose options${
+            isDisabled
+              ? ''
+              : ', press Enter to select the currently focused option'
+          }, press Escape to exit the menu${
+            tabSelectsValue
+              ? ', press Tab to select the option and exit the menu'
+              : ''
+          }.`;
+        case 'input':
+          return `${label || 'Select'} is focused ${
+            isSearchable ? ',type to refine list' : ''
+          }, press Down to open the menu, ${
+            isMulti ? ' press left to focus selected values' : ''
+          }`;
+        case 'value':
+          return 'Use left and right to toggle between focused values, press Backspace to remove the currently focused value';
+        default:
+          return '';
+      }
+    },
 
-export const optionFocusAriaMessage = ({
-  focusedOption,
-  getOptionLabel,
-  options,
-}: {
-  focusedOption: OptionType,
-  getOptionLabel: (option: OptionType) => string,
-  options: OptionsType,
-}) =>
-  `option ${getOptionLabel(focusedOption)} focused${
-    focusedOption.isDisabled ? ' disabled' : ''
-  }, ${options.indexOf(focusedOption) + 1} of ${options.length}.`;
+    onChange: (value: ValueType, context: SelectionContext) => {
+      const { action, label, isDisabled } = context;
+      if (!label) return '';
+      switch (action) {
+        case 'deselect-option':
+        case 'pop-value':
+        case 'remove-value':
+          return `option ${label}, deselected.`;
+        case 'select-option':
+          return isDisabled
+            ? `option ${label} is disabled. Select another option.`
+            : `option ${label}, selected.`;
+        default:
+          return '';
+      }
+    },
 
-export const resultsAriaMessage = ({
-  inputValue,
-  screenReaderMessage,
-}: {
-  inputValue: string,
-  screenReaderMessage: string,
-}) =>
-  `${screenReaderMessage}${
-    inputValue ? ' for search term ' + inputValue : ''
-  }.`;
+    onFocus: (focused: OptionType, context: FocusedContext) => {
+      const { type, value, options, label = '' } = context;
+
+      if (type === 'value' && value) {
+        return `value ${label} focused, ${value.indexOf(focused) + 1} of ${
+          value.length
+        }.`;
+      }
+
+      if (type === 'option') {
+        return `option ${label} focused${
+          focused.isDisabled ? ' disabled' : ''
+        }, ${options.indexOf(focused) + 1} of ${options.length}.`;
+      }
+      return '';
+    },
+
+    onFilter: ({
+      inputValue,
+      resultsMessage,
+    }: {
+      inputValue: string,
+      resultsMessage: string,
+    }) =>
+      `${resultsMessage}${inputValue ? ' for search term ' + inputValue : ''}.`,
+  };
+}

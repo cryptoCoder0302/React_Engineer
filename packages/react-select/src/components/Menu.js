@@ -324,8 +324,8 @@ const Menu = (props: MenuProps) => {
     <div
       css={getStyles('menu', props)}
       className={cx({ menu: true }, className)}
-      ref={innerRef}
       {...innerProps}
+      ref={innerRef}
     >
       {children}
     </div>
@@ -375,9 +375,9 @@ export const MenuList = (props: MenuListComponentProps) => {
     className,
     cx,
     getStyles,
-    innerProps,
-    innerRef,
     isMulti,
+    innerRef,
+    innerProps,
   } = props;
   return (
     <div
@@ -473,7 +473,6 @@ export type MenuPortalProps = CommonProps & {
   appendTo: HTMLElement,
   children: Node, // ideally Menu<MenuProps>
   controlElement: HTMLElement,
-  innerProps: {},
   menuPlacement: MenuPlacement,
   menuPosition: MenuPosition,
 };
@@ -510,10 +509,7 @@ export class MenuPortal extends Component<MenuPortalProps, MenuPortalState> {
     const {
       appendTo,
       children,
-      className,
       controlElement,
-      cx,
-      innerProps,
       menuPlacement,
       menuPosition: position,
       getStyles,
@@ -533,18 +529,7 @@ export class MenuPortal extends Component<MenuPortalProps, MenuPortalState> {
 
     // same wrapper element whether fixed or portalled
     const menuWrapper = (
-      <div
-        css={getStyles('menuPortal', state)}
-        className={cx(
-          {
-            'menu-portal': true,
-          },
-          className
-        )}
-        {...innerProps}
-      >
-        {children}
-      </div>
+      <div css={getStyles('menuPortal', state)}>{children}</div>
     );
 
     return (

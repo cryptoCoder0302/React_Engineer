@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": "https://github.com/JedWatson/react-select/tree/master/packages/react-select",
   "dependencies": {
-    "@babel/runtime": "^7.12.0",
+    "@babel/runtime": "^7.4.4",
     "@emotion/cache": "^11.0.0",
     "@emotion/react": "^11.1.1",
     "memoize-one": "^5.0.0",
@@ -56,5 +56,9 @@
       "creatable",
       "async-creatable"
     ]
+  },
+  "browser": {
+    "./dist/react-select.cjs.js": "./dist/react-select.browser.cjs.js",
+    "./dist/react-select.esm.js": "./dist/react-select.browser.esm.js"
   }
 }
