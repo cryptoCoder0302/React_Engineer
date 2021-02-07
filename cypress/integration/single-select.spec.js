@@ -171,16 +171,6 @@ describe('Single Select', () => {
           .get(selector.focusedOption)
           .should('exist');
       });
-
-      it(`Should focus next option on down arrow key press after filtering: ${viewport}`, () => {
-        cy.get(selector.singleGroupedSelect)
-          .click()
-          .find('input')
-          .type('o', { force: true })
-          .type('{downarrow}', { force: true })
-          .get(selector.focusedOption)
-          .should('exist');
-      });
     });
 
     context(`Clearable in view: ${viewport}`, () => {
