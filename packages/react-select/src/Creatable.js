@@ -12,15 +12,6 @@ import Select, { type Props as SelectProps } from './Select';
 import type { OptionType, OptionsType, ValueType, ActionMeta } from './types';
 import { cleanValue } from './utils';
 import manageState from './stateManager';
-import {
-  getOptionValue as baseGetOptionValue,
-  getOptionLabel as baseGetOptionLabel,
-} from './builtins';
-
-type AccessorType = {|
-  getOptionValue: typeof baseGetOptionValue,
-  getOptionLabel: typeof baseGetOptionLabel,
-|};
 
 export type DefaultCreatableProps = {|
   /* Allow options to be created while the `isLoading` prop is true. Useful to
@@ -34,11 +25,10 @@ export type DefaultCreatableProps = {|
   formatCreateLabel: string => Node,
   /* Determines whether the "create new ..." option should be displayed based on
      the current input value, select value and options array. */
-  isValidNewOption: (string, OptionsType, OptionsType, AccessorType) => boolean,
+  isValidNewOption: (string, OptionsType, OptionsType) => boolean,
   /* Returns the data for the new option when it is created. Used to display the
      value, and is passed to `onChange`. */
   getNewOptionData: (string, Node) => OptionType,
-  ...AccessorType,
 |};
 export type CreatableProps = {
   ...DefaultCreatableProps,
@@ -58,10 +48,10 @@ export type CreatableProps = {
 
 export type Props = SelectProps & CreatableProps;
 
-const compareOption = (inputValue = '', option, accessors) => {
+const compareOption = (inputValue = '', option) => {
   const candidate = String(inputValue).toLowerCase();
-  const optionValue = String(accessors.getOptionValue(option)).toLowerCase();
-  const optionLabel = String(accessors.getOptionLabel(option)).toLowerCase();
+  const optionValue = String(option.value).toLowerCase();
+  const optionLabel = String(option.label).toLowerCase();
   return optionValue === candidate || optionLabel === candidate;
 };
 
@@ -70,23 +60,18 @@ const builtins = {
   isValidNewOption: (
     inputValue: string,
     selectValue: OptionsType,
-    selectOptions: OptionsType,
-    accessors: AccessorType
+    selectOptions: OptionsType
   ) =>
     !(
       !inputValue ||
-      selectValue.some(option =>
-        compareOption(inputValue, option, accessors)
-      ) ||
-      selectOptions.some(option => compareOption(inputValue, option, accessors))
+      selectValue.some(option => compareOption(inputValue, option)) ||
+      selectOptions.some(option => compareOption(inputValue, option))
     ),
   getNewOptionData: (inputValue: string, optionLabel: Node) => ({
     label: optionLabel,
     value: inputValue,
     __isNew__: true,
   }),
-  getOptionValue: baseGetOptionValue,
-  getOptionLabel: baseGetOptionLabel,
 };
 
 export const defaultProps: DefaultCreatableProps = {
@@ -124,17 +109,10 @@ export const makeCreatableSelect = <C: {}>(
         isLoading,
         isValidNewOption,
         value,
-        getOptionValue,
-        getOptionLabel,
       } = props;
       const options = props.options || [];
       let { newOption } = state;
-      if (
-        isValidNewOption(inputValue, cleanValue(value), options, {
-          getOptionValue,
-          getOptionLabel,
-        })
-      ) {
+      if (isValidNewOption(inputValue, cleanValue(value), options)) {
         newOption = getNewOptionData(inputValue, formatCreateLabel(inputValue));
       } else {
         newOption = undefined;
