@@ -9,9 +9,6 @@ type Config = {
 };
 
 import { stripDiacritics } from './diacritics';
-import memoizeOne from 'memoize-one';
-
-const memoizedStripDiacriticsForInput = memoizeOne(stripDiacritics);
 
 const trimString = str => str.replace(/^\s+|\s+$/g, '');
 const defaultStringify = option => `${option.label} ${option.value}`;
@@ -35,7 +32,7 @@ export const createFilter = (config: ?Config) => (
     candidate = candidate.toLowerCase();
   }
   if (ignoreAccents) {
-    input = memoizedStripDiacriticsForInput(input);
+    input = stripDiacritics(input);
     candidate = stripDiacritics(candidate);
   }
   return matchFrom === 'start'

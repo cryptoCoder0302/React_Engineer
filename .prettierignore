@@ -1,8 +1,1 @@
-coverage/*
-cypress/plugins/*
-cypress/support/*
-**/dist/*
-flow-typed/*
-lib/*
-node_modules/*
-**/node_modules/*
+package.json

@@ -1,7 +1,7 @@
 // @flow
 /** @jsx jsx */
 import { type Node } from 'react';
-import { jsx } from '@emotion/react';
+import { jsx } from '@emotion/core';
 
 // const smallDevice = '@media (max-width: 769px)';
 const largeDevice = '@media (min-width: 770px)';
@@ -46,9 +46,6 @@ const A = props => (
       color: '#505F79',
       textDecoration: 'none',
 
-      ':visited': {
-        color: '#505F79',
-      },
       ':hover': {
         textDecoration: 'underline',
       },
@@ -61,10 +58,7 @@ export default function Footer(): Node {
   return (
     <Wrapper>
       <Container>
-        <p>
-          Copyright © <A href="https://twitter.com/JedWatson">Jed Watson</A>,
-          2021. MIT Licensed.
-        </p>
+        <p>Copyright © Jed Watson, 2019. MIT Licensed.</p>
         <p>
           Thanks to <A href="https://www.thinkmill.com.au">Thinkmill</A> and{' '}
           <A href="https://www.atlassian.com">Atlassian</A> for supporting this

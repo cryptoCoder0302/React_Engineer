@@ -22,6 +22,5 @@
   "multiSelectDefaultValues": "#multi-select .react-select__multi-value",
   "multiSelectInput": "#react-select-multi-select-input",
   "placeHolderMulti": "#multi-select .react-select__placeholder",
-  "toggleMenuMulti": "#multi-select .react-select__dropdown-indicator",
-  "focusedOption": ".react-select__option--is-focused"
+  "toggleMenuMulti": "#multi-select .react-select__dropdown-indicator"
 }

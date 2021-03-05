@@ -1,5 +1,4 @@
 module.exports = {
-  extends: ['plugin:react-hooks/recommended'],
   parser: 'babel-eslint',
   env: {
     browser: true,
@@ -15,7 +14,7 @@ module.exports = {
         argsIgnorePattern: '^event$',
         ignoreRestSiblings: true,
         vars: 'all',
-        varsIgnorePattern: 'jsx|emotionJSX',
+        varsIgnorePattern: 'jsx|emotionJSX'
       },
     ],
     curly: [2, 'multi-line'],

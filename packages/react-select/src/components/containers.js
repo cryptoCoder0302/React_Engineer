@@ -1,7 +1,7 @@
 // @flow
 /** @jsx jsx */
 import { type Node } from 'react';
-import { jsx } from '@emotion/react';
+import { jsx } from '@emotion/core';
 import type { CommonProps, KeyboardEventHandler } from '../types';
 
 // ==============================
@@ -60,8 +60,6 @@ export const SelectContainer = (props: ContainerProps) => {
 // ==============================
 
 export type ValueContainerProps = CommonProps & {
-  /** Props to be passed to the value container element. */
-  innerProps?: {},
   /** Set when the value container should hold multiple values */
   isMulti: boolean,
   /** Whether the value container currently holds a value. */
@@ -82,15 +80,7 @@ export const valueContainerCSS = ({
   overflow: 'hidden',
 });
 export const ValueContainer = (props: ValueContainerProps) => {
-  const {
-    children,
-    className,
-    cx,
-    innerProps,
-    isMulti,
-    getStyles,
-    hasValue,
-  } = props;
+  const { children, className, cx, isMulti, getStyles, hasValue } = props;
 
   return (
     <div
@@ -103,7 +93,6 @@ export const ValueContainer = (props: ValueContainerProps) => {
         },
         className
       )}
-      {...innerProps}
     >
       {children}
     </div>
@@ -123,8 +112,6 @@ export type IndicatorContainerProps = CommonProps &
   IndicatorsState & {
     /** The children to be rendered. */
     children: Node,
-    /** Props to be passed to the indicators container element. */
-    innerProps?: {},
   };
 
 export const indicatorsContainerCSS = () => ({
@@ -134,7 +121,7 @@ export const indicatorsContainerCSS = () => ({
   flexShrink: 0,
 });
 export const IndicatorsContainer = (props: IndicatorContainerProps) => {
-  const { children, className, cx, innerProps, getStyles } = props;
+  const { children, className, cx, getStyles } = props;
 
   return (
     <div
@@ -145,7 +132,6 @@ export const IndicatorsContainer = (props: IndicatorContainerProps) => {
         },
         className
       )}
-      {...innerProps}
     >
       {children}
     </div>

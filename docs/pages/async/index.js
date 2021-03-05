@@ -4,16 +4,24 @@ import React, { Fragment } from 'react';
 import Helmet from 'react-helmet';
 import ExampleWrapper from '../../ExampleWrapper';
 import md from '../../markdown/renderer';
-import { AsyncCallbacks, AsyncMulti, AsyncPromises } from '../../examples';
+import {
+  AsyncCallbacks,
+  AsyncMulti,
+  AsyncPromises,
+} from '../../examples';
+
 
 export default function Async() {
   return (
-    <Fragment>
-      <Helmet>
-        <title>Async - React Select</title>
-        <meta name="description" content="The react-select Async Component." />
-      </Helmet>
-      {md`
+  <Fragment>
+    <Helmet>
+      <title>Async - React Select</title>
+      <meta
+        name="description"
+        content="The react-select Async Component."
+      />
+    </Helmet>
+    {md`
     # Async
     Use the Async component to load options from a remote source as the user types.
 
@@ -53,7 +61,7 @@ export default function Async() {
         urlPath="docs/examples/AsyncMulti.js"
         raw={require('!!raw-loader!../../examples/AsyncMulti.js')}
       >
-        <AsyncMulti />
+        <AsyncMulti/>
       </ExampleWrapper>
     )}
 
@@ -67,7 +75,7 @@ export default function Async() {
         urlPath="docs/examples/DefaultOptions.js"
         raw={require('!!raw-loader!../../examples/DefaultOptions.js')}
       >
-        <AsyncMulti />
+        <AsyncMulti/>
       </ExampleWrapper>
     )}
 
@@ -81,6 +89,5 @@ export default function Async() {
       </ExampleWrapper>
     )}
   `}
-    </Fragment>
-  );
-}
+</Fragment>);
+};
