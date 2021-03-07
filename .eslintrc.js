@@ -1,4 +1,5 @@
 module.exports = {
+  extends: ['plugin:react-hooks/recommended'],
   parser: 'babel-eslint',
   env: {
     browser: true,
@@ -14,7 +15,7 @@ module.exports = {
         argsIgnorePattern: '^event$',
         ignoreRestSiblings: true,
         vars: 'all',
-        varsIgnorePattern: 'jsx|emotionJSX'
+        varsIgnorePattern: 'jsx|emotionJSX',
       },
     ],
     curly: [2, 'multi-line'],
@@ -39,4 +40,36 @@ module.exports = {
     semi: 2,
     strict: 0,
   },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      parser: '@typescript-eslint/parser',
+      plugins: ['react', '@typescript-eslint'],
+      extends: ['plugin:@typescript-eslint/base'],
+      rules: {
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          {
+            args: 'after-used',
+            argsIgnorePattern: '^event$',
+            ignoreRestSiblings: true,
+            vars: 'all',
+            varsIgnorePattern: 'jsx|emotionJSX',
+          },
+        ],
+        'no-unused-expressions': 'off',
+        '@typescript-eslint/no-unused-expressions': 1,
+        quotes: 'off',
+        '@typescript-eslint/quotes': [2, 'single', 'avoid-escape'],
+        semi: 'off',
+        '@typescript-eslint/semi': 2,
+      },
+    },
+  ],
 };
