@@ -1725,7 +1725,6 @@ export default class Select extends Component<Props, State> {
                   }}
                   isLoading={isLoading}
                   maxHeight={maxHeight}
-                  focusedOption={focusedOption}
                 >
                   {menuUI}
                 </MenuList>
