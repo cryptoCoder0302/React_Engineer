@@ -1,56 +1,30 @@
 import React, { Fragment } from 'react';
 import { Helmet } from 'react-helmet';
 import md from '../../markdown/renderer';
-import { PropTypes } from '@magical-types/macro';
-import SelectBase from '../../PropTypes/Select';
-import StateManagerProps from '../../PropTypes/stateManager';
-import AsyncProps from '../../PropTypes/Async';
-import CreatableProps from '../../PropTypes/Creatable';
+import PrettyProps, { CommonProps, Inter, Obj, Prop } from 'pretty-proptypes';
 
-import ClearIndicator from '../../PropTypes/components/ClearIndicator';
-import Control from '../../PropTypes/components/Control';
-import DropdownIndicator from '../../PropTypes/components/DropdownIndicator';
-import Group from '../../PropTypes/components/Group';
-import IndicatorsContainer from '../../PropTypes/components/IndicatorsContainer';
-import IndicatorsSeparator from '../../PropTypes/components/IndicatorsSeparator';
-import Input from '../../PropTypes/components/Input';
-import LoadingIndicator from '../../PropTypes/components/LoadingIndicator';
-import Menu from '../../PropTypes/components/Menu';
-import MenuList from '../../PropTypes/components/MenuList';
-import LoadingMessage from '../../PropTypes/components/LoadingMessage';
-import NoOptionsMessage from '../../PropTypes/components/NoOptionsMessage';
-import MultiValue from '../../PropTypes/components/MultiValue';
-import MultiValueContainer from '../../PropTypes/components/MultiValueContainer';
-import MultiValueLabel from '../../PropTypes/components/MultiValueLabel';
-import MultiValueRemove from '../../PropTypes/components/MultiValueRemove';
-import Option from '../../PropTypes/components/Option';
-import Placeholder from '../../PropTypes/components/Placeholder';
-import SelectContainer from '../../PropTypes/components/SelectContainer';
-import SingleValue from '../../PropTypes/components/SingleValue';
-import ValueContainer from '../../PropTypes/components/ValueContainer';
+interface PropsProps {
+  readonly overrides?: {
+    readonly [key: string]: React.ComponentType<CommonProps>;
+  };
+  readonly props: {
+    readonly component?: Obj | Inter;
+  };
+}
 
-// interface PropsProps {
-//   readonly overrides?: {
-//     readonly [key: string]: React.ComponentType<CommonProps>;
-//   };
-//   readonly props: {
-//     readonly component?: Obj | Inter;
-//   };
-// }
-
-// const Props = (props: PropsProps) => (
-//   <PrettyProps
-//     heading=""
-//     components={{
-//       Button: ({ isCollapsed, ...rest }) => (
-//         <button {...rest}>
-//           {isCollapsed ? 'Hide Prop Shape' : 'Show Prop Shape'}
-//         </button>
-//       ),
-//     }}
-//     {...props}
-//   />
-// );
+const Props = (props: PropsProps) => (
+  <PrettyProps
+    heading=""
+    components={{
+      Button: ({ isCollapsed, ...rest }) => (
+        <button {...rest}>
+          {isCollapsed ? 'Hide Prop Shape' : 'Show Prop Shape'}
+        </button>
+      ),
+    }}
+    {...props}
+  />
+);
 
 export default function Api() {
   return (
@@ -108,27 +82,52 @@ export default function Api() {
     expose inputValue and value as controllable props. For more detailed information on these props and their usage
     please see the [controlled props](/advanced#controlled-props) section of the advanced page.
 
-    ${(<PropTypes component={StateManagerProps} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/stateManager')}
+      />
+    )}
 
     ## Select Props
 
     These base props are those available to be passed to all select variants.
 
-    ${(<PropTypes component={SelectBase} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/Select')}
+        overrides={{
+          components: (props) => (
+            <Prop
+              {...props}
+              shapeComponent={() => null}
+              type="All Components Object"
+            />
+          ),
+        }}
+      />
+    )}
 
     ## Async props
 
     These props are included with in both the Async and AsyncCreatable select. For
     more on using async selects, see the [async select documentation](/async)
 
-    ${(<PropTypes component={AsyncProps} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/Async')}
+      />
+    )}
 
     ## Creatable props
 
     These props are included with in both the Creatable and AsyncCreatable select. For
     more on using creatable selects, see the [creatable select documentation](/creatable)
 
-    ${(<PropTypes component={CreatableProps} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/Creatable')}
+      />
+    )}
 
     ## Replacing Components
 
@@ -163,19 +162,35 @@ export default function Api() {
 
     ### ClearIndicator
 
-    ${(<PropTypes component={ClearIndicator} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/ClearIndicator')}
+      />
+    )}
 
     ### Control
 
-    ${(<PropTypes component={Control} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/Control')}
+      />
+    )}
 
     ### DropdownIndicator
 
-    ${(<PropTypes component={DropdownIndicator} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/DropdownIndicator')}
+      />
+    )}
 
     ### Group
 
-    ${(<PropTypes component={Group} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/Group')}
+      />
+    )}
 
     ### GroupHeading
 
@@ -183,72 +198,140 @@ export default function Api() {
 
     ### IndicatorsContainer
 
-    ${(<PropTypes component={IndicatorsContainer} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/IndicatorsContainer')}
+      />
+    )}
 
     ### IndicatorSeparator
 
-    ${(<PropTypes component={IndicatorsSeparator} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/IndicatorsSeparator')}
+      />
+    )}
 
     ### Input
 
-    ${(<PropTypes component={Input} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/Input')}
+      />
+    )}
 
     ### LoadingIndicator
 
-    ${(<PropTypes component={LoadingIndicator} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/LoadingIndicator')}
+      />
+    )}
 
     ### Menu
 
-    ${(<PropTypes component={Menu} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/Menu')}
+      />
+    )}
 
     ### MenuList
 
-    ${(<PropTypes component={MenuList} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/MenuList')}
+      />
+    )}
 
     ### LoadingMessage
 
-    ${(<PropTypes component={LoadingMessage} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/LoadingMessage')}
+      />
+    )}
 
     ### NoOptionsMessage
 
-    ${(<PropTypes component={NoOptionsMessage} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/NoOptionsMessage')}
+      />
+    )}
 
     ### MultiValue
 
-    ${(<PropTypes component={MultiValue} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/MultiValue')}
+      />
+    )}
 
     ### MultiValueContainer
 
-    ${(<PropTypes component={MultiValueContainer} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/MultiValueContainer')}
+      />
+    )}
 
     ### MultiValueLabel
 
-    ${(<PropTypes component={MultiValueLabel} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/MultiValueLabel')}
+      />
+    )}
 
     ### MultiValueRemove
 
-    ${(<PropTypes component={MultiValueRemove} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/MultiValueRemove')}
+      />
+    )}
 
     ### Option
 
-    ${(<PropTypes component={Option} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/Option')}
+      />
+    )}
 
     ### Placeholder
 
-    ${(<PropTypes component={Placeholder} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/Placeholder')}
+      />
+    )}
 
     ### SelectContainer
 
-    ${(<PropTypes component={SelectContainer} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/SelectContainer')}
+      />
+    )}
 
     ### SingleValue
 
-    ${(<PropTypes component={SingleValue} />)}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/SingleValue')}
+      />
+    )}
 
     ### ValueContainer
 
-    ${(<PropTypes component={ValueContainer} />)}
-      `}
+    ${(
+      <Props
+        props={require('!!extract-react-types-loader!../../PropTypes/components/ValueContainer')}
+      />
+    )}
+  `}
     </Fragment>
   );
 }
