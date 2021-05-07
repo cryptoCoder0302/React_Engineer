@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react';
-import AutosizeInput, { AutosizeInputProps } from 'react-input-autosize';
+import AutosizeInput from 'react-input-autosize';
 
 import {
   CommonPropsAndClassName,
@@ -10,7 +10,7 @@ import {
 } from '../types';
 import { cleanCommonProps } from '../utils';
 
-export interface InputSpecificProps<
+export interface InputProps<
   Option extends OptionBase = OptionBase,
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>
@@ -24,13 +24,6 @@ export interface InputSpecificProps<
   /** The ID of the form that the input belongs to */
   form?: string;
 }
-
-export type InputProps<
-  Option extends OptionBase = OptionBase,
-  IsMulti extends boolean = boolean,
-  Group extends GroupBase<Option> = GroupBase<Option>
-> = InputSpecificProps<Option, IsMulti, Group> &
-  Omit<AutosizeInputProps, 'ref'>;
 
 export const inputCSS = <
   Option extends OptionBase,
