@@ -78,6 +78,7 @@
     "eslint": "^7.18.0",
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "extract-react-types-loader": "^0.3.0",
     "fork-ts-checker-webpack-plugin": "^6.1.0",
     "gh-pages": "^1.1.0",
     "html-webpack-plugin": "^3.2.0",
@@ -119,12 +120,11 @@
     "prettier:check": "prettier --check .",
     "lint": "eslint .",
     "start": "cd docs && yarn start",
-    "start:test": "cd docs && yarn start:test",
     "build:docs": "cd docs && yarn build:docs",
     "fresh": "rm -rf node_modules && yarn install",
     "test": "npm run test:jest && npm run test:cypress",
     "test:jest": "jest --coverage",
-    "e2e": "concurrently --kill-others --success=first --names 'SERVER,E2E' 'yarn start:test --progress=false --no-info' 'yarn test:cypress'",
+    "e2e": "concurrently --kill-others --success=first --names 'SERVER,E2E' 'yarn start --progress=false --no-info' 'yarn test:cypress'",
     "type-check": "tsc --build packages/react-select/tsconfig.json && tsc --build docs/tsconfig.json && tsc --build cypress/tsconfig.json",
     "precommit": "yarn run type-check",
     "postinstall": "preconstruct dev",
@@ -168,8 +168,7 @@
   ],
   "preconstruct": {
     "packages": [
-      "packages/*",
-      "docs/generate-magical-types"
+      "packages/*"
     ]
   },
   "browser": {
