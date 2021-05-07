@@ -14,7 +14,7 @@ type MagicalNodesForPackage = Record<
 
 export type MagicalNodes = Record<string, MagicalNodesForPackage>;
 
-const OTHERFILES: string[] = ['Async', 'Creatable'];
+const OTHERFILES: string[] = ['stateManager', 'Async', 'Creatable'];
 const getOtherProps = (obj: MagicalNodes) => {
   OTHERFILES.forEach((name: string) => {
     let pkgExports: MagicalNodesForPackage = {};
@@ -45,6 +45,7 @@ const resolveTypes = ({
 }) => {
   let exportedDeclarations = sourceFile.getExportedDeclarations();
   for (const [exportName, declaration] of exportedDeclarations) {
+    if (item === 'icon' && exportName !== 'IconProps') continue;
     if (declaration.length) {
       let type = declaration[0].getType().compilerType;
       let typeKind: 'component' | 'other' = 'other';
