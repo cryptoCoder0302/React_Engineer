@@ -586,14 +586,14 @@ export default class Select<
   // Misc. Instance Properties
   // ------------------------------
 
-  blockOptionHover = false;
-  isComposing = false;
+  blockOptionHover: boolean = false;
+  isComposing: boolean = false;
   commonProps: any; // TODO
-  initialTouchX = 0;
-  initialTouchY = 0;
-  instancePrefix = '';
-  openAfterFocus = false;
-  scrollToFocusedOptionOnUpdate = false;
+  initialTouchX: number = 0;
+  initialTouchY: number = 0;
+  instancePrefix: string = '';
+  openAfterFocus: boolean = false;
+  scrollToFocusedOptionOnUpdate: boolean = false;
   userIsDragging?: boolean;
 
   // Refs

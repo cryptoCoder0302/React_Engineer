@@ -20,8 +20,7 @@ module.exports = {
     ],
     curly: [2, 'multi-line'],
     'jsx-quotes': 1,
-    'no-shadow': 0,
-    '@typescript-eslint/no-shadow': 2,
+    'no-shadow': 1,
     'no-trailing-spaces': 1,
     'no-underscore-dangle': 1,
     '@typescript-eslint/no-unused-expressions': 1,
@@ -39,7 +38,6 @@ module.exports = {
     'react/self-closing-comp': 1,
     'react/sort-prop-types': 1,
     '@typescript-eslint/semi': 2,
-    '@typescript-eslint/no-inferrable-types': 2,
     strict: 0,
   },
   settings: {

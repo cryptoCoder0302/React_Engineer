@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { Component } from 'react';
+import { Component, CSSProperties } from 'react';
 import { jsx } from '@emotion/react';
 import { CSSObject } from '@emotion/serialize';
 import moment, { Moment } from 'moment';

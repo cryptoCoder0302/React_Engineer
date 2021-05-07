@@ -1,5 +1,6 @@
 import memoize from 'memoize-one';
 import {
+  SelectComponents,
   defaultComponents,
   SelectComponentsGeneric,
 } from '../components/index';
