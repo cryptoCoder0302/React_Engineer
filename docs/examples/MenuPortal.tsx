@@ -25,7 +25,7 @@ export default class MenuPortal extends Component<{}, State> {
   close = () => {
     this.setState({ isOpen: false });
   };
-  setPlacement: ChangeEventHandler<HTMLSelectElement> = ({ currentTarget }) => {
+  setPlacement: ChangeEventHandler<HTMLInputElement> = ({ currentTarget }) => {
     const portalPlacement =
       currentTarget && (currentTarget.value as 'auto' | 'bottom' | 'top');
     this.setState({ portalPlacement });
@@ -55,7 +55,8 @@ export default class MenuPortal extends Component<{}, State> {
               menuShouldScrollIntoView={false}
             />
             <Note Tag="label">
-              <select
+              <input
+                type="radio"
                 onChange={this.setPlacement}
                 value={portalPlacement}
                 id="cypress-portalled__radio-bottom"
@@ -63,7 +64,7 @@ export default class MenuPortal extends Component<{}, State> {
                 <option value="auto">auto</option>
                 <option value="bottom">bottom</option>
                 <option value="top">top</option>
-              </select>
+              </input>
             </Note>
             <Note Tag="label" style={{ marginLeft: '1em' }}>
               <input
