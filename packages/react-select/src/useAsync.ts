@@ -87,8 +87,9 @@ export default function useAsync<
     typeof propsInputValue !== 'undefined' ? (propsInputValue as string) : ''
   );
   const [isLoading, setIsLoading] = useState(propsDefaultOptions === true);
-  const [loadedInputValue, setLoadedInputValue] =
-    useState<string | undefined>(undefined);
+  const [loadedInputValue, setLoadedInputValue] = useState<string | undefined>(
+    undefined
+  );
   const [loadedOptions, setLoadedOptions] = useState<
     OptionsOrGroups<Option, Group>
   >([]);
@@ -96,8 +97,9 @@ export default function useAsync<
   const [optionsCache, setOptionsCache] = useState<
     Record<string, OptionsOrGroups<Option, Group>>
   >({});
-  const [prevDefaultOptions, setPrevDefaultOptions] =
-    useState<OptionsOrGroups<Option, Group> | boolean | undefined>(undefined);
+  const [prevDefaultOptions, setPrevDefaultOptions] = useState<
+    OptionsOrGroups<Option, Group> | boolean | undefined
+  >(undefined);
   const [prevCacheOptions, setPrevCacheOptions] = useState(undefined);
 
   if (cacheOptions !== prevCacheOptions) {

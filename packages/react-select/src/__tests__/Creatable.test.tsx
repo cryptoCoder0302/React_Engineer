@@ -165,15 +165,13 @@ cases<Opts>(
     ).toBeTruthy();
   },
   {
-    'single select > should show "create..." prompt only if isValidNewOption returns thruthy value':
-      {},
-    'multi select > should show "create..." prompt only if isValidNewOption returns thruthy value':
-      {
-        props: {
-          isMulti: true,
-          options: OPTIONS,
-        },
+    'single select > should show "create..." prompt only if isValidNewOption returns thruthy value': {},
+    'multi select > should show "create..." prompt only if isValidNewOption returns thruthy value': {
+      props: {
+        isMulti: true,
+        options: OPTIONS,
       },
+    },
   }
 );
 
@@ -231,15 +229,13 @@ cases<Opts>(
     );
   },
   {
-    'single select > should create option as per label returned from getNewOptionData':
-      {},
-    'multi select > should create option as per label returned from getNewOptionData':
-      {
-        props: {
-          isMulti: true,
-          options: OPTIONS,
-        },
+    'single select > should create option as per label returned from getNewOptionData': {},
+    'multi select > should create option as per label returned from getNewOptionData': {
+      props: {
+        isMulti: true,
+        options: OPTIONS,
       },
+    },
   }
 );
 
@@ -269,15 +265,13 @@ cases<Opts>(
     );
   },
   {
-    'single select > should show label of custom option as per text returned from formatCreateLabel':
-      {},
-    'multi select > should show label of custom option as per text returned from formatCreateLabel':
-      {
-        props: {
-          isMulti: true,
-          options: OPTIONS,
-        },
+    'single select > should show label of custom option as per text returned from formatCreateLabel': {},
+    'multi select > should show label of custom option as per text returned from formatCreateLabel': {
+      props: {
+        isMulti: true,
+        options: OPTIONS,
       },
+    },
   }
 );
 

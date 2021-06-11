@@ -78,7 +78,7 @@ cases(
         {...props}
       />
     );
-    let input = container.querySelector('input.react-select__input');
+    let input = container.querySelector('div.react-select__input input');
     userEvent.type(input!, 'a');
     await waitFor(() => {
       expect(container.querySelectorAll('.react-select__option').length).toBe(
@@ -115,7 +115,7 @@ test('to not call loadOptions again for same value when cacheOptions is true', (
       cacheOptions
     />
   );
-  let input = container.querySelector('input.react-select__input');
+  let input = container.querySelector('div.react-select__input input');
 
   fireEvent.input(input!, {
     target: {
@@ -151,7 +151,10 @@ test('to create new cache for each instance', async () => {
       loadOptions={loadOptionsOne}
     />
   );
-  userEvent.type(containerOne.querySelector('input.react-select__input')!, 'a');
+  userEvent.type(
+    containerOne.querySelector('div.react-select__input input')!,
+    'a'
+  );
 
   let loadOptionsTwo = jest.fn();
   let { container: containerTwo } = render(
@@ -163,7 +166,10 @@ test('to create new cache for each instance', async () => {
     />
   );
 
-  userEvent.type(containerTwo.querySelector('input.react-select__input')!, 'a');
+  userEvent.type(
+    containerTwo.querySelector('div.react-select__input input')!,
+    'a'
+  );
 
   expect(loadOptionsOne).toHaveBeenCalled();
   expect(loadOptionsTwo).toHaveBeenCalled();
@@ -185,7 +191,7 @@ test('in case of callbacks display the most recently-requested loaded options (i
     />
   );
 
-  let input = container.querySelector('input.react-select__input');
+  let input = container.querySelector('div.react-select__input input');
   fireEvent.input(input!, {
     target: {
       value: 'foo',
@@ -229,7 +235,7 @@ test.skip('in case of callbacks should handle an error by setting options to an 
       options={OPTIONS}
     />
   );
-  let input = container.querySelector('input.react-select__input');
+  let input = container.querySelector('div.react-select__input input');
   fireEvent.input(input!, {
     target: {
       value: 'foo',

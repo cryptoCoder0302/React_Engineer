@@ -28,8 +28,10 @@ export type PropsValue<Option extends OptionBase> =
   | MultiValue<Option>
   | SingleValue<Option>;
 
-export type OnChangeValue<Option extends OptionBase, IsMulti extends boolean> =
-  IsMulti extends true ? MultiValue<Option> : SingleValue<Option>;
+export type OnChangeValue<
+  Option extends OptionBase,
+  IsMulti extends boolean
+> = IsMulti extends true ? MultiValue<Option> : SingleValue<Option>;
 
 interface Colors {
   primary: string;

@@ -5,4 +5,3 @@ cypress/support/*
 lib/*
 node_modules/*
 **/node_modules/*
-**/magical-types/*
