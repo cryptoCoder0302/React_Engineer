@@ -6,10 +6,11 @@ import {
   CommonPropsAndClassName,
   CSSObjectWithLabel,
   GroupBase,
+  OptionBase,
 } from '../types';
 
 export interface OptionProps<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>
 > extends CommonPropsAndClassName<Option, IsMulti, Group> {
@@ -35,7 +36,7 @@ export interface OptionProps<
 }
 
 export const optionCSS = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >({
@@ -74,7 +75,7 @@ export const optionCSS = <
 });
 
 const Option = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -104,6 +105,7 @@ const Option = <
         className
       )}
       ref={innerRef}
+      aria-disabled={isDisabled}
       {...innerProps}
     >
       {children}

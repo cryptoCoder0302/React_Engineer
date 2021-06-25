@@ -55,6 +55,7 @@ import {
   MenuPlacement,
   MenuPosition,
   OnChangeValue,
+  OptionBase,
   Options,
   OptionsOrGroups,
   PropsValue,
@@ -62,14 +63,14 @@ import {
 } from './types';
 
 export type FormatOptionLabelContext = 'menu' | 'value';
-export interface FormatOptionLabelMeta<Option> {
+export interface FormatOptionLabelMeta<Option extends OptionBase> {
   context: FormatOptionLabelContext;
   inputValue: string;
   selectValue: Options<Option>;
 }
 
 export interface Props<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > {
@@ -308,7 +309,7 @@ export const defaultProps = {
 };
 
 interface State<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > {
@@ -323,7 +324,7 @@ interface State<
   prevProps: Props<Option, IsMulti, Group> | void;
 }
 
-interface CategorizedOption<Option> {
+interface CategorizedOption<Option extends OptionBase> {
   type: 'option';
   data: Option;
   isDisabled: boolean;
@@ -333,19 +334,23 @@ interface CategorizedOption<Option> {
   index: number;
 }
 
-interface CategorizedGroup<Option, Group extends GroupBase<Option>> {
+interface CategorizedGroup<
+  Option extends OptionBase,
+  Group extends GroupBase<Option>
+> {
   type: 'group';
   data: Group;
   options: readonly CategorizedOption<Option>[];
   index: number;
 }
 
-type CategorizedGroupOrOption<Option, Group extends GroupBase<Option>> =
-  | CategorizedGroup<Option, Group>
-  | CategorizedOption<Option>;
+type CategorizedGroupOrOption<
+  Option extends OptionBase,
+  Group extends GroupBase<Option>
+> = CategorizedGroup<Option, Group> | CategorizedOption<Option>;
 
 function toCategorizedOption<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -371,7 +376,7 @@ function toCategorizedOption<
 }
 
 function buildCategorizedOptions<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -409,7 +414,7 @@ function buildCategorizedOptions<
 }
 
 function buildFocusableOptionsFromCategorizedOptions<
-  Option,
+  Option extends OptionBase,
   Group extends GroupBase<Option>
 >(categorizedOptions: readonly CategorizedGroupOrOption<Option, Group>[]) {
   return categorizedOptions.reduce<Option[]>(
@@ -428,7 +433,7 @@ function buildFocusableOptionsFromCategorizedOptions<
 }
 
 function buildFocusableOptions<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(props: Props<Option, IsMulti, Group>, selectValue: Options<Option>) {
@@ -438,7 +443,7 @@ function buildFocusableOptions<
 }
 
 function isFocusable<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -455,7 +460,7 @@ function isFocusable<
 }
 
 function getNextFocusedValue<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(state: State<Option, IsMulti, Group>, nextSelectValue: Options<Option>) {
@@ -476,7 +481,7 @@ function getNextFocusedValue<
 }
 
 function getNextFocusedOption<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(state: State<Option, IsMulti, Group>, options: Options<Option>) {
@@ -486,7 +491,7 @@ function getNextFocusedOption<
     : options[0];
 }
 const getOptionLabel = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -496,7 +501,7 @@ const getOptionLabel = <
   return props.getOptionLabel(data);
 };
 const getOptionValue = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -507,7 +512,7 @@ const getOptionValue = <
 };
 
 function isOptionDisabled<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -520,7 +525,7 @@ function isOptionDisabled<
     : false;
 }
 function isOptionSelected<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -536,7 +541,7 @@ function isOptionSelected<
   return selectValue.some((i) => getOptionValue(props, i) === candidate);
 }
 function filterOption<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -548,7 +553,7 @@ function filterOption<
 }
 
 const shouldHideSelectedOptions = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -562,7 +567,7 @@ const shouldHideSelectedOptions = <
 let instanceId = 1;
 
 export default class Select<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>
 > extends Component<
@@ -623,10 +628,22 @@ export default class Select<
     this.instancePrefix =
       'react-select-' + (this.props.instanceId || ++instanceId);
     this.state.selectValue = cleanValue(props.value);
+
+    // If `value` or `defaultValue` props are not empty then announce them
+    // when the Select is focussed
+    if (this.state.selectValue.length) {
+      this.state.ariaSelection = {
+        value: this.state.selectValue as OnChangeValue<Option, IsMulti>,
+        action: 'select-option',
+        option: this.state.selectValue,
+        name: this.props.name,
+      };
+    }
   }
+
   static getDerivedStateFromProps(
-    props: Props<unknown, boolean, GroupBase<unknown>>,
-    state: State<unknown, boolean, GroupBase<unknown>>
+    props: Props<OptionBase, boolean, GroupBase<OptionBase>>,
+    state: State<OptionBase, boolean, GroupBase<OptionBase>>
   ) {
     const { prevProps, clearFocusValueOnUpdate, inputIsHiddenAfterUpdate } =
       state;
@@ -1022,7 +1039,9 @@ export default class Select<
     const custom = this.props.styles[key];
     return custom ? custom(base, props as any) : base;
   };
-  getElementId = (element: 'group' | 'input' | 'listbox' | 'option') => {
+  getElementId = (
+    element: 'group' | 'input' | 'listbox' | 'option' | 'placeholder'
+  ) => {
     return `${this.instancePrefix}-${element}`;
   };
 
@@ -1489,8 +1508,15 @@ export default class Select<
   // Renderers
   // ==============================
   renderInput() {
-    const { isDisabled, isSearchable, inputId, inputValue, tabIndex, form } =
-      this.props;
+    const {
+      isDisabled,
+      isSearchable,
+      inputId,
+      inputValue,
+      tabIndex,
+      form,
+      menuIsOpen,
+    } = this.props;
     const { Input } = this.getComponents();
     const { inputIsHidden } = this.state;
     const { commonProps } = this;
@@ -1500,10 +1526,21 @@ export default class Select<
     // aria attributes makes the JSX "noisy", separated for clarity
     const ariaAttributes = {
       'aria-autocomplete': 'list' as const,
+      'aria-expanded': menuIsOpen,
+      'aria-haspopup': true,
+      'aria-controls': this.getElementId('listbox'),
+      'aria-owns': this.getElementId('listbox'),
       'aria-errormessage': this.props['aria-errormessage'],
       'aria-invalid': this.props['aria-invalid'],
       'aria-label': this.props['aria-label'],
       'aria-labelledby': this.props['aria-labelledby'],
+      role: 'combobox',
+      ...(!isSearchable && {
+        'aria-readonly': true,
+      }),
+      ...(!this.hasValue() && {
+        'aria-describedby': this.getElementId('placeholder'),
+      }),
     };
 
     if (!isSearchable) {
@@ -1515,9 +1552,9 @@ export default class Select<
           onBlur={this.onInputBlur}
           onChange={noop}
           onFocus={this.onInputFocus}
+          inputMode="none"
           disabled={isDisabled}
           tabIndex={tabIndex}
-          inputMode="none"
           form={form}
           value=""
           {...ariaAttributes}
@@ -1573,6 +1610,7 @@ export default class Select<
           key="placeholder"
           isDisabled={isDisabled}
           isFocused={isFocused}
+          innerProps={{ id: this.getElementId('placeholder') }}
         >
           {placeholder}
         </Placeholder>
@@ -1835,6 +1873,7 @@ export default class Select<
             innerProps={{
               onMouseDown: this.onMenuMouseDown,
               onMouseMove: this.onMenuMouseMove,
+              id: this.getElementId('listbox'),
             }}
             isLoading={isLoading}
             placement={placement}
@@ -1992,7 +2031,7 @@ export default class Select<
 }
 
 export type PublicBaseSelectProps<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > = JSX.LibraryManagedAttributes<typeof Select, Props<Option, IsMulti, Group>>;

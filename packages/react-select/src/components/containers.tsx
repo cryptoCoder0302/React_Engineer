@@ -5,6 +5,7 @@ import {
   CommonPropsAndClassName,
   CSSObjectWithLabel,
   GroupBase,
+  OptionBase,
 } from '../types';
 
 // ==============================
@@ -12,7 +13,7 @@ import {
 // ==============================
 
 export interface ContainerProps<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>
 > extends CommonPropsAndClassName<Option, IsMulti, Group> {
@@ -25,7 +26,7 @@ export interface ContainerProps<
   innerProps: JSX.IntrinsicElements['div'];
 }
 export const containerCSS = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >({
@@ -38,7 +39,7 @@ export const containerCSS = <
   position: 'relative',
 });
 export const SelectContainer = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -57,6 +58,7 @@ export const SelectContainer = <
         className
       )}
       {...innerProps}
+      role="widget"
     >
       {children}
     </div>
@@ -68,7 +70,7 @@ export const SelectContainer = <
 // ==============================
 
 export interface ValueContainerProps<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>
 > extends CommonPropsAndClassName<Option, IsMulti, Group> {
@@ -79,7 +81,7 @@ export interface ValueContainerProps<
   isDisabled: boolean;
 }
 export const valueContainerCSS = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >({
@@ -95,7 +97,7 @@ export const valueContainerCSS = <
   overflow: 'hidden',
 });
 export const ValueContainer = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -127,7 +129,7 @@ export const ValueContainer = <
 // ==============================
 
 export interface IndicatorsContainerProps<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>
 > extends CommonPropsAndClassName<Option, IsMulti, Group> {
@@ -145,7 +147,7 @@ export const indicatorsContainerCSS = (): CSSObjectWithLabel => ({
   flexShrink: 0,
 });
 export const IndicatorsContainer = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(

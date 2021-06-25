@@ -47,10 +47,10 @@ import {
   MultiValueProps,
   multiValueRemoveCSS,
 } from './components/MultiValue';
-import { CSSObjectWithLabel, GroupBase } from './types';
+import { CSSObjectWithLabel, GroupBase, OptionBase } from './types';
 
 export interface StylesProps<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > {
@@ -80,7 +80,7 @@ export interface StylesProps<
 
 type StylesFunction<Props> = (props: Props) => CSSObjectWithLabel;
 export type StylesFunctions<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > = {
@@ -94,7 +94,7 @@ export type StylesConfigFunction<Props> = (
   props: Props
 ) => CSSObjectWithLabel;
 export type StylesConfig<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>
 > = {
@@ -104,9 +104,9 @@ export type StylesConfig<
 };
 
 export const defaultStyles: StylesFunctions<
-  unknown,
+  OptionBase,
   boolean,
-  GroupBase<unknown>
+  GroupBase<OptionBase>
 > = {
   clearIndicator: clearIndicatorCSS,
   container: containerCSS,
@@ -136,7 +136,7 @@ export const defaultStyles: StylesFunctions<
 // Allows consumers to extend a base Select with additional styles
 
 export function mergeStyles<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(

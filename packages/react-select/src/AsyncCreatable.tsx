@@ -1,12 +1,12 @@
 import Select from './Select';
-import { GroupBase } from './types';
+import { GroupBase, OptionBase } from './types';
 import React, { MutableRefObject, ReactElement, RefAttributes } from 'react';
 import useAsync, { AsyncAdditionalProps } from './useAsync';
 import useStateManager, { StateManagerProps } from './useStateManager';
 import useCreatable, { CreatableAdditionalProps } from './useCreatable';
 
 type AsyncCreatableProps<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > = StateManagerProps<Option, IsMulti, Group> &
@@ -14,7 +14,7 @@ type AsyncCreatableProps<
   AsyncAdditionalProps<Option, Group>;
 
 type AsyncCreatableSelect = <
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>
 >(
@@ -23,7 +23,11 @@ type AsyncCreatableSelect = <
 ) => ReactElement;
 
 const AsyncCreatableSelect = React.forwardRef(
-  <Option, IsMulti extends boolean, Group extends GroupBase<Option>>(
+  <
+    Option extends OptionBase,
+    IsMulti extends boolean,
+    Group extends GroupBase<Option>
+  >(
     props: AsyncCreatableProps<Option, IsMulti, Group>,
     ref:
       | ((instance: Select<Option, IsMulti, Group> | null) => void)

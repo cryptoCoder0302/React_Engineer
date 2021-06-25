@@ -6,10 +6,11 @@ import {
   CommonPropsAndClassName,
   CSSObjectWithLabel,
   GroupBase,
+  OptionBase,
 } from '../types';
 
 export interface ControlProps<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>
 > extends CommonPropsAndClassName<Option, IsMulti, Group> {
@@ -27,7 +28,7 @@ export interface ControlProps<
 }
 
 export const css = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >({
@@ -62,7 +63,7 @@ export const css = <
 });
 
 const Control = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(

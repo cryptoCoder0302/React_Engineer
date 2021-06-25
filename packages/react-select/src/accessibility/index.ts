@@ -2,6 +2,7 @@ import {
   ActionMeta,
   GroupBase,
   OnChangeValue,
+  OptionBase,
   Options,
   OptionsOrGroups,
 } from '../types';
@@ -12,10 +13,13 @@ export type GuidanceContext = 'menu' | 'input' | 'value';
 
 export type AriaLive = 'polite' | 'off' | 'assertive';
 
-export type AriaSelection<Option, IsMulti extends boolean> =
-  ActionMeta<Option> & {
-    value: OnChangeValue<Option, IsMulti>;
-  };
+export type AriaSelection<
+  Option extends OptionBase,
+  IsMulti extends boolean
+> = Omit<ActionMeta<Option>, 'option'> & {
+  value: OnChangeValue<Option, IsMulti>;
+  option?: Option | Options<Option>;
+};
 
 export interface AriaGuidanceProps {
   /** String value of selectProp aria-label */
@@ -32,10 +36,10 @@ export interface AriaGuidanceProps {
   tabSelectsValue: boolean;
 }
 
-export type AriaOnChangeProps<Option, IsMulti extends boolean> = AriaSelection<
-  Option,
-  IsMulti
-> & {
+export type AriaOnChangeProps<
+  Option extends OptionBase,
+  IsMulti extends boolean
+> = AriaSelection<Option, IsMulti> & {
   /** String derived label from selected or removed option/value */
   label: string;
   /** Boolean indicating if the selected menu option is disabled */
@@ -49,7 +53,10 @@ export interface AriaOnFilterProps {
   resultsMessage: string;
 }
 
-export interface AriaOnFocusProps<Option, Group extends GroupBase<Option>> {
+export interface AriaOnFocusProps<
+  Option extends OptionBase,
+  Group extends GroupBase<Option>
+> {
   /** String indicating whether the option was focused in the menu or as (multi-) value */
   context: OptionContext;
   /** Option that is being focused */
@@ -67,17 +74,18 @@ export interface AriaOnFocusProps<Option, Group extends GroupBase<Option>> {
 }
 
 export type AriaGuidance = (props: AriaGuidanceProps) => string;
-export type AriaOnChange<Option, IsMulti extends boolean> = (
-  props: AriaOnChangeProps<Option, IsMulti>
-) => string;
+export type AriaOnChange<
+  Option extends OptionBase = OptionBase,
+  IsMulti extends boolean = boolean
+> = (props: AriaOnChangeProps<Option, IsMulti>) => string;
 export type AriaOnFilter = (props: AriaOnFilterProps) => string;
 export type AriaOnFocus<
-  Option,
+  Option extends OptionBase = OptionBase,
   Group extends GroupBase<Option> = GroupBase<Option>
 > = (props: AriaOnFocusProps<Option, Group>) => string;
 
 export interface AriaLiveMessages<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > {
@@ -119,7 +127,7 @@ export const defaultAriaLiveMessages = {
     }
   },
 
-  onChange: <Option, IsMulti extends boolean>(
+  onChange: <Option extends OptionBase, IsMulti extends boolean>(
     props: AriaOnChangeProps<Option, IsMulti>
   ) => {
     const { action, label = '', isDisabled } = props;
@@ -127,6 +135,7 @@ export const defaultAriaLiveMessages = {
       case 'deselect-option':
       case 'pop-value':
       case 'remove-value':
+      case 'clear':
         return `option ${label}, deselected.`;
       case 'select-option':
         return isDisabled
@@ -137,7 +146,7 @@ export const defaultAriaLiveMessages = {
     }
   },
 
-  onFocus: <Option, Group extends GroupBase<Option>>(
+  onFocus: <Option extends OptionBase, Group extends GroupBase<Option>>(
     props: AriaOnFocusProps<Option, Group>
   ) => {
     const {

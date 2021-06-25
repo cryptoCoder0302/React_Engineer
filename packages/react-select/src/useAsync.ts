@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { handleInputChange } from './utils';
 import { StateManagerProps } from './useStateManager';
-import { GroupBase, InputActionMeta, OptionsOrGroups } from './types';
+import {
+  GroupBase,
+  InputActionMeta,
+  OptionBase,
+  OptionsOrGroups,
+} from './types';
 
 type AsyncManagedPropKeys =
   | 'options'
@@ -9,7 +14,10 @@ type AsyncManagedPropKeys =
   | 'onInputChange'
   | 'filterOption';
 
-export interface AsyncAdditionalProps<Option, Group extends GroupBase<Option>> {
+export interface AsyncAdditionalProps<
+  Option extends OptionBase,
+  Group extends GroupBase<Option>
+> {
   /**
    * The default set of options to show before the user starts searching. When
    * set to `true`, the results for loadOptions('') will be autoloaded.
@@ -38,14 +46,14 @@ export interface AsyncAdditionalProps<Option, Group extends GroupBase<Option>> {
 }
 
 export type AsyncProps<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > = StateManagerProps<Option, IsMulti, Group> &
   AsyncAdditionalProps<Option, Group>;
 
 export default function useAsync<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>,
   AdditionalProps

@@ -5,6 +5,7 @@ import {
   InputActionMeta,
   MultiValue,
   OnChangeValue,
+  OptionBase,
   Options,
   PropsValue,
   SingleValue,
@@ -63,7 +64,7 @@ export function classNames(
 // Clean Value
 // ==============================
 
-export const cleanValue = <Option>(
+export const cleanValue = <Option extends OptionBase>(
   value: PropsValue<Option>
 ): Options<Option> => {
   if (isArray(value)) return value.filter(Boolean);
@@ -76,7 +77,7 @@ export const cleanValue = <Option>(
 // ==============================
 
 export const cleanCommonProps = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>,
   AdditionalProps
@@ -348,7 +349,10 @@ export function isArray<T>(arg: unknown): arg is readonly T[] {
   return Array.isArray(arg);
 }
 
-export function valueTernary<Option, IsMulti extends boolean>(
+export function valueTernary<
+  Option extends OptionBase,
+  IsMulti extends boolean
+>(
   isMulti: IsMulti | undefined,
   multiValue: MultiValue<Option>,
   singleValue: SingleValue<Option>
@@ -356,14 +360,16 @@ export function valueTernary<Option, IsMulti extends boolean>(
   return (isMulti ? multiValue : singleValue) as OnChangeValue<Option, IsMulti>;
 }
 
-export function singleValueAsValue<Option, IsMulti extends boolean>(
-  singleValue: SingleValue<Option>
-): OnChangeValue<Option, IsMulti> {
+export function singleValueAsValue<
+  Option extends OptionBase,
+  IsMulti extends boolean
+>(singleValue: SingleValue<Option>): OnChangeValue<Option, IsMulti> {
   return singleValue as OnChangeValue<Option, IsMulti>;
 }
 
-export function multiValueAsValue<Option, IsMulti extends boolean>(
-  multiValue: MultiValue<Option>
-): OnChangeValue<Option, IsMulti> {
+export function multiValueAsValue<
+  Option extends OptionBase,
+  IsMulti extends boolean
+>(multiValue: MultiValue<Option>): OnChangeValue<Option, IsMulti> {
   return multiValue as OnChangeValue<Option, IsMulti>;
 }

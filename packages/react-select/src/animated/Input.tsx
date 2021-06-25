@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react';
 import { TransitionProps } from 'react-transition-group/Transition';
 import { InputProps } from '../components/Input';
-import { GroupBase } from '../types';
+import { GroupBase, OptionBase } from '../types';
 
 export type InputComponent = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -12,14 +12,18 @@ export type InputComponent = <
 ) => ReactElement;
 
 export type AnimatedInputProps<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > = InputProps<Option, IsMulti, Group> & Partial<TransitionProps>;
 
 // strip transition props off before spreading onto select component
 const AnimatedInput = (WrappedComponent: InputComponent): InputComponent => {
-  return <Option, IsMulti extends boolean, Group extends GroupBase<Option>>({
+  return <
+    Option extends OptionBase,
+    IsMulti extends boolean,
+    Group extends GroupBase<Option>
+  >({
     in: inProp,
     onExited,
     appear,

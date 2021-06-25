@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react';
 import { SingleValueProps } from '../components/SingleValue';
 import { Fade } from './transitions';
-import { GroupBase } from '../types';
+import { GroupBase, OptionBase } from '../types';
 
 export type SingleValueComponent = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -15,7 +15,11 @@ export type SingleValueComponent = <
 
 const AnimatedSingleValue =
   (WrappedComponent: SingleValueComponent) =>
-  <Option, IsMulti extends boolean, Group extends GroupBase<Option>>(
+  <
+    Option extends OptionBase,
+    IsMulti extends boolean,
+    Group extends GroupBase<Option>
+  >(
     props: SingleValueProps<Option, IsMulti, Group>
   ) =>
     (

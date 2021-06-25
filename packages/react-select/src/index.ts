@@ -1,5 +1,5 @@
 import Select from './Select';
-import { GroupBase } from './types';
+import { GroupBase, OptionBase } from './types';
 
 export { default } from './stateManager';
 export { default as NonceProvider } from './NonceProvider';
@@ -8,7 +8,7 @@ export { defaultTheme } from './theme';
 export { createFilter } from './filters';
 export { components } from './components';
 export type SelectInstance<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>
 > = Select<Option, IsMulti, Group>;

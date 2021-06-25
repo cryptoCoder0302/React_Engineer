@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react';
 import { PlaceholderProps } from '../components/Placeholder';
 import { Fade, collapseDuration } from './transitions';
-import { GroupBase } from '../types';
+import { GroupBase, OptionBase } from '../types';
 
 export type PlaceholderComponent = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -14,7 +14,11 @@ export type PlaceholderComponent = <
 // fade in when last multi-value removed, otherwise instant
 const AnimatedPlaceholder =
   (WrappedComponent: PlaceholderComponent) =>
-  <Option, IsMulti extends boolean, Group extends GroupBase<Option>>(
+  <
+    Option extends OptionBase,
+    IsMulti extends boolean,
+    Group extends GroupBase<Option>
+  >(
     props: PlaceholderProps<Option, IsMulti, Group>
   ) =>
     (

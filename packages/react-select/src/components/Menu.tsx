@@ -22,6 +22,7 @@ import {
   MenuPosition,
   CommonProps,
   Theme,
+  OptionBase,
   GroupBase,
   CommonPropsAndClassName,
   CoercedMenuPlacement,
@@ -224,7 +225,7 @@ export interface MenuPlacementProps {
 }
 
 export interface MenuProps<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>
 > extends CommonPropsAndClassName<Option, IsMulti, Group>,
@@ -249,7 +250,7 @@ interface ChildrenProps {
 }
 
 export interface MenuPlacerProps<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > extends CommonProps<Option, IsMulti, Group>,
@@ -265,7 +266,7 @@ function alignToControl(placement: CoercedMenuPlacement) {
 const coercePlacement = (p: MenuPlacement) => (p === 'auto' ? 'bottom' : p);
 
 export const menuCSS = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >({
@@ -290,7 +291,7 @@ const PortalPlacementContext = createContext<{
 
 // NOTE: internal only
 export class MenuPlacer<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > extends Component<MenuPlacerProps<Option, IsMulti, Group>, MenuState> {
@@ -348,7 +349,11 @@ export class MenuPlacer<
   }
 }
 
-const Menu = <Option, IsMulti extends boolean, Group extends GroupBase<Option>>(
+const Menu = <
+  Option extends OptionBase,
+  IsMulti extends boolean,
+  Group extends GroupBase<Option>
+>(
   props: MenuProps<Option, IsMulti, Group>
 ) => {
   const { children, className, cx, getStyles, innerRef, innerProps } = props;
@@ -372,7 +377,7 @@ export default Menu;
 // ==============================
 
 export interface MenuListProps<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>
 > extends CommonPropsAndClassName<Option, IsMulti, Group> {
@@ -388,7 +393,7 @@ export interface MenuListProps<
   innerProps: JSX.IntrinsicElements['div'];
 }
 export const menuListCSS = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >({
@@ -405,7 +410,7 @@ export const menuListCSS = <
   WebkitOverflowScrolling: 'touch',
 });
 export const MenuList = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -436,7 +441,7 @@ export const MenuList = <
 // ==============================
 
 const noticeCSS = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >({
@@ -453,7 +458,7 @@ export const noOptionsMessageCSS = noticeCSS;
 export const loadingMessageCSS = noticeCSS;
 
 export interface NoticeProps<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>
 > extends CommonPropsAndClassName<Option, IsMulti, Group> {
@@ -464,7 +469,7 @@ export interface NoticeProps<
 }
 
 export const NoOptionsMessage = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -492,7 +497,7 @@ NoOptionsMessage.defaultProps = {
 };
 
 export const LoadingMessage = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
@@ -524,7 +529,7 @@ LoadingMessage.defaultProps = {
 // ==============================
 
 export interface MenuPortalProps<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > extends CommonPropsAndClassName<Option, IsMulti, Group> {
@@ -559,7 +564,7 @@ export const menuPortalCSS = ({
 });
 
 export class MenuPortal<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > extends Component<MenuPortalProps<Option, IsMulti, Group>, MenuPortalState> {

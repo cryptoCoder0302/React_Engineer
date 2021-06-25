@@ -6,11 +6,12 @@ import {
   CommonPropsAndClassName,
   CSSObjectWithLabel,
   GroupBase,
+  OptionBase,
 } from '../types';
 import { Props } from '../Select';
 
 interface MultiValueComponents<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 > {
@@ -20,7 +21,7 @@ interface MultiValueComponents<
 }
 
 export interface MultiValueProps<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>
 > extends CommonPropsAndClassName<Option, IsMulti, Group> {
@@ -35,7 +36,7 @@ export interface MultiValueProps<
 }
 
 export const multiValueCSS = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >({
@@ -50,7 +51,7 @@ export const multiValueCSS = <
 });
 
 export const multiValueLabelCSS = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >({
@@ -69,7 +70,7 @@ export const multiValueLabelCSS = <
 });
 
 export const multiValueRemoveCSS = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >({
@@ -89,7 +90,7 @@ export const multiValueRemoveCSS = <
 });
 
 export interface MultiValueGenericProps<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>
 > {
@@ -99,7 +100,7 @@ export interface MultiValueGenericProps<
   selectProps: Props<Option, IsMulti, Group>;
 }
 export const MultiValueGeneric = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >({
@@ -112,7 +113,7 @@ export const MultiValueGeneric = <
 export const MultiValueContainer = MultiValueGeneric;
 export const MultiValueLabel = MultiValueGeneric;
 export interface MultiValueRemoveProps<
-  Option = unknown,
+  Option extends OptionBase = OptionBase,
   IsMulti extends boolean = boolean,
   Group extends GroupBase<Option> = GroupBase<Option>
 > {
@@ -122,7 +123,7 @@ export interface MultiValueRemoveProps<
   selectProps: Props<Option, IsMulti, Group>;
 }
 export function MultiValueRemove<
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >({ children, innerProps }: MultiValueRemoveProps<Option, IsMulti, Group>) {
@@ -130,7 +131,7 @@ export function MultiValueRemove<
 }
 
 const MultiValue = <
-  Option,
+  Option extends OptionBase,
   IsMulti extends boolean,
   Group extends GroupBase<Option>
 >(
