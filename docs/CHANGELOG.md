@@ -1,13 +1,5 @@
 # @react-select/docs
 
-## 3.1.1-beta.0
-
-### Patch Changes
-
-- Updated dependencies [4b028829]:
-- Updated dependencies [ef87c3ac]:
-  - react-select@undefined
-
 ## 3.1.0
 
 ### Minor Changes
