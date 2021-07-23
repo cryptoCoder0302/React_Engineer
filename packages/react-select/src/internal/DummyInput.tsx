@@ -32,7 +32,7 @@ export default function DummyInput({
         left: -100,
         opacity: 0,
         position: 'relative',
-        transform: 'scale(.01)',
+        transform: 'scale(0)',
       }}
     />
   );
