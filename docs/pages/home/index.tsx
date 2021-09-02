@@ -48,8 +48,6 @@ export default function Home() {
     </ExampleWrapper>
   )}
 
-  ${(<br />)}
-
   ## Getting Started
 
   Start by installing \`react-select\`

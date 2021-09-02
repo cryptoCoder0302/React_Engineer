@@ -84,10 +84,9 @@ export const valueContainerCSS = <
   Group extends GroupBase<Option>
 >({
   theme: { spacing },
-  isMulti,
 }: ValueContainerProps<Option, IsMulti, Group>): CSSObjectWithLabel => ({
   alignItems: 'center',
-  display: isMulti ? 'flex' : 'grid',
+  display: 'flex',
   flex: 1,
   flexWrap: 'wrap',
   padding: `${spacing.baseUnit / 2}px ${spacing.baseUnit * 2}px`,
