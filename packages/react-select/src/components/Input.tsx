@@ -39,7 +39,6 @@ export const inputCSS = <
   Group extends GroupBase<Option>
 >({
   isDisabled,
-  value,
   theme: { spacing, colors },
 }: InputProps<Option, IsMulti, Group>): CSSObjectWithLabel => ({
   margin: spacing.baseUnit / 2,
@@ -47,9 +46,6 @@ export const inputCSS = <
   paddingTop: spacing.baseUnit / 2,
   visibility: isDisabled ? 'hidden' : 'visible',
   color: colors.neutral80,
-  // force css to recompute when value change due to @emotion bug.
-  // We can remove it whenever the bug is fixed.
-  transform: value ? 'translateZ(0)' : '',
   ...containerStyle,
 });
 

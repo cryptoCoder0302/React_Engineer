@@ -758,10 +758,7 @@ export default class Select<
     this.props.onMenuOpen();
   }
   onMenuClose() {
-    this.onInputChange('', {
-      action: 'menu-close',
-      prevInputValue: this.props.inputValue,
-    });
+    this.onInputChange('', { action: 'menu-close' });
     this.props.onMenuClose();
   }
   onInputChange(newValue: string, actionMeta: InputActionMeta) {
@@ -899,8 +896,8 @@ export default class Select<
     action: SetValueAction,
     option?: Option
   ) => {
-    const { closeMenuOnSelect, isMulti, inputValue } = this.props;
-    this.onInputChange('', { action: 'set-value', prevInputValue: inputValue });
+    const { closeMenuOnSelect, isMulti } = this.props;
+    this.onInputChange('', { action: 'set-value' });
     if (closeMenuOnSelect) {
       this.setState({ inputIsHiddenAfterUpdate: !isMulti });
       this.onMenuClose();
@@ -1348,10 +1345,9 @@ export default class Select<
   // ==============================
 
   handleInputChange: FormEventHandler<HTMLInputElement> = (event) => {
-    const { inputValue: prevInputValue } = this.props;
     const inputValue = event.currentTarget.value;
     this.setState({ inputIsHiddenAfterUpdate: false });
-    this.onInputChange(inputValue, { action: 'input-change', prevInputValue });
+    this.onInputChange(inputValue, { action: 'input-change' });
     if (!this.props.menuIsOpen) {
       this.onMenuOpen();
     }
@@ -1370,7 +1366,6 @@ export default class Select<
     this.openAfterFocus = false;
   };
   onInputBlur: FocusEventHandler<HTMLInputElement> = (event) => {
-    const { inputValue: prevInputValue } = this.props;
     if (this.menuListRef && this.menuListRef.contains(document.activeElement)) {
       this.inputRef!.focus();
       return;
@@ -1378,7 +1373,7 @@ export default class Select<
     if (this.props.onBlur) {
       this.props.onBlur(event);
     }
-    this.onInputChange('', { action: 'input-blur', prevInputValue });
+    this.onInputChange('', { action: 'input-blur' });
     this.onMenuClose();
     this.setState({
       focusedValue: null,
@@ -1480,10 +1475,7 @@ export default class Select<
       case 'Escape':
         if (menuIsOpen) {
           this.setState({ inputIsHiddenAfterUpdate: false });
-          this.onInputChange('', {
-            action: 'menu-close',
-            prevInputValue: inputValue,
-          });
+          this.onInputChange('', { action: 'menu-close' });
           this.onMenuClose();
         } else if (isClearable && escapeClearsValue) {
           this.clearValue();
@@ -1656,7 +1648,6 @@ export default class Select<
     if (isMulti) {
       return selectValue.map((opt, index) => {
         const isOptionFocused = opt === focusedValue;
-        const key = `${this.getOptionLabel(opt)}-${this.getOptionValue(opt)}`;
 
         return (
           <MultiValue
@@ -1668,7 +1659,7 @@ export default class Select<
             }}
             isFocused={isOptionFocused}
             isDisabled={isDisabled}
-            key={key}
+            key={`${this.getOptionValue(opt)}-${index}`}
             index={index}
             removeProps={{
               onClick: () => this.removeValue(opt),

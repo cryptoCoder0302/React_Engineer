@@ -3,41 +3,43 @@ import Select, { InputActionMeta } from 'react-select';
 import { colourOptions } from '../data';
 
 interface State {
+  readonly inputValue: string;
   readonly menuIsOpen?: boolean;
 }
 
 export default class OnSelectResetsInput extends Component<{}, State> {
-  state: State = {};
-  onInputChange = (
-    inputValue: string,
-    { action, prevInputValue }: InputActionMeta
-  ) => {
+  state: State = {
+    inputValue: '',
+  };
+  onInputChange = (inputValue: string, { action }: InputActionMeta) => {
     console.log(inputValue, action);
     switch (action) {
       case 'input-change':
-        return inputValue;
+        this.setState({ inputValue });
+        return;
       case 'menu-close':
-        console.log(prevInputValue);
+        console.log(this.state.inputValue);
         let menuIsOpen = undefined;
-        if (prevInputValue) {
+        if (this.state.inputValue) {
           menuIsOpen = true;
         }
         this.setState({
           menuIsOpen,
         });
-        return prevInputValue;
+        return;
       default:
-        return prevInputValue;
+        return;
     }
   };
   render() {
-    const { menuIsOpen } = this.state;
+    const { inputValue, menuIsOpen } = this.state;
     return (
       <Select
         isMulti
         defaultValue={colourOptions[0]}
         isClearable
         isSearchable
+        inputValue={inputValue}
         onInputChange={this.onInputChange}
         name="color"
         options={colourOptions}

@@ -127,13 +127,7 @@ export class Collapse extends Component<CollapseProps, CollapseState> {
   getTransition = (state: TransitionStatus) => this.transition[state];
 
   render() {
-    const { children, in: inProp, onExited } = this.props;
-    const exitedProp = () => {
-      if (this.nodeRef.current && onExited) {
-        onExited(this.nodeRef.current);
-      }
-    };
-
+    const { children, in: inProp } = this.props;
     const { width } = this.state;
 
     return (
@@ -142,7 +136,6 @@ export class Collapse extends Component<CollapseProps, CollapseState> {
         mountOnEnter
         unmountOnExit
         in={inProp}
-        onExited={exitedProp}
         timeout={this.duration}
         nodeRef={this.nodeRef}
       >
