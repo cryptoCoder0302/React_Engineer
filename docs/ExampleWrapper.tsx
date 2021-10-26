@@ -27,13 +27,15 @@ interface Props {
 }
 
 interface State {
+  readonly isHovered: boolean;
   readonly showCode: boolean;
 }
 
 export default class ExampleWrapper extends Component<Props, State> {
-  state: State = { showCode: false };
+  state: State = { isHovered: false, showCode: false };
   static defaultProps = { isEditable: true };
-
+  handleEnter = () => this.setState({ isHovered: true });
+  handleLeave = () => this.setState({ isHovered: false });
   renderCodeSample = () => {
     let { raw } = this.props;
     let { showCode } = this.state;
@@ -98,11 +100,13 @@ export default class ExampleWrapper extends Component<Props, State> {
   };
 
   render() {
+    const { isHovered } = this.state;
+
     return (
-      <div>
+      <div onMouseEnter={this.handleEnter} onMouseLeave={this.handleLeave}>
         <ExampleHeading>
           <h4>{this.props.label}</h4>
-          <Actions>
+          <Actions show={isHovered}>
             {this.renderSourceViewOption()}
             {this.renderCSBButton()}
           </Actions>
@@ -119,6 +123,7 @@ const ExampleHeading = (props: any) => (
     css={{
       alignItems: 'center',
       display: 'flex',
+      justifyContent: 'space-between',
       paddingBottom: '1em',
       paddingTop: '1.25em',
 
@@ -172,6 +177,9 @@ const actionCSS: CSSObject = {
     backgroundColor: colors.neutral10,
     bottom: -1,
   },
+  ':focus': {
+    outline: 0,
+  },
 };
 
 interface ActionProps {
@@ -206,23 +214,18 @@ const AAction = ({
   );
 };
 
-const Actions = (props: JSX.IntrinsicElements['div']) => (
+const Actions = ({
+  show,
+  ...props
+}: { readonly show: boolean } & JSX.IntrinsicElements['div']) => (
   <div
     css={{
-      flex: '1 1',
       alignItems: 'center',
       display: 'flex',
-      justifyContent: 'flex-end',
-      opacity: 0.2,
+      justifyContent: 'space-between',
+      opacity: show ? 1 : 0.2,
       transition: 'opacity 140ms',
       transitionDelay: '140ms',
-
-      '&:hover': {
-        opacity: 1,
-      },
-      '&:focus-within': {
-        opacity: 1,
-      },
     }}
     {...props}
   />

@@ -2,12 +2,10 @@ import React, { Component, Fragment } from 'react';
 
 import Select from 'react-select';
 import { colourOptions } from '../data';
+import { Note } from '../styled-components';
 
-const Checkbox = ({ children, ...props }: JSX.IntrinsicElements['input']) => (
-  <label style={{ marginRight: '1em' }}>
-    <input type="checkbox" {...props} />
-    {children}
-  </label>
+const Checkbox = (props: JSX.IntrinsicElements['input']) => (
+  <input type="checkbox" {...props} />
 );
 
 interface State {
@@ -36,19 +34,9 @@ export default class SingleSelect extends Component<{}, State> {
   toggleRtl = () => this.setState((state) => ({ isRtl: !state.isRtl }));
   toggleSearchable = () =>
     this.setState((state) => ({ isSearchable: !state.isSearchable }));
-
   render() {
-    const {
-      toggleClearable,
-      toggleDisabled,
-      toggleLoading,
-      toggleRtl,
-      toggleSearchable,
-    } = this;
-
     const { isClearable, isSearchable, isDisabled, isLoading, isRtl } =
       this.state;
-
     return (
       <Fragment>
         <Select
@@ -63,32 +51,47 @@ export default class SingleSelect extends Component<{}, State> {
           name="color"
           options={colourOptions}
         />
-
-        <div
-          style={{
-            color: 'hsl(0, 0%, 40%)',
-            display: 'inline-block',
-            fontSize: 12,
-            fontStyle: 'italic',
-            marginTop: '1em',
-          }}
-        >
-          <Checkbox checked={isClearable} onChange={toggleClearable}>
-            Clearable
-          </Checkbox>
-          <Checkbox checked={isSearchable} onChange={toggleSearchable}>
-            Searchable
-          </Checkbox>
-          <Checkbox checked={isDisabled} onChange={toggleDisabled}>
-            Disabled
-          </Checkbox>
-          <Checkbox checked={isLoading} onChange={toggleLoading}>
-            Loading
-          </Checkbox>
-          <Checkbox checked={isRtl} onChange={toggleRtl}>
-            RTL
-          </Checkbox>
-        </div>
+        <Note Tag="label">
+          <Checkbox
+            checked={isClearable}
+            onChange={this.toggleClearable}
+            id="cypress-single__clearable-checkbox"
+          />
+          Clearable
+        </Note>
+        <Note Tag="label" style={{ marginLeft: '1em' }}>
+          <Checkbox
+            checked={isSearchable}
+            onChange={this.toggleSearchable}
+            id="cypress-single__searchable-checkbox"
+          />
+          Searchable
+        </Note>
+        <Note Tag="label" style={{ marginLeft: '1em' }}>
+          <Checkbox
+            checked={isDisabled}
+            onChange={this.toggleDisabled}
+            id="cypress-single__disabled-checkbox"
+          />
+          Disabled
+        </Note>
+        <Note Tag="label" style={{ marginLeft: '1em' }}>
+          <Checkbox
+            checked={isLoading}
+            onChange={this.toggleLoading}
+            id="cypress-single__loading-checkbox"
+          />
+          Loading
+        </Note>
+        <Note Tag="label" style={{ marginLeft: '1em' }}>
+          <Checkbox
+            type="checkbox"
+            checked={isRtl}
+            onChange={this.toggleRtl}
+            id="cypress-single__rtl-checkbox"
+          />
+          RTL
+        </Note>
       </Fragment>
     );
   }
