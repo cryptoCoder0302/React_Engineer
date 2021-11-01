@@ -30,5 +30,4 @@ const AsyncSelect = React.forwardRef(
   }
 ) as AsyncSelect;
 
-export { useAsync };
 export default AsyncSelect;
